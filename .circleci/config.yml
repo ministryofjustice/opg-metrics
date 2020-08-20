@@ -1,0 +1,121 @@
+version: 2.1
+
+workflows:
+  pr_build:
+      jobs:
+        - cancel_redundant_builds:
+            name: cancel_previous_jobs
+            filters: { branches: { ignore: ["main"] } }
+
+        - opg-metrics/lint_terraform:
+            name: lint_terraform_pr_build
+            filters: { branches: { ignore: ["main"] } }
+
+        # - opg-metrics/plan_shared_terraform:
+        #   name: dev_plan_shared_terraform
+        #   filters: { branches: { ignore: [main] } }
+        #   requires: [cancel_previous_jobs,lint_terraform_pr_build]
+
+  path_to_live:
+      jobs:
+        - opg-metrics/lint_terraform:
+            name: lint_terraform_path_to_live
+            filters: { branches: { only: ["main"] } }
+          # - opg-metrics/apply_shared_terraform:
+          #   name: dev_apply_shared_terraform
+          #   workspace: development
+          #   filters: { branches: { only: [main] } }
+
+
+orbs:
+  slack: circleci/slack@3.3.0
+  opg-metrics:
+    executors:
+      terraform:
+        docker: [image: hashicorp/terraform:latest]
+        resource_class: small
+
+    jobs:
+      #----------------------------------------------------
+      # Terraform
+
+      lint_terraform:
+        #
+        # Lint the Terraform
+        #
+        executor: terraform
+        parameters:
+          workspace:
+            description: Terraform workspace name
+            type: string
+            default: development
+        environment:
+          TF_WORKSPACE: "<<parameters.workspace>>"
+        steps:
+          - checkout
+          - run:
+              name: Lint Shared Terraform
+              command: |
+                terraform --version
+                cd ~/project/terraform/service
+                terraform init -lock-timeout=300s
+                terraform validate
+
+      plan_shared_terraform:
+        #
+        # Plan the shared terraform configuration. This:
+        #   - Updates the shared infrastructure;
+        #
+        executor: terraform
+        parameters:
+          workspace:
+            description: Terraform workspace name
+            type: string
+            default: development
+        environment:
+          TF_WORKSPACE: "<<parameters.workspace>>"
+        steps:
+          - checkout
+          - run:
+              name: Plan Service Terraform
+              command: |
+                cd ~/project/terraform/service
+                terraform init -lock-timeout=300s
+                terraform --version
+                terraform plan -lock-timeout=300s
+
+      apply_shared_terraform:
+        executor: terraform
+        parameters:
+          workspace:
+            description: Terraform workspace name
+            type: string
+            default: development
+        environment:
+          TF_WORKSPACE: "<<parameters.workspace>>"
+        steps:
+          - checkout
+          - run:
+              name: Apply Service Terraform
+              command: |
+                cd ~/project/terraform/service
+                terraform init -lock-timeout=300s
+                terraform --version
+                terraform apply -lock-timeout=300s --auto-approve
+
+jobs:
+  cancel_redundant_builds:
+    docker:
+      - image: circleci/python
+    resource_class: small
+    steps:
+      - checkout
+      - run:
+          name: Cancel Redundant Builds
+          command: |
+            python scripts/pipeline/cancel_previous_jobs/cancel_redundant_builds.py \
+            --circle_project_username ${CIRCLE_PROJECT_USERNAME} \
+            --circle_project_reponame ${CIRCLE_PROJECT_REPONAME} \
+            --circle_branch ${CIRCLE_BRANCH} \
+            --circle_builds_token ${CIRCLECI_API_KEY} \
+            --terms_to_waitfor "dev_plan_shared_terraform,dev_apply_environment_terraform"
