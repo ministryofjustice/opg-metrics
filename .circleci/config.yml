@@ -36,13 +36,7 @@ orbs:
         resource_class: small
 
     jobs:
-      #----------------------------------------------------
-      # Terraform
-
       lint_terraform:
-        #
-        # Lint the Terraform
-        #
         executor: terraform
         parameters:
           workspace:
@@ -62,10 +56,6 @@ orbs:
                 terraform validate
 
       plan_shared_terraform:
-        #
-        # Plan the shared terraform configuration. This:
-        #   - Updates the shared infrastructure;
-        #
         executor: terraform
         parameters:
           workspace:
