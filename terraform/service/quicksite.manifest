@@ -1,0 +1,14 @@
+{
+    "fileLocations": [
+        {
+            "URIPrefixes": [
+                "https://opg-service-perf-bucket.s3-eu-west-1.amazonaws.com/",
+                "https://opg-service-release-bucket.s3.eu-west-1.amazonaws.com/"
+            ]
+        }
+    ],
+    "globalUploadSettings": {
+        "format": "JSON",
+        "textqualifier": "\""
+    }
+}
