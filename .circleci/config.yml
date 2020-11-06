@@ -9,7 +9,7 @@ workflows:
 
         - opg-metrics/terraform_command:
             name: lint shared terraform
-            workspace: production
+            workspace: development
             configuration_path: shared
             terraform_command: validate
             filters: { branches: { ignore: [main] } }
@@ -17,7 +17,7 @@ workflows:
 
         - opg-metrics/terraform_command:
             name: lint service terraform
-            workspace: production
+            workspace: development
             configuration_path: service
             terraform_command: validate
             filters: { branches: { ignore: [main] } }
@@ -25,7 +25,7 @@ workflows:
 
         - opg-metrics/terraform_command:
             name: plan shared terraform
-            workspace: production
+            workspace: development
             configuration_path: shared
             terraform_command: plan
             filters: { branches: { ignore: [main] } }
@@ -35,7 +35,7 @@ workflows:
 
         - opg-metrics/terraform_command:
             name: plan service terraform
-            workspace: production
+            workspace: development
             configuration_path: service
             terraform_command: plan
             filters: { branches: { ignore: [main] } }
@@ -47,14 +47,14 @@ workflows:
       jobs:
         - opg-metrics/terraform_command:
             name: apply shared terraform
-            workspace: production
+            workspace: development
             configuration_path: shared
             terraform_command: apply
             filters: { branches: { only: [main] } }
 
         - opg-metrics/terraform_command:
               name: apply service terraform
-              workspace: production
+              workspace: development
               configuration_path: service
               terraform_command: apply
               filters: { branches: { only: [main] } }

@@ -4,7 +4,7 @@ locals {
     application      = "opg-metrics-shared"
     environment-name = terraform.workspace
     owner            = "OPGOPS opgteam+opgmetrics@digital.justice.gov.uk"
-    is-production    = "true"
+    is-production    = "false"
     runbook          = "https://github.com/ministryofjustice/opg-metrics"
     source-code      = "https://github.com/ministryofjustice/opg-metrics"
   }
