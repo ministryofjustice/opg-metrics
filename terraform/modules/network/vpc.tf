@@ -5,14 +5,17 @@ resource "aws_vpc" "main" {
   enable_dns_support   = var.enable_dns_support
   tags = merge(
     var.tags,
-    { name = "sandbox-vpc" },
+    { name = "${local.name-prefix}-vpc" },
   )
 }
 
 resource "aws_vpc_dhcp_options" "dns_resolver" {
   domain_name         = var.dhcp_options_domain_name
   domain_name_servers = var.dhcp_options_domain_name_servers
-  tags                = var.tags
+  tags = merge(
+    var.tags,
+    { name = "${local.name-prefix}-dns-resolver" },
+  )
 }
 
 resource "aws_internet_gateway" "gw" {
@@ -20,7 +23,7 @@ resource "aws_internet_gateway" "gw" {
 
   tags = merge(
     var.tags,
-    { name = "internet-gateway" },
+    { name = "${local.name-prefix}-internet-gateway" },
   )
 }
 
@@ -30,7 +33,7 @@ resource "aws_eip" "nat" {
 
   tags = merge(
     var.tags,
-    { name = "eip-nat-gateway" },
+    { name = "${local.name-prefix}-eip-nat-gateway" },
   )
 }
 
@@ -41,6 +44,6 @@ resource "aws_nat_gateway" "gw" {
 
   tags = merge(
     var.tags,
-    { name = "nat-gateway-${data.aws_availability_zones.all.names[count.index]}" },
+    { name = "${local.name-prefix}-nat-gateway-${data.aws_availability_zones.all.names[count.index]}" },
   )
 }

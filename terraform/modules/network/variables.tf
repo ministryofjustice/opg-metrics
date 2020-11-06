@@ -1,4 +1,6 @@
-variable "tags" {}
+variable "tags" {
+  type = map(string)
+}
 
 variable "cidr" {
   type    = string
@@ -53,4 +55,8 @@ variable "default_security_group_ingress" {
 variable "default_security_group_egress" {
   type    = list(map(string))
   default = null
+}
+
+locals {
+  name-prefix = "${var.tags.application}-${var.tags.environment-name}"
 }

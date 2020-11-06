@@ -9,7 +9,7 @@ resource "aws_subnet" "public" {
 
   tags = merge(
     var.tags,
-    { Name = "public-${data.aws_availability_zones.all.names[count.index]}" },
+    { Name = "${local.name-prefix}-public-${data.aws_availability_zones.all.names[count.index]}" },
   )
 }
 
@@ -25,7 +25,7 @@ resource "aws_route_table" "public" {
 
   tags = merge(
     var.tags,
-    { Name = "public" },
+    { Name = "${local.name-prefix}-public" },
   )
 }
 
@@ -52,7 +52,7 @@ resource "aws_subnet" "application" {
 
   tags = merge(
     var.tags,
-    { Name = "application-${data.aws_availability_zones.all.names[count.index]}" },
+    { Name = "${local.name-prefix}-application-${data.aws_availability_zones.all.names[count.index]}" },
   )
 }
 
@@ -68,7 +68,7 @@ resource "aws_route_table" "application" {
 
   tags = merge(
     var.tags,
-    { Name = "application-route-table" },
+    { Name = "${local.name-prefix}-application-route-table" },
   )
 }
 
@@ -96,7 +96,7 @@ resource "aws_subnet" "data" {
 
   tags = merge(
     var.tags,
-    { Name = "data-${data.aws_availability_zones.all.names[count.index]}" },
+    { Name = "${local.name-prefix}-data-${data.aws_availability_zones.all.names[count.index]}" },
   )
 }
 
@@ -112,6 +112,6 @@ resource "aws_route_table" "data" {
 
   tags = merge(
     var.tags,
-    { Name = "data-route-table" },
+    { Name = "${local.name-prefix}-data-route-table" },
   )
 }
