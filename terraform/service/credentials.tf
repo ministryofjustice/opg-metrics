@@ -9,7 +9,7 @@ terraform {
   }
   required_providers {
     aws = {
-      source = "hashicorp/aws",
+      source  = "hashicorp/aws",
       version = "~> 3.0"
     }
   }
@@ -17,11 +17,11 @@ terraform {
 }
 
 variable "default_role" {
-    default = "opg-metrics-ci"
+  default = "opg-metrics-ci"
 }
 
 provider "aws" {
-  region  = "eu-west-1"
+  region = "eu-west-1"
   assume_role {
     role_arn     = "arn:aws:iam::311462405659:role/${var.default_role}"
     session_name = "terraform-session"
