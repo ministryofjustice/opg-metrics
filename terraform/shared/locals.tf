@@ -1,7 +1,7 @@
 locals {
   mandatory_moj_tags = {
     business-unit    = "OPG"
-    application      = "opg_metrics_shared"
+    application      = "opg-metrics-shared"
     environment-name = terraform.workspace
     owner            = "OPGOPS opgteam+opgmetrics@digital.justice.gov.uk"
     is-production    = "true"
