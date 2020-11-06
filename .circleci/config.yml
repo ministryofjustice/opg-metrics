@@ -4,27 +4,64 @@ workflows:
   pr_build:
       jobs:
         - cancel_redundant_builds:
-            name: cancel_previous_jobs
-            filters: { branches: { ignore: ["main"] } }
+            name: cancel previous jobs
+            filters: { branches: { ignore: [main] } }
 
-        - opg-metrics/lint_terraform:
-            name: lint_terraform_pr_build
-            filters: { branches: { ignore: ["main"] } }
+        - opg-metrics/terraform_command:
+            name: lint shared terraform
+            workspace: production
+            configuration_path: shared
+            terraform_command: validate
+            filters: { branches: { ignore: [main] } }
+            requires: [cancel previous jobs]
 
-        # - opg-metrics/plan_shared_terraform:
-        #   name: plan_shared_terraform
-        #   filters: { branches: { ignore: [main] } }
-        #   requires: [cancel_previous_jobs,lint_terraform_pr_build]
+        - opg-metrics/terraform_command:
+            name: lint service terraform
+            workspace: production
+            configuration_path: service
+            terraform_command: validate
+            filters: { branches: { ignore: [main] } }
+            requires: [cancel previous jobs]
+
+        - opg-metrics/terraform_command:
+            name: plan shared terraform
+            workspace: production
+            configuration_path: shared
+            terraform_command: plan
+            filters: { branches: { ignore: [main] } }
+            requires: [
+              lint shared terraform,
+              ]
+
+        - opg-metrics/terraform_command:
+            name: plan service terraform
+            workspace: production
+            configuration_path: service
+            terraform_command: plan
+            filters: { branches: { ignore: [main] } }
+            requires: [
+              lint service terraform,
+              ]
 
   path_to_live:
       jobs:
-        - opg-metrics/lint_terraform:
-            name: lint_terraform_path_to_live
-            filters: { branches: { only: ["main"] } }
-          # - opg-metrics/apply_shared_terraform:
-          #   name: apply_shared_terraform
-          #   workspace: development
-          #   filters: { branches: { only: [main] } }
+        - opg-metrics/terraform_command:
+            name: apply shared terraform
+            workspace: production
+            configuration_path: shared
+            terraform_command: apply
+            filters: { branches: { only: [main] } }
+
+        - opg-metrics/terraform_command:
+              name: apply service terraform
+              workspace: production
+              configuration_path: service
+              terraform_command: apply
+              filters: { branches: { only: [main] } }
+              requires: [
+                apply shared terraform,
+                ]
+
 
 
 orbs:
@@ -36,62 +73,33 @@ orbs:
         resource_class: small
 
     jobs:
-      lint_terraform:
+      terraform_command:
         executor: terraform
         parameters:
           workspace:
             description: Terraform workspace name
             type: string
-            default: development
+          configuration_path:
+            description: Terraform workspace name
+            type: string
+          terraform_command:
+            description: Terraform workspace name
+            type: string
         environment:
           TF_WORKSPACE: "<<parameters.workspace>>"
+          TF_CLI_ARGS_init: "-lock-timeout=300s"
+          TF_CLI_ARGS_plan: "-lock-timeout=300s"
+          TF_CLI_ARGS_apply: "-lock-timeout=300s"
         steps:
           - checkout
           - run:
-              name: Lint Shared Terraform
+              name: terraform <<parameters.terraform_command>> <<parameters.configuration_path>> <<parameters.workspace>>
               command: |
                 terraform --version
-                cd ~/project/terraform/service
-                terraform init -lock-timeout=300s
-                terraform validate
+                cd ~/project/terraform/<<parameters.configuration_path>>
+                terraform init
+                terraform <<parameters.terraform_command>>
 
-      plan_shared_terraform:
-        executor: terraform
-        parameters:
-          workspace:
-            description: Terraform workspace name
-            type: string
-            default: development
-        environment:
-          TF_WORKSPACE: "<<parameters.workspace>>"
-        steps:
-          - checkout
-          - run:
-              name: Plan Service Terraform
-              command: |
-                cd ~/project/terraform/service
-                terraform init -lock-timeout=300s
-                terraform --version
-                terraform plan -lock-timeout=300s
-
-      apply_shared_terraform:
-        executor: terraform
-        parameters:
-          workspace:
-            description: Terraform workspace name
-            type: string
-            default: development
-        environment:
-          TF_WORKSPACE: "<<parameters.workspace>>"
-        steps:
-          - checkout
-          - run:
-              name: Apply Service Terraform
-              command: |
-                cd ~/project/terraform/service
-                terraform init -lock-timeout=300s
-                terraform --version
-                terraform apply -lock-timeout=300s --auto-approve
 
 jobs:
   cancel_redundant_builds:
