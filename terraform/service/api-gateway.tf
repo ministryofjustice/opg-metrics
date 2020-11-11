@@ -81,73 +81,13 @@ resource "aws_api_gateway_rest_api" "kinesis_stream_api_gateway" {
         }
       }
     },
-    "/streams/{stream-name}/record": {
+    "/streams/${var.name}/records": {
       "put": {
         "consumes": [
           "application/json"
         ],
         "produces": [
           "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "stream-name",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "PutRecord",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/PutRecord"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "200 response",
-            "schema": {
-              "$ref": "#/definitions/Empty"
-            }
-          }
-        },
-        "x-amazon-apigateway-integration": {
-          "type": "aws",
-          "credentials": "${var.kinesis_gateway_role}",
-          "uri": "arn:aws:apigateway:eu-west-1:kinesis:action/PutRecord",
-          "responses": {
-            "default": {
-              "statusCode": "200"
-            }
-          },
-          "requestParameters": {
-            "integration.request.header.Content-Type": "'x-amz-json-1.1'"
-          },
-          "requestTemplates": {
-            "application/json": "{\n    \"StreamName\": \"$input.params('stream-name')\",\n    \"Data\": \"$util.base64Encode($input.json('$.Data'))\",\n    \"PartitionKey\": \"$input.path('$.PartitionKey')\"\n}"
-          },
-          "passthroughBehavior": "when_no_templates",
-          "httpMethod": "POST"
-        }
-      }
-    },
-    "/streams/{stream-name}/records": {
-      "put": {
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "stream-name",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
         ],
         "responses": {
           "200": {
@@ -167,7 +107,7 @@ resource "aws_api_gateway_rest_api" "kinesis_stream_api_gateway" {
             }
           },
           "requestTemplates": {
-            "application/json": "{\n    \"StreamName\": \"$input.params('stream-name')\",\n    \"Records\": [\n       #foreach($elem in $input.path('$.records'))\n          {\n            \"Data\": \"$util.base64Encode($elem.data)\",\n            \"PartitionKey\": \"$elem.partition-key\"\n          }#if($foreach.hasNext),#end\n        #end\n    ]\n}"
+            "application/json": "{\n    \"StreamName\": \"${var.name}\",\n    \"Records\": [\n       #foreach($elem in $input.path('$.records'))\n          {\n            \"Data\": \"$util.base64Encode($elem.data)\",\n            \"PartitionKey\": \"$elem.partition-key\"\n          }#if($foreach.hasNext),#end\n        #end\n    ]\n}"
           },
           "passthroughBehavior": "when_no_templates",
           "httpMethod": "POST"
