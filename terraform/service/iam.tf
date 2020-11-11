@@ -1,5 +1,5 @@
-resource "aws_iam_role" "firehose_role" {
-  name = "${var.name}_firehose_role"
+resource "aws_iam_role" "role" {
+  name = var.name
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -8,7 +8,6 @@ resource "aws_iam_role" "firehose_role" {
       "Action": "sts:AssumeRole",
       "Principal": {
         "Service": [
-          "firehose.amazonaws.com",
           "kinesis.amazonaws.com",
           "apigateway.amazonaws.com"
           ]
@@ -22,8 +21,8 @@ EOF
 }
 
 resource "aws_iam_role_policy" "inline-policy" {
-  name   = "${var.name}_firehose_inline_policy"
-  role   = aws_iam_role.firehose_role.id
+  name   = var.name
+  role   = aws_iam_role.role.id
   policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -47,9 +46,9 @@ resource "aws_iam_role_policy" "inline-policy" {
       "Effect": "Allow",
       "Action": [
         "apigateway:*",
-                "kinesis:*"
+        "kinesis:*"
       ],
-      "Resource": "${aws_kinesis_stream.central_logging_stream.arn}"
+      "Resource": "${aws_kinesis_stream.stream.arn}"
     },
     {
       "Effect": "Allow",
