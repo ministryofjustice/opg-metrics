@@ -62,3 +62,56 @@ resource "aws_iam_role_policy" "inline-policy" {
 }
 EOF
 }
+
+resource "aws_iam_role_policy" "data-analytics-inline-policy" {
+  name   = "${var.name}_data_analytics"
+  role   = aws_iam_role.role.id
+  policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "ReadCode",
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetObject",
+                "s3:GetObjectVersion"
+            ],
+            "Resource": [
+                "arn:aws:s3:::ka-app-code-metrics/timestreamsink-1.0-SNAPSHOT.jar"
+            ]
+        },
+        {
+            "Sid": "ListCloudwatchLogGroups",
+            "Effect": "Allow",
+            "Action": [
+                "logs:DescribeLogGroups"
+            ],
+            "Resource": [
+                "arn:aws:logs:eu-west-1:995199299616:log-group:*"
+            ]
+        },
+        {
+            "Sid": "ListCloudwatchLogStreams",
+            "Effect": "Allow",
+            "Action": [
+                "logs:DescribeLogStreams"
+            ],
+            "Resource": [
+                "arn:aws:logs:eu-west-1:995199299616:log-group:/aws/kinesis-analytics/OPGMetricsApplication:log-stream:*"
+            ]
+        },
+        {
+            "Sid": "PutCloudwatchLogs",
+            "Effect": "Allow",
+            "Action": [
+                "logs:PutLogEvents"
+            ],
+            "Resource": [
+                "arn:aws:logs:eu-west-1:995199299616:log-group:/aws/kinesis-analytics/OPGMetricsApplication:log-stream:kinesis-analytics-log-stream"
+            ]
+        }
+    ]
+}
+EOF
+}
