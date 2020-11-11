@@ -30,10 +30,10 @@ resource "aws_kinesisanalyticsv2_application" "flink" {
         property_group_id = "ARGS"
 
         property_map = {
-          InputStreamName: var.name
-          Region = var.region
-          TimestreamDbName = var.name
-          TimestreamTableName = var.name
+          InputStreamName : var.name
+          Region                    = var.region
+          TimestreamDbName          = var.name
+          TimestreamTableName       = var.name
           TimestreamIngestBatchSize = "10"
         }
       }
