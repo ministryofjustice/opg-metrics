@@ -37,7 +37,7 @@ workflows:
             name: plan service terraform
             workspace: development
             configuration_path: service
-            terraform_command: plan
+            terraform_command: apply
             filters: { branches: { ignore: [main] } }
             requires: [
               lint service terraform,
