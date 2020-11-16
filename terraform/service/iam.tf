@@ -92,7 +92,7 @@ data "aws_iam_policy_document" "flink_execution_two" {
     ]
 
     resources = [
-      "arn:aws:logs:eu-west-1:995199299616:log-group:*",
+      "arn:aws:logs:${var.region}:995199299616:log-group:*",
     ]
   }
 
@@ -105,7 +105,7 @@ data "aws_iam_policy_document" "flink_execution_two" {
     ]
 
     resources = [
-      "arn:aws:logs:eu-west-1:995199299616:log-group:*",
+      "arn:aws:logs:${var.region}:995199299616:log-group:*",
     ]
   }
 
@@ -118,7 +118,7 @@ data "aws_iam_policy_document" "flink_execution_two" {
     ]
 
     resources = [
-      "arn:aws:logs:eu-west-1:995199299616:log-group:/aws/kinesis-analytics/OPGMetricsApplication:log-stream:*",
+      "arn:aws:logs:${var.region}:995199299616:log-group:/aws/kinesis-analytics/${var.name}:log-stream:*",
     ]
   }
 
@@ -131,7 +131,7 @@ data "aws_iam_policy_document" "flink_execution_two" {
     ]
 
     resources = [
-      "arn:aws:logs:eu-west-1:995199299616:log-group:/aws/kinesis-analytics/OPGMetricsApplication:log-stream:kinesis-analytics-log-stream",
+      "arn:aws:logs:${var.region}:995199299616:log-group:/aws/kinesis-analytics/${var.name}:log-stream:kinesis-analytics-log-stream",
     ]
   }
 }

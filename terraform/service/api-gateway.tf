@@ -67,7 +67,7 @@ resource "aws_api_gateway_rest_api" "kinesis_stream_api_gateway" {
         "x-amazon-apigateway-integration": {
           "type": "aws",
           "credentials": "${var.kinesis_gateway_role}",
-          "uri": "arn:aws:apigateway:eu-west-1:kinesis:action/ListStreams",
+          "uri": "arn:aws:apigateway:${var.region}:kinesis:action/ListStreams",
           "responses": {
             "default": {
               "statusCode": "200"
@@ -100,7 +100,7 @@ resource "aws_api_gateway_rest_api" "kinesis_stream_api_gateway" {
         "x-amazon-apigateway-integration": {
           "type": "aws",
           "credentials": "${var.kinesis_gateway_role}",
-          "uri": "arn:aws:apigateway:eu-west-1:kinesis:action/PutRecords",
+          "uri": "arn:aws:apigateway:${var.region}:kinesis:action/PutRecords",
           "responses": {
             "default": {
               "statusCode": "200"
