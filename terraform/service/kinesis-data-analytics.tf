@@ -11,7 +11,7 @@ resource "aws_s3_bucket_object" "flink" {
 resource "aws_kinesisanalyticsv2_application" "flink" {
   name                   = var.flink_name
   runtime_environment    = "FLINK-1_8"
-  service_execution_role = aws_iam_role.role.arn
+  service_execution_role = aws_iam_role.flink_execution.arn
 
   application_configuration {
     application_code_configuration {
@@ -30,7 +30,7 @@ resource "aws_kinesisanalyticsv2_application" "flink" {
         property_group_id = "FlinkApplicationProperties"
 
         property_map = {
-          InputStreamName = var.name
+          InputStreamName           = var.name
           Region                    = var.region
           TimestreamDbName          = var.name
           TimestreamTableName       = var.name
