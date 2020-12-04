@@ -27,3 +27,5 @@ provider "aws" {
     session_name = "terraform-session"
   }
 }
+
+data "aws_region" "current" {}

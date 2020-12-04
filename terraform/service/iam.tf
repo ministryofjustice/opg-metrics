@@ -98,20 +98,6 @@ data "aws_iam_policy_document" "flink_execution_one" {
       aws_kinesis_stream.metrics_input.arn
     ]
   }
-  statement {
-    sid = "1"
-
-    effect = "Allow"
-
-    actions = [
-      "apigateway:*",
-      "kinesis:*",
-    ]
-
-    resources = [
-      "*"
-    ]
-  }
 }
 
 resource "aws_iam_role_policy" "flink_execution_one" {
