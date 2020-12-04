@@ -1,3 +1,44 @@
+resource "aws_iam_role" "kinesis_apigateway" {
+  name               = "KinesisApiGatewayRole"
+  assume_role_policy = data.aws_iam_policy_document.kinesis_apigateway_assume_role_policy.json
+}
+
+data "aws_iam_policy_document" "kinesis_apigateway_assume_role_policy" {
+  statement {
+    actions = ["sts:AssumeRole"]
+    principals {
+      type        = "Service"
+      identifiers = [
+        "kinesisanalytics.amazonaws.com",
+        "apigateway.amazonaws.com",
+      ]
+    }
+  }
+}
+
+data "aws_iam_policy_document" "kinesis_apigateway" {
+  statement {
+    sid = "1"
+
+    effect = "Allow"
+
+    actions = [
+      "apigateway:*",
+      "kinesis:*",
+    ]
+
+    resources = [
+      "*"
+    ]
+  }
+}
+
+resource "aws_iam_role_policy" "kinesis_apigateway" {
+  name   = "KinesisApiGatewayPolicy"
+  role   = aws_iam_role.kinesis_apigateway.id
+  policy = data.aws_iam_policy_document.kinesis_apigateway.json
+}
+
 resource "aws_iam_role" "flink_execution" {
   name               = var.name
   assume_role_policy = data.aws_iam_policy_document.flink_execution_assume.json
