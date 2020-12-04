@@ -18,7 +18,6 @@ data "aws_iam_policy_document" "kinesis_apigateway_assume_role_policy" {
 
 data "aws_iam_policy_document" "kinesis_apigateway" {
   statement {
-    sid = "1"
 
     effect = "Allow"
 
@@ -46,7 +45,6 @@ resource "aws_iam_role" "flink_execution" {
 
 data "aws_iam_policy_document" "flink_execution_assume" {
   statement {
-    sid = "1"
 
     effect = "Allow"
 
@@ -58,6 +56,7 @@ data "aws_iam_policy_document" "flink_execution_assume" {
       type = "Service"
       identifiers = [
         "kinesis.amazonaws.com",
+        "kinesisanalytics.amazonaws.com",
         "apigateway.amazonaws.com",
       ]
     }
@@ -66,7 +65,6 @@ data "aws_iam_policy_document" "flink_execution_assume" {
 
 data "aws_iam_policy_document" "flink_execution_one" {
   statement {
-    sid = "1"
 
     effect = "Allow"
 
@@ -85,7 +83,6 @@ data "aws_iam_policy_document" "flink_execution_one" {
     ]
   }
   statement {
-    sid = "1"
 
     effect = "Allow"
 
@@ -119,7 +116,7 @@ data "aws_iam_policy_document" "flink_execution_two" {
     ]
 
     resources = [
-      "${aws_s3_bucket.flink.arn}/timestreamsink-1.0-SNAPSHOT.jar",
+      "${aws_s3_bucket.flink.arn}/${aws_s3_bucket_object.flink.key}",
     ]
   }
 
