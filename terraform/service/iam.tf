@@ -83,8 +83,8 @@ data "aws_iam_policy_document" "flink_execution_two" {
   version = "2012-10-17"
 
   statement {
-    sid     = "ReadCode"
-    effect  = "Allow"
+    sid    = "ReadCode"
+    effect = "Allow"
 
     actions = [
       "s3:GetObject",
@@ -92,7 +92,7 @@ data "aws_iam_policy_document" "flink_execution_two" {
     ]
 
     resources = [
-      "arn:aws:logs:${var.region}:995199299616:log-group:*",
+      "${aws_s3_bucket.flink.arn}/timestreamsink-1.0-SNAPSHOT.jar",
     ]
   }
 
@@ -105,7 +105,7 @@ data "aws_iam_policy_document" "flink_execution_two" {
     ]
 
     resources = [
-      "arn:aws:logs:${var.region}:995199299616:log-group:*",
+      "${aws_cloudwatch_log_group.flink.arn}:*",
     ]
   }
 
@@ -118,7 +118,7 @@ data "aws_iam_policy_document" "flink_execution_two" {
     ]
 
     resources = [
-      "arn:aws:logs:${var.region}:995199299616:log-group:/aws/kinesis-analytics/${var.name}:log-stream:*",
+      "${aws_cloudwatch_log_group.flink.arn}:log-stream:*",
     ]
   }
 
@@ -131,7 +131,7 @@ data "aws_iam_policy_document" "flink_execution_two" {
     ]
 
     resources = [
-      "arn:aws:logs:${var.region}:995199299616:log-group:/aws/kinesis-analytics/${var.name}:log-stream:kinesis-analytics-log-stream",
+      aws_cloudwatch_log_stream.flink.arn,
     ]
   }
 }

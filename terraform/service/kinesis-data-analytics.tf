@@ -8,6 +8,15 @@ resource "aws_s3_bucket_object" "flink" {
   source = "../../kinesis-analytics-application/timestreamsink-1.0-SNAPSHOT.jar"
 }
 
+resource "aws_cloudwatch_log_group" "flink" {
+  name = var.flink_name
+}
+
+resource "aws_cloudwatch_log_stream" "flink" {
+  name           = var.flink_name
+  log_group_name = aws_cloudwatch_log_group.flink.name
+}
+
 resource "aws_kinesisanalyticsv2_application" "flink" {
   name                   = var.flink_name
   runtime_environment    = "FLINK-1_8"
@@ -39,6 +48,8 @@ resource "aws_kinesisanalyticsv2_application" "flink" {
       }
     }
 
+
+
     flink_application_configuration {
       checkpoint_configuration {
         configuration_type = "DEFAULT"
@@ -57,6 +68,9 @@ resource "aws_kinesisanalyticsv2_application" "flink" {
         parallelism_per_kpu  = 1
       }
     }
+  }
+  cloudwatch_logging_options {
+    log_stream_arn = aws_cloudwatch_log_stream.flink.arn
   }
 
   tags = local.tags
