@@ -7,7 +7,7 @@ data "aws_iam_policy_document" "kinesis_apigateway_assume_role_policy" {
   statement {
     actions = ["sts:AssumeRole"]
     principals {
-      type        = "Service"
+      type = "Service"
       identifiers = [
         "kinesisanalytics.amazonaws.com",
         "apigateway.amazonaws.com",
