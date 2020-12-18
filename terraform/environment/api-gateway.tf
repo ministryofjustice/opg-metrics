@@ -31,7 +31,7 @@ resource "aws_api_gateway_integration" "kinesis_stream_api_gateway" {
 }
 
 resource "aws_api_gateway_rest_api" "kinesis_stream_api_gateway" {
-  name = "kinesis_stream"
+  name = "kinesis-stream"
 
   endpoint_configuration {
     types = ["REGIONAL"]
@@ -41,7 +41,7 @@ resource "aws_api_gateway_rest_api" "kinesis_stream_api_gateway" {
   {
   "swagger": "2.0",
   "info": {
-    "title": "kinesis_stream"
+    "title": "kinesis-stream"
   },
   "basePath": "/kinesis",
   "schemes": [

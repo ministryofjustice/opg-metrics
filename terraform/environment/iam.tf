@@ -161,7 +161,7 @@ data "aws_iam_policy_document" "flink_execution_two" {
 }
 
 resource "aws_iam_role_policy" "flink_execution_two" {
-  name   = "${var.name}_data_analytics"
+  name   = "${var.name}-data-analytics"
   role   = aws_iam_role.flink_execution.id
   policy = data.aws_iam_policy_document.flink_execution_two.json
 }
