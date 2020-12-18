@@ -69,7 +69,7 @@ orbs:
   opg-metrics:
     executors:
       terraform:
-        docker: [image: hashicorp/terraform:latest]
+        docker: [image: hashicorp/terraform:0.14.2]
         resource_class: small
 
     jobs:
