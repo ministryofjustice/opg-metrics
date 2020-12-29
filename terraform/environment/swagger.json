@@ -1,0 +1,86 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "kinesis-stream"
+  },
+  "basePath": "/kinesis",
+  "schemes": ["https"],
+  "paths": {
+    "/streams": {
+      "get": {
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "200 response",
+            "schema": {
+              "$ref": "#/definitions/Empty"
+            }
+          }
+        },
+        "x-amazon-apigateway-integration": {
+          "type": "aws",
+          "credentials": "${allowed_roles}",
+          "uri": "arn:aws:apigateway:${region}:kinesis:action/ListStreams",
+          "responses": {
+            "default": {
+              "statusCode": "200"
+            }
+          },
+          "requestTemplates": {
+            "application/json": "{}"
+          },
+          "passthroughBehavior": "when_no_templates",
+          "httpMethod": "POST"
+        }
+      }
+    },
+    "/streams/${var.name}/records": {
+      "put": {
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "200 response",
+            "schema": {
+              "$ref": "#/definitions/Empty"
+            }
+          }
+        },
+        "x-amazon-apigateway-integration": {
+          "type": "aws",
+          "credentials": "${allowed_roles}",
+          "uri": "arn:aws:apigateway:${region}:kinesis:action/PutRecords",
+          "responses": {
+            "default": {
+              "statusCode": "200"
+            }
+          },
+          "requestTemplates": {
+            "application/json": "{\n    \"StreamName\": \"${name}\",\n    \"Records\": [\n       #foreach($elem in $input.path('$.records'))\n          {\n            \"Data\": \"$util.base64Encode($elem.data)\",\n            \"PartitionKey\": \"$elem.partition-key\"\n          }#if($foreach.hasNext),#end\n        #end\n    ]\n}"
+          },
+          "passthroughBehavior": "when_no_templates",
+          "httpMethod": "POST"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Empty": {
+      "type": "object",
+      "title": "Empty Schema"
+    },
+    "PutRecord": {
+      "type": "object",
+      "properties": {
+        "Data": {
+          "type": "string"
+        },
+        "PartitionKey": {
+          "type": "string"
+        }
+      },
+      "title": "PutRecord proxy single-record payload"
+    }
+  }
+}
