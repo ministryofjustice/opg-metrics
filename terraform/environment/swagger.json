@@ -35,7 +35,7 @@
         }
       }
     },
-    "/streams/${var.name}/records": {
+    "/streams/${name}/records": {
       "put": {
         "consumes": ["application/json"],
         "produces": ["application/json"],
