@@ -58,6 +58,7 @@ data "aws_iam_policy_document" "flink_execution_assume" {
         "kinesis.amazonaws.com",
         "kinesisanalytics.amazonaws.com",
         "apigateway.amazonaws.com",
+        "timestream.amazonaws.com",
       ]
     }
   }
@@ -89,10 +90,23 @@ data "aws_iam_policy_document" "flink_execution_one" {
     actions = [
       "apigateway:*",
       "kinesis:*",
+      "timestream:*",
     ]
 
     resources = [
       aws_kinesis_stream.metrics_input.arn
+    ]
+  }
+
+  statement {
+    effect = "Allow"
+
+    actions = [
+      "timestream:*",
+    ]
+
+    resources = [
+      "*",
     ]
   }
 }
@@ -156,6 +170,19 @@ data "aws_iam_policy_document" "flink_execution_two" {
 
     resources = [
       aws_cloudwatch_log_stream.flink.arn,
+    ]
+  }
+
+  statement {
+    sid    = "TimestreamAccess"
+    effect = "Allow"
+
+    actions = [
+      "timestream:*",
+    ]
+
+    resources = [
+      "*",
     ]
   }
 }
