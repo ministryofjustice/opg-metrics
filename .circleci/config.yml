@@ -10,7 +10,7 @@ workflows:
         - opg-metrics/terraform_command:
             name: lint shared terraform
             workspace: development
-            configuration_path: shared
+            configuration_path: account
             terraform_command: validate
             filters: { branches: { ignore: [main] } }
             requires: [cancel previous jobs]
@@ -18,7 +18,7 @@ workflows:
         - opg-metrics/terraform_command:
             name: lint service terraform
             workspace: development
-            configuration_path: service
+            configuration_path: environment
             terraform_command: validate
             filters: { branches: { ignore: [main] } }
             requires: [cancel previous jobs]
@@ -26,7 +26,7 @@ workflows:
         - opg-metrics/terraform_command:
             name: plan shared terraform
             workspace: development
-            configuration_path: shared
+            configuration_path: account
             terraform_command: plan
             filters: { branches: { ignore: [main] } }
             requires: [
@@ -36,7 +36,7 @@ workflows:
         - opg-metrics/terraform_command:
             name: plan service terraform
             workspace: development
-            configuration_path: service
+            configuration_path: environment
             terraform_command: plan
             filters: { branches: { ignore: [main] } }
             requires: [
@@ -48,14 +48,14 @@ workflows:
         - opg-metrics/terraform_command:
             name: apply shared terraform
             workspace: development
-            configuration_path: shared
+            configuration_path: account
             terraform_command: apply
             filters: { branches: { only: [main] } }
 
         - opg-metrics/terraform_command:
               name: apply service terraform
               workspace: development
-              configuration_path: service
+              configuration_path: environment
               terraform_command: apply
               filters: { branches: { only: [main] } }
               requires: [
@@ -69,7 +69,7 @@ orbs:
   opg-metrics:
     executors:
       terraform:
-        docker: [image: hashicorp/terraform:latest]
+        docker: [image: hashicorp/terraform:0.14.3]
         resource_class: small
 
     jobs:
