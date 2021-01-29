@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "kinesis-stream",
+    "title": "OPG Metrics Rest API",
     "version": "0.0.1"
   },
   "basePath": "/kinesis",
@@ -83,41 +83,34 @@
         }
       },
     "PutMetrics": {
-      "title": "The root schema",
-      "description": "The root schema comprises the entire JSON document.",
+      "title": "OPG Metrics data object definition.",
+      "description": "The metrics array can contain between 1 and 20 individual metrics at a time.",
       "required": ["metrics"],
       "properties": {
         "metrics": {
           "maxItems": 20,
           "type": "array",
-          "title": "The metrics schema",
-          "description": "An explanation about the purpose of this instance.",
+          "title": "Individual metric to be recorded.",
+          "description": "Contains an array of individual metrics to be consumed by the service.",
           "default": [],
           "items": {
             "type": "object",
             "title": "The first anyOf schema",
-            "description": "An explanation about the purpose of this instance.",
+            "description": "A anyOf wrapper around the individual metric.",
             "default": {},
             "required": ["metric"],
             "properties": {
               "metric": {
                 "type": "object",
-                "title": "The metric schema",
-                "description": "An explanation about the purpose of this instance.",
+                "title": "The metric schema.",
+                "description": "The individual metric object that is required to record an entry successfully.",
                 "default": {},
-                "required": ["Dimensions", "Project", "Time"],
+                "required": ["Project", "Time"],
                 "properties": {
-                  "Dimensions": {
-                    "type": "string",
-                    "title": "The Dimensions schema",
-                    "description": "An explanation about the purpose of this instance.",
-                    "maxLength": 10,
-                    "pattern": "^[a-zA-Z-_]{1,10}$"
-                  },
                   "Project": {
                     "type": "string",
-                    "title": "The Project schema",
-                    "description": "An explanation about the purpose of this instance.",
+                    "title": "The service or project name.",
+                    "description": "Gives the ability to query against a particular service to know the purpose of this metric.",
                     "maxLength": 15,
                     "pattern": "^[a-zA-Z-_]{1,15}$"
                   },
@@ -145,7 +138,7 @@
                   "Time": {
                     "type": "string",
                     "title": "The Time schema",
-                    "description": "An explanation about the purpose of this instance.",
+                    "description": "A 13 digit timestamp of the metrics event",
                     "maxLength": 13,
                     "pattern": "^[0-9]{13}$"
                   }
