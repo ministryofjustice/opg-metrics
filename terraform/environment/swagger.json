@@ -99,13 +99,15 @@
             "description": "A anyOf wrapper around the individual metric.",
             "default": {},
             "required": ["metric"],
+            "additionalProperties": false,
             "properties": {
               "metric": {
                 "type": "object",
                 "title": "The metric schema.",
                 "description": "The individual metric object that is required to record an entry successfully.",
                 "default": {},
-                "required": ["Project", "Time"],
+                "required": ["Project", "Time", "MeasureName", "MeasureValue"],
+                "additionalProperties": false,
                 "properties": {
                   "Project": {
                     "type": "string",
@@ -114,26 +116,33 @@
                     "maxLength": 15,
                     "pattern": "^[a-zA-Z-_]{1,15}$"
                   },
+                  "Category": {
+                    "type": "string",
+                    "title": "Assign metric a Category (Optional)",
+                    "description": "Optionally tag the metric with a Category to better enable finer grouping of data.",
+                    "maxLength": 15,
+                    "pattern": "^[a-zA-Z-_]{1,15}$"
+                  },
+                  "Subcategory": {
+                    "type": "string",
+                    "title": "Assign metric a Subcategory (Optional)",
+                    "description": "Optionally tag the metric with a Subcategory to better enable finer grouping of data.",
+                    "maxLength": 15,
+                    "pattern": "^[a-zA-Z-_]{1,15}$"
+                  },
                   "MeasureName": {
                     "type": "string",
-                    "title": "The MeasureName schema",
-                    "description": "An explanation about the purpose of this instance.",
+                    "title": "The metric name",
+                    "description": "The name of the metric you want to record the measure under.",
                     "maxLength": 15,
                     "pattern": "^[a-zA-Z-_]{1,15}$"
                   },
                   "MeasureValue": {
                     "type": "string",
-                    "title": "The MeasureValue schema",
-                    "description": "An explanation about the purpose of this instance.",
+                    "title": "The metric value",
+                    "description": "A alpha value that defines the value you want to record.",
                     "maxLength": 5,
                     "pattern": "^[0-9\\.]{1,5}$"
-                  },
-                  "MeasureValueType": {
-                    "type": "string",
-                    "title": "The MeasureValueType schema",
-                    "description": "An explanation about the purpose of this instance.",
-                    "maxLength": 8,
-                    "pattern": "^[a-zA-Z-_]{1,8}$"
                   },
                   "Time": {
                     "type": "string",
