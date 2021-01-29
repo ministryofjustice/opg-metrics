@@ -52,7 +52,7 @@
             }
           },
           "requestTemplates": {
-            "application/json": "{\n    \"StreamName\": \"${name}\",\n    \"Records\": [\n       #foreach($elem in $input.path('$.metrics'))\n          {\n            \"Data\": \"$util.base64Encode($elem.metric)\",\n            \"PartitionKey\": \"default\"\n          }#if($foreach.hasNext),#end\n        #end\n    ]\n}"
+            "application/json": "{\n    \"StreamName\": \"${name}\",\n    \"Records\": [\n       #foreach($elem in $input.path('$.metrics'))\n          {\n            \"Data\": \"$util.base64Encode($util.escapeJavaScript($elem.metric))\",\n            \"PartitionKey\": \"default\"\n          }#if($foreach.hasNext),#end\n        #end\n    ]\n}"
           },
           "passthroughBehavior": "when_no_templates",
           "httpMethod": "POST"
