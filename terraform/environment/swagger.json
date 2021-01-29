@@ -13,17 +13,17 @@
     }
   },
   "paths": {
-    "/stream/records": {
+    "/metrics": {
       "put": {
         "consumes": ["application/json"],
         "produces": ["application/json"],
         "parameters": [
           {
             "in": "body",
-            "name": "PutRecords",
+            "name": "PutMetrics",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/PutRecords"
+              "$ref": "#/definitions/PutMetrics"
             }
           }
         ],
@@ -31,7 +31,7 @@
           "200": {
             "description": "200 response",
             "schema": {
-              "$ref": "#/definitions/PutRecords"
+              "$ref": "#/definitions/PutMetrics"
             }
           },
           "404": {
@@ -52,7 +52,7 @@
             }
           },
           "requestTemplates": {
-            "application/json": "{\n    \"StreamName\": \"${name}\",\n    \"Records\": [\n       #foreach($elem in $input.path('$.records'))\n          {\n            \"Data\": \"$util.base64Encode($elem.data)\",\n            \"PartitionKey\": \"default\"\n          }#if($foreach.hasNext),#end\n        #end\n    ]\n}"
+            "application/json": "{\n    \"StreamName\": \"${name}\",\n    \"Records\": [\n       #foreach($elem in $input.path('$.metrics'))\n          {\n            \"Data\": \"$util.base64Encode($elem.metric)\",\n            \"PartitionKey\": \"default\"\n          }#if($foreach.hasNext),#end\n        #end\n    ]\n}"
           },
           "passthroughBehavior": "when_no_templates",
           "httpMethod": "POST"
@@ -82,15 +82,15 @@
           }
         }
       },
-    "PutRecords": {
+    "PutMetrics": {
       "title": "The root schema",
       "description": "The root schema comprises the entire JSON document.",
-      "required": ["records"],
+      "required": ["metrics"],
       "properties": {
-        "records": {
+        "metrics": {
           "maxItems": 20,
           "type": "array",
-          "title": "The records schema",
+          "title": "The metrics schema",
           "description": "An explanation about the purpose of this instance.",
           "default": [],
           "items": {
@@ -98,11 +98,11 @@
             "title": "The first anyOf schema",
             "description": "An explanation about the purpose of this instance.",
             "default": {},
-            "required": ["data"],
+            "required": ["metric"],
             "properties": {
-              "data": {
+              "metric": {
                 "type": "object",
-                "title": "The data schema",
+                "title": "The metric schema",
                 "description": "An explanation about the purpose of this instance.",
                 "default": {},
                 "required": ["Dimensions", "Project", "Time"],
