@@ -44,15 +44,15 @@
         "x-amazon-apigateway-request-validator": "Validate body",
         "x-amazon-apigateway-integration": {
           "type": "aws",
-          "credentials": "arn:aws:iam::995199299616:role/KinesisApiGatewayRole",
-          "uri": "arn:aws:apigateway:eu-west-1:kinesis:action/PutRecords",
+          "credentials": "${allowed_roles}",
+          "uri": "arn:aws:apigateway:${region}:kinesis:action/PutRecords",
           "responses": {
             "default": {
               "statusCode": "200"
             }
           },
           "requestTemplates": {
-            "application/json": "{\n    \"StreamName\": \"opg-metrics\",\n    \"Records\": [\n       #foreach($elem in $input.path('$.records'))\n          {\n            \"Data\": \"$util.base64Encode($elem.data)\",\n            \"PartitionKey\": \"default\"\n          }#if($foreach.hasNext),#end\n        #end\n    ]\n}"
+            "application/json": "{\n    \"StreamName\": \"${name}\",\n    \"Records\": [\n       #foreach($elem in $input.path('$.records'))\n          {\n            \"Data\": \"$util.base64Encode($elem.data)\",\n            \"PartitionKey\": \"default\"\n          }#if($foreach.hasNext),#end\n        #end\n    ]\n}"
           },
           "passthroughBehavior": "when_no_templates",
           "httpMethod": "POST"
