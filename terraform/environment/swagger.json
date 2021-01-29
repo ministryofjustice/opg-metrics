@@ -1,63 +1,58 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "kinesis-stream"
+    "title": "kinesis-stream",
+    "version": "0.0.1"
   },
   "basePath": "/kinesis",
   "schemes": ["https"],
+  "x-amazon-apigateway-request-validators": {
+    "Validate body": {
+      "validateRequestParameters": false,
+      "validateRequestBody": true
+    }
+  },
   "paths": {
-    "/streams": {
-      "get": {
-        "consumes": ["application/json"],
-        "produces": ["application/json"],
-        "responses": {
-          "200": {
-            "description": "200 response",
-            "schema": {
-              "$ref": "#/definitions/Empty"
-            }
-          }
-        },
-        "x-amazon-apigateway-integration": {
-          "type": "aws",
-          "credentials": "${allowed_roles}",
-          "uri": "arn:aws:apigateway:${region}:kinesis:action/ListStreams",
-          "responses": {
-            "default": {
-              "statusCode": "200"
-            }
-          },
-          "requestTemplates": {
-            "application/json": "{}"
-          },
-          "passthroughBehavior": "when_no_templates",
-          "httpMethod": "POST"
-        }
-      }
-    },
-    "/streams/${name}/records": {
+    "/stream/records": {
       "put": {
         "consumes": ["application/json"],
         "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "PutRecords",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PutRecords"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "200 response",
             "schema": {
-              "$ref": "#/definitions/Empty"
+              "$ref": "#/definitions/PutRecords"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
             }
           }
         },
+        "x-amazon-apigateway-request-validator": "Validate body",
         "x-amazon-apigateway-integration": {
           "type": "aws",
-          "credentials": "${allowed_roles}",
-          "uri": "arn:aws:apigateway:${region}:kinesis:action/PutRecords",
+          "credentials": "arn:aws:iam::995199299616:role/KinesisApiGatewayRole",
+          "uri": "arn:aws:apigateway:eu-west-1:kinesis:action/PutRecords",
           "responses": {
             "default": {
               "statusCode": "200"
             }
           },
           "requestTemplates": {
-            "application/json": "{\n    \"StreamName\": \"${name}\",\n    \"Records\": [\n       #foreach($elem in $input.path('$.records'))\n          {\n            \"Data\": \"$util.base64Encode($elem.data)\",\n            \"PartitionKey\": \"default\"\n          }#if($foreach.hasNext),#end\n        #end\n    ]\n}"
+            "application/json": "{\n    \"StreamName\": \"opg-metrics\",\n    \"Records\": [\n       #foreach($elem in $input.path('$.records'))\n          {\n            \"Data\": \"$util.base64Encode($elem.data)\",\n            \"PartitionKey\": \"default\"\n          }#if($foreach.hasNext),#end\n        #end\n    ]\n}"
           },
           "passthroughBehavior": "when_no_templates",
           "httpMethod": "POST"
@@ -66,18 +61,100 @@
     }
   },
   "definitions": {
-    "Empty": {
-      "type": "object",
-      "title": "Empty Schema"
-    },
-    "PutRecord": {
-      "type": "object",
-      "properties": {
-        "Data": {
-          "type": "string"
+    "ErrorModel": {
+        "type": "object",
+        "required": [
+          "message",
+          "code"
+        ],
+        "properties": {
+          "message": {
+            "type": "string",
+            "maxLength": 200,
+            "pattern": "^[0-9a-zA-Z]$"
+          },
+          "code": {
+            "type": "integer",
+            "minimum": 100,
+            "maximum": 600,
+            "pattern": "^[1-9]{3}$",
+            "format": "-"
+          }
         }
       },
-      "title": "PutRecord proxy single-record payload"
+    "PutRecords": {
+      "title": "The root schema",
+      "description": "The root schema comprises the entire JSON document.",
+      "required": ["records"],
+      "properties": {
+        "records": {
+          "maxItems": 20,
+          "type": "array",
+          "title": "The records schema",
+          "description": "An explanation about the purpose of this instance.",
+          "default": [],
+          "items": {
+            "type": "object",
+            "title": "The first anyOf schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": {},
+            "required": ["data"],
+            "properties": {
+              "data": {
+                "type": "object",
+                "title": "The data schema",
+                "description": "An explanation about the purpose of this instance.",
+                "default": {},
+                "required": ["Dimensions", "Project", "Time"],
+                "properties": {
+                  "Dimensions": {
+                    "type": "string",
+                    "title": "The Dimensions schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "maxLength": 10,
+                    "pattern": "^[a-zA-Z-_]{1,10}$"
+                  },
+                  "Project": {
+                    "type": "string",
+                    "title": "The Project schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "maxLength": 15,
+                    "pattern": "^[a-zA-Z-_]{1,15}$"
+                  },
+                  "MeasureName": {
+                    "type": "string",
+                    "title": "The MeasureName schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "maxLength": 15,
+                    "pattern": "^[a-zA-Z-_]{1,15}$"
+                  },
+                  "MeasureValue": {
+                    "type": "string",
+                    "title": "The MeasureValue schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "maxLength": 5,
+                    "pattern": "^[0-9\\.]{1,5}$"
+                  },
+                  "MeasureValueType": {
+                    "type": "string",
+                    "title": "The MeasureValueType schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "maxLength": 8,
+                    "pattern": "^[a-zA-Z-_]{1,8}$"
+                  },
+                  "Time": {
+                    "type": "string",
+                    "title": "The Time schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "maxLength": 13,
+                    "pattern": "^[0-9]{13}$"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
