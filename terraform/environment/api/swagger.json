@@ -62,26 +62,23 @@
   },
   "definitions": {
     "ErrorModel": {
-        "type": "object",
-        "required": [
-          "message",
-          "code"
-        ],
-        "properties": {
-          "message": {
-            "type": "string",
-            "maxLength": 200,
-            "pattern": "^[0-9a-zA-Z]$"
-          },
-          "code": {
-            "type": "integer",
-            "minimum": 100,
-            "maximum": 600,
-            "pattern": "^[1-9]{3}$",
-            "format": "-"
-          }
+      "type": "object",
+      "required": ["message", "code"],
+      "properties": {
+        "message": {
+          "type": "string",
+          "maxLength": 200,
+          "pattern": "^[0-9a-zA-Z]$"
+        },
+        "code": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 600,
+          "pattern": "^[1-9]{3}$",
+          "format": "-"
         }
-      },
+      }
+    },
     "PutMetrics": {
       "title": "OPG Metrics data object definition.",
       "description": "The metrics array can contain between 1 and 20 individual metrics at a time.",
