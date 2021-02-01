@@ -6,17 +6,7 @@ Within the solution we have provided a [swagger](/terraform/environment/api/swag
 
 This swagger document can be used to build out a Mock service of your choosing. Below is an example using Prism.
 
-To install Prism locally run
-
-`npm install -g @stoplight/prism-cli`
-
-Then from the root of the package run
-
-`prism mock terraform/environment/api/swagger.json`
-
-This will bring up a new API for you to test against locally.
-
-Alternatively you can run a Docker version as part of your `docker-compose`.
+You can run the Docker version of prism as part of your `docker-compose`.
 
 ```
 sirius-api:
