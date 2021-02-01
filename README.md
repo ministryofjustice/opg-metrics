@@ -2,7 +2,7 @@
 
 ## Integration and Mocking
 
-Within the solution we have provided a swagger doc and example packet for help in understanding the integration.
+Within the solution we have provided a [swagger](/terraform/environment/api/swagger.json) doc and [example packet](/terraform/environment/api/metrics.json) for help in understanding the integration.
 
 This swagger document can be used to build out a Mock service of your choosing. Below is an example using Prism.
 
