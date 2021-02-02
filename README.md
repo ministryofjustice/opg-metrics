@@ -9,7 +9,7 @@ This OpenAPI specification can be used to build out a Mock service of your choos
 You can run the Docker version of prism as part of your `docker-compose`.
 
 ```
-sirius-api:
+metrics-api:
     image: stoplight/prism:latest
     ports:
       - 4010:4010
