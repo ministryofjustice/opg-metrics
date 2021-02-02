@@ -1,0 +1,31 @@
+{
+  "metrics": [
+    {
+      "metric": {
+        "Project": "opgtest",
+        "MeasureName": "release",
+        "MeasureValue": "1.0",
+        "Time": "1609240692503"
+      }
+    },
+    {
+      "metric": {
+        "Project": "opgtest",
+        "Category": "client",
+        "MeasureName": "login_btn_click",
+        "MeasureValue": "1.0",
+        "Time": "1609240692523"
+      }
+    },
+    {
+      "metric": {
+        "Project": "opgtest",
+        "Category": "client",
+        "Subcategory": "webvitals",
+        "MeasureName": "cumulative_layout_shift",
+        "MeasureValue": "1.1",
+        "Time": "1609240692533"
+      }
+    }
+  ]
+}
