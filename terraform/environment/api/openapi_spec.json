@@ -161,7 +161,7 @@
     "PutMetricsResponse": {
       "title": "OPG Metrics successfule response definition.",
       "description": "Confirms the data was accepted by the system and is processing the data.",
-      "type": "string",
+      "type": "object",
       "default": {
         "status": "Processing"
       }
