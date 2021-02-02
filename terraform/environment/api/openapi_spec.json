@@ -28,10 +28,10 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "200 response",
+          "202": {
+            "description": "202 response",
             "schema": {
-              "$ref": "#/definitions/PutMetrics"
+              "$ref": "#/definitions/PutMetricsResponse"
             }
           },
           "404": {
@@ -48,7 +48,10 @@
           "uri": "arn:aws:apigateway:${region}:kinesis:action/PutRecords",
           "responses": {
             "default": {
-              "statusCode": "200"
+              "statusCode": "200",
+              "responseTemplates" : {
+                "application/json" : "{ \"status\": \"Processing\" }"
+            }
             }
           },
           "requestTemplates": {
@@ -153,6 +156,14 @@
             }
           }
         }
+      }
+    },
+    "PutMetricsResponse": {
+      "title": "OPG Metrics successfule response definition.",
+      "description": "Confirms the data was accepted by the system and is processing the data.",
+      "type": "string",
+      "default": {
+        "status": "Processing"
       }
     }
   }

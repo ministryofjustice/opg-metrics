@@ -2,9 +2,9 @@
 
 ## Integration and Mocking
 
-Within the solution we have provided a [swagger](/terraform/environment/api/swagger.json) doc and [example packet](/terraform/environment/api/metrics.json) for help in understanding the integration.
+Within the solution we have provided a [OpenAPI specification](/terraform/environment/api/openapi_spec.json) and an [example JSON packet](/terraform/environment/api/examples/put_metrics.json) for help in understanding the integration.
 
-This swagger document can be used to build out a Mock service of your choosing. Below is an example using Prism.
+This OpenAPI specification can be used to build out a Mock service of your choosing. Below is an example using Prism.
 
 You can run the Docker version of prism as part of your `docker-compose`.
 
@@ -15,7 +15,7 @@ sirius-api:
       - 4010:4010
     command:
       - mock
-      - https://github.com/ministryofjustice/opg-metrics/tree/main/terraform/environment/api/swagger.json
+      - https://github.com/ministryofjustice/opg-metrics/tree/main/terraform/environment/api/openapi_spec.json
       - -h
       - 0.0.0.0
       - --dynamic
