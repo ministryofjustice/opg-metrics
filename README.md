@@ -1,28 +1,5 @@
 # OPG Metrics
 
-## Integration and Mocking
-
-Within the solution we have provided a [OpenAPI specification](/terraform/environment/api/openapi_spec.json) and an [example JSON packet](/terraform/environment/api/examples/put_metrics.json) for help in understanding the integration.
-
-Upon a merge into `main` a Github Action will build and publish HTML documentation to github pages. This can be found here [https://ministryofjustice.github.io/opg-metrics/](https://ministryofjustice.github.io/opg-metrics/).
-
-This OpenAPI specification can be used to build out a Mock service of your choosing. Below is an example using Prism.
-
-You can run the Docker version of prism as part of your `docker-compose`.
-
-```
-metrics-api:
-    image: stoplight/prism:latest
-    ports:
-      - 4010:4010
-    command:
-      - mock
-      - https://github.com/ministryofjustice/opg-metrics/tree/main/terraform/environment/api/openapi_spec.json
-      - -h
-      - 0.0.0.0
-      - --dynamic
-```
-
 
 The Office of the Public Guardian metrics service: Managed by opg-org-infra &amp; Terraform
 
@@ -93,28 +70,9 @@ The OPG Metrics Service allows you to send a PUT request to a endpoint with a JS
 
 If you choose to use the API Gateway endpoint, you can use the information below.
 
-### API Swagger Definition
+### OpenAPI
 
-The API Gateway is built using a swagger.json file that can be found in [/terraform/environment/swagger.json](./terraform/environment/swagger.json). You can use this to see the structure of the requests you need to make.
-
-An example request would look like the below. The endpoint accepts an array of `records` which allow you to bulk send measurements.
-
-```
-curl --location --request PUT 'https://<api-endpoint>/prod/streams/opg-metrics/records' \
---header 'Content-Type: application/json' \
---data-raw '{
-    "records": [
-        {
-            "data": "{ '\''Dimensions'\'': dimensions, '\''Project'\'': '\''opgtest'\'', '\''MeasureName'\'': '\''release'\'', '\''MeasureValue'\'': '\''1.0'\'', '\''MeasureValueType'\'': '\''DOUBLE'\'', '\''Time'\'': '\''1609240692503'\'' }",
-            "partition-key": "key"
-        },
-        {
-            "data": "{ '\''Dimensions'\'': dimensions, '\''Project'\'': '\''opgtest'\'', '\''MeasureName'\'': '\''release'\'', '\''MeasureValue'\'': '\''1.0'\'', '\''MeasureValueType'\'': '\''DOUBLE'\'', '\''Time'\'': '\''1609240692513'\'' }",
-            "partition-key": "key"
-        }
-    ]
-}'
-```
+This service takes advantage of the OpenAPI standard. More information can be found in [docs/openapi/README.md](docs/openapi/README.md)
 
 ## Plugins and integrations
 
