@@ -53,8 +53,6 @@ If developing the app then ensure you have [pre-commit](https://pre-commit.com/)
 
 Our decisions are recorded and maintained using the tool [https://github.com/npryce/adr-tools](https://github.com/npryce/adr-tools). As such, all records including diagrams can be found in [docs/architecture/README.md](docs/architecture/README.md)
 
-![OPG Metrics Terraform Infrastructure Diagram](./docs/images/infrastructure-diagram.png)
-
 ## Using the service
 
 If you choose to use the API Gateway endpoint, you can find more information in our OpenAPI Documentation in [docs/openapi/README.md](docs/openapi/README.md).
