@@ -1,10 +1,26 @@
-- name: Generate Swagger UI
-  uses: Legion2/swagger-ui-action@v1
-  with:
-    output: swagger-ui
-    spec-file: terraform/environment/api/openapi_spec.json
-- name: Deploy to GitHub Pages
-  uses: peaceiris/actions-gh-pages@v3
-  with:
-    github_token: ${{ secrets.GITHUB_TOKEN }}
-    publish_dir: swagger-ui
+name: Swagger-Documentation
+
+# Run this workflow every time a new commit pushed to your repository
+on: push
+
+jobs:
+  # Set the job key. The key is displayed as the job name
+  # when a job name is not provided
+  swagger-documenation:
+    # Name the Job
+    name: Publish Documentation
+    # Set the type of machine to run on
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Generate Swagger UI
+        uses: Legion2/swagger-ui-action@v1
+        with:
+          output: swagger-ui
+          spec-file: terraform/environment/api/openapi_spec.json
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          DEFAULT_BRANCH: ui-action
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: swagger-ui
