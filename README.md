@@ -1,29 +1,10 @@
 # OPG Metrics
 
-
 The Office of the Public Guardian metrics service: Managed by opg-org-infra &amp; Terraform
 
 Building a new metrics service for OPG.
 
-## Overview
-### Mission Statement
-
-OPG has many 'things' to measure to aid in decision making, but these are not visible to all or easily accessible in one place, making it difficult to see patterns and connections, or high level problems across products.
-
-### Problems this service aims to solve
-
-* A common language that can be used across teams and OPG.
-* Encourage and Gamify the culture of celebrating maintenance and managing legacy
-* Understanding our users over time
-* Hold ourselves accountable throughout the entire service life-cycle
-* Think about performance and monitoring at the start and what done/good looks like
-* Reduce barriers to entry for getting data
-
-### How should you use this service
-
-This service is not intended to be a place where you debug issues or store logs that you can diagnose problems. It is to enable you to pass key bits of information across multiple services so you can overlay data points, find patterns and maintain visibility of your service.
-
-If you do find something happening you should use other tools that are built for this in mind to dig deeper into the issue.
+To find out more about this service, see our [about this service](ABOUT_THIS_SERVICE.md) documentation.
 
 ## Plugins and integrations
 
@@ -56,6 +37,66 @@ Our decisions are recorded and maintained using the tool [https://github.com/npr
 ## Using the service
 
 If you choose to use the API Gateway endpoint, you can find more information in our OpenAPI Documentation in [docs/openapi/README.md](docs/openapi/README.md).
+
+# opg-sirius-infrastructure
+
+Sirius Infrastructure: Managed by opg-org-infra &amp; Terraform
+
+## Local Development
+
+### Environment Variables
+
+This repository comes with an `.envrc` file containing useful environment variables for working with this repository.
+
+`.envrc` can be sourced automatically using either [direnv](https://direnv.net) or manually with bash.
+
+```bash
+cd terraform/account && source .envrc
+cd terraform/environment && source .envrc
+```
+
+```bash
+cd terraform/account && direnv allow
+cd terraform/environment && direnv allow
+```
+
+## AWS Credentials Setup
+
+See [opg-org-infra/AWS-CONSOLE.md](https://github.com/ministryofjustice/opg-org-infra/blob/master/AWS-CONSOLE.md) for setup instructions.
+
+## Planning locally
+
+```bash
+cd terraform/environment && aws-vault exec identity -- terraform plan
+```
+
+### Update .envrc
+
+You'll need to update `TF_WORKSPACE` to point to the environment you want to run a task in.
+
+### Terraform Plan and Apply
+
+You need to perform terraform apply in order to generate some outputs which are needed
+by the ecs-runner tool. First you'll want to do a plan to ensure there are no unexpected changes
+
+```bash
+cd terraform/environment && aws-vault exec identity -- terraform plan
+```
+
+Terraform should want to create 3 resources, these should all be local files. If there are any other
+changes listed, ask someone in #opg-starfox to help you out.
+
+You can now do a terraform apply
+
+```bash
+cd terraform/environment && aws-vault exec identity -- terraform apply
+```
+
+After the apply is finished, you'll need to send all the outputs to one file using the command below
+
+```bash
+cd terraform/environment && aws-vault exec identity -- terraform output -json > terraform.output.json
+```
 
 ## License
 
