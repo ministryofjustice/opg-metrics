@@ -1,7 +1,10 @@
 name: Swagger-Documentation
 
 # Run this workflow every time a new commit pushed to your repository
-on: push
+on:
+  push:
+    branches:
+      - ui-action
 
 jobs:
   # Set the job key. The key is displayed as the job name
@@ -21,6 +24,5 @@ jobs:
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
-          DEFAULT_BRANCH: ui-action
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: swagger-ui
