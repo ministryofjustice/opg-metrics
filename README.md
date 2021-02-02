@@ -19,66 +19,45 @@ OPG has many 'things' to measure to aid in decision making, but these are not vi
 * Think about performance and monitoring at the start and what done/good looks like
 * Reduce barriers to entry for getting data
 
-
 ### How should you use this service
 
 This service is not intended to be a place where you debug issues or store logs that you can diagnose problems. It is to enable you to pass key bits of information across multiple services so you can overlay data points, find patterns and maintain visibility of your service.
 
 If you do find something happening you should use other tools that are built for this in mind to dig deeper into the issue.
 
-### Example integrations
+## Plugins and integrations
 
-As the service can take data from a REST endpoint, it makes it easy for you to integrate external services. An example of a few services that could be used are below.
+The service is built to allow flexibility and ease of integration into a wide range of services. More information on existing integrations can be found in [docs/integrations/README.md](docs/integrations/README.md).
 
-For a list of shared integrations please see [Plugins and integrations](#plugins-and-integrations) in this readme.
-
-* CircleCI Orb
-* Jenkins plugin
-* Call center integration
-* Offline data points
-* Cloudwatch
-* Jira
-* AWS Cost Explorer
-* Pa11y
-* Google Analytics
-* Real User Metrics
-* Google Sheets
-* Pager Duty
-
-
-## Requirements
+## Prerequisites
 
 aws-vault for managing AWS access.
 
 `brew install --cask aws-vault`
 
+[https://formulae.brew.sh/cask/aws-vault](https://formulae.brew.sh/cask/aws-vault)
+
 Terraform CLI for releasing to AWS and validation.
 
 `brew install terraform`
+
+[https://formulae.brew.sh/formula/terraform](https://formulae.brew.sh/formula/terraform)
 
 If developing the app then ensure you have [pre-commit](https://pre-commit.com/) installed to take advantage of the pre-commit [hooks](.pre-commit-config.yaml) we've added to the project to make PRs a more consistent and enjoyable experience.
 
 `brew install pre-commit`
 
-## Infrastructure
+[https://formulae.brew.sh/formula/pre-commit](https://formulae.brew.sh/formula/pre-commit)
+
+## Infrastructure and Architecture
+
+Our decisions are recorded and maintained using the tool [https://github.com/npryce/adr-tools](https://github.com/npryce/adr-tools). As such, all records including diagrams can be found in [docs/architecture/README.md](docs/architecture/README.md)
 
 ![OPG Metrics Terraform Infrastructure Diagram](./docs/images/infrastructure-diagram.png)
 
 ## Using the service
 
-The OPG Metrics Service allows you to send a PUT request to a endpoint with a JSON package in the body to record data. You don't have to use this point of entry however, the service is designed in a way that should you choose to, you can integrate directly with the Timestream database or the Kinesis Data Stream.
-
-If you choose to use the API Gateway endpoint, you can use the information below.
-
-### OpenAPI
-
-This service takes advantage of the OpenAPI standard. More information can be found in [docs/openapi/README.md](docs/openapi/README.md)
-
-## Plugins and integrations
-
-Below are a list of existing integrations that have been done and can be used with the service. Should you wish to add your own to the list, please raise a PR with a link and description.
-
-* TBC
+If you choose to use the API Gateway endpoint, you can find more information in our OpenAPI Documentation in [docs/openapi/README.md](docs/openapi/README.md).
 
 ## License
 
