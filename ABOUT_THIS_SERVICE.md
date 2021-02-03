@@ -2,7 +2,7 @@
 
 ## Mission Statement
 
-OPG has many 'things' to measure to aid in decision making, but these are not visible to all or easily accessible in one place, making it difficult to see patterns and connections, or high level problems across products.
+OPG has many 'things' to measure to aid in decision making, but these are not visible to all or accessible in one place, making it difficult to see patterns and connections, or high level problems across products.
 
 ## Problems this service aims to solve
 

@@ -10,7 +10,7 @@ diagrams [1. Record architecture decisions](0001-record-architecture-decisions.m
 
 ## Context
 
-Based on ADRs and developer need, we need to create a system that is light weight, fully managed and easy to integrate into.
+Based on ADRs and developer need, we need to create a system that is light weight, fully managed and to integrate into.
 
 ## Decision
 

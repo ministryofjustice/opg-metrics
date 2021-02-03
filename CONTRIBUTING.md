@@ -23,7 +23,7 @@ We have a pull request template, which will help you explain your work. It cover
 
 A green build on circle CI is required before a merge, along with approval from a member of the team.
 
-We use a rebase workflow. Our primary branch is *main*. Please rebase branches on main if you need to pull in changes and use squash an merge for the final commit so we can back out changes easily.
+We use a rebase workflow. Our primary branch is *main*. Please rebase branches on main if you need to pull in changes and use squash an merge for the final commit so we can back out changes.
 
 ## Commit messages
 

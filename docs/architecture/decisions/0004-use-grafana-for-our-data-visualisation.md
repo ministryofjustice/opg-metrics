@@ -8,9 +8,9 @@ Accepted
 
 ## Context
 
-We need a way to visualise our time series data for users to view and analyse data easily.
+We need a way to visualise our time series data for users to view and analyse data.
 
-We need the ability for authenticating users with levels of permissions for creation and viewing. A way to organise dashboards by project or area of interest should also be available from the solution to help navigate to information easily.
+We need the ability for authenticating users with levels of permissions for creation and viewing. A way to organise dashboards by project or area of interest should also be available from the solution to help navigate to information.
 
 It is not to be used for debugging, we have other solutions that provide and handle this sort of functionality. This should be for analysing metrics across a spectrum of sources and be able to overlay key points on top of each other.
 
