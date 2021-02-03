@@ -90,4 +90,4 @@ cd terraform/environment && aws-vault exec identity -- terraform apply
 
 ## License
 
-The OPG Metrics Service is released under the MIT license, a copy of which can be found in [LICENSE](LICENSE).
+The OPG Metrics Service is released under the MIT license, a copy of which can be found in [LICENCE](LICENCE).
