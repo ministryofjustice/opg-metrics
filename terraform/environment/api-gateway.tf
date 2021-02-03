@@ -41,8 +41,8 @@ resource "aws_api_gateway_rest_api" "kinesis_stream_api_gateway" {
 }
 
 locals {
-  openapispec = file("./swagger.json")
-  swagger_template_vars = {
+  openapispec = file("./api/openapi_spec.json")
+  openapi_template_vars = {
     region        = data.aws_region.current.name
     name          = var.name
     allowed_roles = aws_iam_role.kinesis_apigateway.arn
@@ -50,5 +50,5 @@ locals {
 }
 data "template_file" "_" {
   template = local.openapispec
-  vars     = local.swagger_template_vars
+  vars     = local.openapi_template_vars
 }
