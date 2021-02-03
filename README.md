@@ -42,10 +42,6 @@ Our decisions are recorded and maintained using the tool [https://github.com/npr
 
 If you choose to use the API Gateway endpoint, you can find more information in our OpenAPI Documentation in [docs/openapi/README.md](docs/openapi/README.md).
 
-# opg-sirius-infrastructure
-
-Sirius Infrastructure: Managed by opg-org-infra &amp; Terraform
-
 ## Local Development
 
 ### Environment Variables
@@ -80,26 +76,16 @@ You'll need to update `TF_WORKSPACE` to point to the environment you want to run
 
 ### Terraform Plan and Apply
 
-You need to perform terraform apply in order to generate some outputs which are needed
-by the ecs-runner tool. First you'll want to do a plan to ensure there are no unexpected changes
+To test and compare your changes you'll want to do a plan to ensure there are no unexpected changes
 
 ```bash
 cd terraform/environment && aws-vault exec identity -- terraform plan
 ```
 
-Terraform should want to create 3 resources, these should all be local files. If there are any other
-changes listed, ask someone in #opg-starfox to help you out.
-
-You can now do a terraform apply
+If everything returns as you expect, you can now do a terraform apply. This will deploy your changes to a development environment.
 
 ```bash
 cd terraform/environment && aws-vault exec identity -- terraform apply
-```
-
-After the apply is finished, you'll need to send all the outputs to one file using the command below
-
-```bash
-cd terraform/environment && aws-vault exec identity -- terraform output -json > terraform.output.json
 ```
 
 ## License
