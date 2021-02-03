@@ -32,9 +32,6 @@
             "description": "202 response",
             "schema": {
               "$ref": "#/definitions/PutMetricsResponse"
-            },
-            "default": {
-              "status": "Processing"
             }
           },
           "404": {
