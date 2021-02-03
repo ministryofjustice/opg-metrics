@@ -32,6 +32,9 @@
             "description": "202 response",
             "schema": {
               "$ref": "#/definitions/PutMetricsResponse"
+            },
+            "default": {
+              "status": "Processing"
             }
           },
           "404": {
@@ -162,8 +165,14 @@
       "title": "OPG Metrics successfule response definition.",
       "description": "Confirms the data was accepted by the system and is processing the data.",
       "type": "object",
-      "default": {
-        "status": "Processing"
+      "properties": {
+        "status": {
+          "type": "string",
+          "title": "Message to return on success",
+          "description": "Gives confirmation to the client that a request has been accepted.",
+          "maxLength": 20,
+          "pattern": "^[a-zA-Z-_]{1,20}$"
+        }
       }
     }
   }
