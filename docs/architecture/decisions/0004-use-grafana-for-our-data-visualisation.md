@@ -25,4 +25,3 @@ It is not available as a managed service within AWS, this means we will have to 
 We will be able to access data from our time series database with its connectivity and also connect to other services which we can overlay on top of one another. Exxamples of this are Cloudwatch, Jira, and Prometheus (Should this be something we want to look at in the future).
 
 The connection to the data source means we can swap Grafana out for another tool in the future should we wish without losing data.
-

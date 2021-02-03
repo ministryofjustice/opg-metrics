@@ -10,7 +10,7 @@ Accepted
 
 Data collected within the solution is stored in a Time Series format. This data can be stored in any type of database if needed, however we should use, if possible, a database that natively supports it. This will result in a more optimised system and therefore cheaper to run.
 
-The amount of data that gets sent to the database will grow over time and so it will need to be easily scalable and managable over this time. 
+The amount of data that gets sent to the database will grow over time and so it will need to be easily scalable and managable over this time.
 
 ## Decision
 
