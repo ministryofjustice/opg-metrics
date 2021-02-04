@@ -10,10 +10,6 @@ Building a new metrics service for OPG.
 
 To find out more about this service, see our [about this service](ABOUT_THIS_SERVICE.md) documentation.
 
-## Plugins and integrations
-
-The service is built to allow flexibility and ease of integration into a wide range of services. More information on existing integrations can be found in [docs/integrations/README.md](docs/integrations/README.md).
-
 ## Prerequisites
 
 aws-vault for managing AWS access.
@@ -42,6 +38,12 @@ Our decisions are recorded and maintained using the tool [https://github.com/npr
 
 If you choose to use the API Gateway endpoint, you can find more information in our OpenAPI Documentation in [docs/openapi/README.md](docs/openapi/README.md).
 
+For additional methods see the [Plugins and integrations](#plugins-and-integrations) section below.
+
+## Plugins and integrations
+
+The service is built to allow flexibility and ease of integration into a wide range of services. More information on existing integrations can be found in [docs/integrations/README.md](docs/integrations/README.md).
+
 ## Local Development
 
 ### Environment Variables
@@ -60,19 +62,14 @@ cd terraform/account && direnv allow
 cd terraform/environment && direnv allow
 ```
 
+### Update .envrc
+
+You'll need to update `TF_WORKSPACE` to point to the environment you want to run a task in.
+
 ## AWS Credentials Setup
 
 See [opg-org-infra/AWS-CONSOLE.md](https://github.com/ministryofjustice/opg-org-infra/blob/master/AWS-CONSOLE.md) for setup instructions.
 
-## Planning locally
-
-```bash
-cd terraform/environment && aws-vault exec identity -- terraform plan
-```
-
-### Update .envrc
-
-You'll need to update `TF_WORKSPACE` to point to the environment you want to run a task in.
 
 ### Terraform Plan and Apply
 
