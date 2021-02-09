@@ -18,6 +18,8 @@ aws-vault for managing AWS access.
 
 [https://formulae.brew.sh/cask/aws-vault](https://formulae.brew.sh/cask/aws-vault)
 
+Also see [https://docs.opg.service.justice.gov.uk/documentation/get_started.html#get-started](https://docs.opg.service.justice.gov.uk/documentation/get_started.html#get-started) for a full breakdown on how to setup your local environment for using Terraform and aws-vault.
+
 Terraform CLI for releasing to AWS and validation.
 
 `brew install terraform`
