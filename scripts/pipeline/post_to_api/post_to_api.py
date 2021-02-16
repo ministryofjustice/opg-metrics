@@ -56,6 +56,7 @@ class APIGatewayCaller:
           'Content-Type': 'application/json',
           'Content-Length': str(len(data)),
           }
+        print(method,url+path,headers)
         response = requests.request(
             method=method,
             url=url+path,
@@ -84,7 +85,7 @@ def main():
 
     with open(args.json_file) as json_file:
         json_data = json.load(json_file)
-        # print(json.dumps(json_data, indent = 4))
+        print(json.dumps(json_data, indent = 4))
         work.call_api_gateway(json_data, args.url)
 
 
