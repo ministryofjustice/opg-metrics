@@ -57,7 +57,7 @@ class APIGatewayCaller:
           }
         print(headers)
         response = requests.request(
-            method=method, url=url+path, auth=self.aws_auth, data=data, headers=headers)
+            method=method, url=url+path, auth=self.aws_auth, json=data, headers=headers)
         print(response.text)
 
 
