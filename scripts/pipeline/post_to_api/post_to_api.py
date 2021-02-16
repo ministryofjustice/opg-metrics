@@ -50,18 +50,17 @@ class APIGatewayCaller:
 
     def call_api_gateway(self, json_data, url):
         method = 'PUT'
-        data = str(json_data)
         path = '/{}/metrics'.format(self.api_gateway_stage)
         headers = {
           'Content-Type': 'application/json',
-          'Content-Length': str(len(data)),
+          'Content-Length': str(len(str(json_data))),
           }
-        print(method,url+path,headers)
+        # print(method,url+path,headers)
         response = requests.request(
             method=method,
             url=url+path,
             auth=self.aws_auth,
-            json=data,
+            json=json_data,
             headers=headers
         )
         print(response.text)
@@ -85,7 +84,7 @@ def main():
 
     with open(args.json_file) as json_file:
         json_data = json.load(json_file)
-        print(json.dumps(json_data, indent = 4))
+        # print(json.dumps(json_data, indent = 4))
         work.call_api_gateway(json_data, args.url)
 
 
