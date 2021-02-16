@@ -1,20 +1,20 @@
 {
-  "metrics": [
-      {
-          "metric": {
-              "Project": "opgtest",
-              "MeasureName": "release",
-              "MeasureValue": "1.0",
-              "Time": "1609240692503"
-          }
-      },
-      {
-          "metric": {
-              "Project": "opgtest",
-              "MeasureName": "release",
-              "MeasureValue": "1.0",
-              "Time": "1609240692513"
-          }
-      }
-  ]
+    "metrics": [
+        {
+            "metric": {
+                "Project": "opgtest",
+                "MeasureName": "release",
+                "MeasureValue": "1.0",
+                "Time": "1609240692503"
+            }
+        },
+        {
+            "metric": {
+                "Project": "opgtest",
+                "MeasureName": "release",
+                "MeasureValue": "1.0",
+                "Time": "1609240692513"
+            }
+        }
+    ]
 }

@@ -1,6 +1,7 @@
 import boto3
 import argparse
 import json
+from requests import auth
 from requests_aws4auth import AWS4Auth
 import requests
 import os
@@ -48,9 +49,14 @@ class APIGatewayCaller:
 
     def call_api_gateway(self, json_data, url):
         method = 'PUT'
-        headers = {'Content-Type': 'application/json'}
+        data = str(json_data)
+        headers = {
+          'Content-Type': 'application/json',
+          'Content-Length': str(len(data)),
+          }
+        print(headers)
         response = requests.request(
-            method, url, auth=self.aws_auth, data=json_data, headers=headers)
+            method, url, auth=self.aws_auth, data=data, headers=headers)
         print(response.text)
 
 
@@ -72,7 +78,7 @@ def main():
 
     with open(args.json_file) as json_file:
         json_data = json.load(json_file)
-        print(json_data)
+        print(json.dumps(json_data, indent = 4))
         work.call_api_gateway(json_data, args.url)
 
 
