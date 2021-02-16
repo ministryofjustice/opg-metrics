@@ -1,33 +1,27 @@
-resource "aws_api_gateway_stage" "kinesis_stream_api_gateway" {
-  stage_name    = "prod"
-  rest_api_id   = aws_api_gateway_rest_api.kinesis_stream_api_gateway.id
-  deployment_id = aws_api_gateway_deployment.kinesis_stream_api_gateway.id
-}
-
 resource "aws_api_gateway_deployment" "kinesis_stream_api_gateway" {
-  depends_on  = [aws_api_gateway_integration.kinesis_stream_api_gateway]
   rest_api_id = aws_api_gateway_rest_api.kinesis_stream_api_gateway.id
-  stage_name  = "dev"
+
+  triggers = {
+    redeployment = sha1(jsonencode(aws_api_gateway_rest_api.kinesis_stream_api_gateway.body))
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  stage_name = ""
 }
 
-resource "aws_api_gateway_resource" "kinesis_stream_api_gateway" {
-  rest_api_id = aws_api_gateway_rest_api.kinesis_stream_api_gateway.id
-  parent_id   = aws_api_gateway_rest_api.kinesis_stream_api_gateway.root_resource_id
-  path_part   = "mytestresource"
-}
-
-resource "aws_api_gateway_method" "kinesis_stream_api_gateway" {
+resource "aws_api_gateway_stage" "kinesis_stream_api_gateway" {
+  deployment_id = aws_api_gateway_deployment.kinesis_stream_api_gateway.id
   rest_api_id   = aws_api_gateway_rest_api.kinesis_stream_api_gateway.id
-  resource_id   = aws_api_gateway_resource.kinesis_stream_api_gateway.id
-  http_method   = "GET"
-  authorization = "NONE"
+  stage_name    = "prod"
 }
 
-resource "aws_api_gateway_integration" "kinesis_stream_api_gateway" {
-  rest_api_id = aws_api_gateway_rest_api.kinesis_stream_api_gateway.id
-  resource_id = aws_api_gateway_resource.kinesis_stream_api_gateway.id
-  http_method = aws_api_gateway_method.kinesis_stream_api_gateway.http_method
-  type        = "MOCK"
+resource "aws_api_gateway_stage" "kinesis_stream_api_gateway_dev" {
+  deployment_id = aws_api_gateway_deployment.kinesis_stream_api_gateway.id
+  rest_api_id   = aws_api_gateway_rest_api.kinesis_stream_api_gateway.id
+  stage_name    = "dev"
 }
 
 resource "aws_api_gateway_rest_api" "kinesis_stream_api_gateway" {
