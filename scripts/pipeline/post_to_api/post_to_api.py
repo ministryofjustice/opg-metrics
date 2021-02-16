@@ -57,7 +57,12 @@ class APIGatewayCaller:
           'Content-Length': str(len(data)),
           }
         response = requests.request(
-            method=method, url=url+path, auth=self.aws_auth, json=data, headers=headers)
+            method=method,
+            url=url+path,
+            auth=self.aws_auth,
+            json=data,
+            headers=headers
+        )
         print(response.text)
 
 
