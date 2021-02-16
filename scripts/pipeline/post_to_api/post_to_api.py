@@ -50,13 +50,14 @@ class APIGatewayCaller:
     def call_api_gateway(self, json_data, url):
         method = 'PUT'
         data = str(json_data)
+        path = '/development/metrics'
         headers = {
           'Content-Type': 'application/json',
           'Content-Length': str(len(data)),
           }
         print(headers)
         response = requests.request(
-            method, url, auth=self.aws_auth, data=data, headers=headers)
+            method=method, url=url+path, auth=self.aws_auth, data=data, headers=headers)
         print(response.text)
 
 
