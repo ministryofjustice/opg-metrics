@@ -9,7 +9,7 @@ resource "aws_api_gateway_deployment" "kinesis_stream_api_gateway" {
     create_before_destroy = true
   }
 
-  stage_name = ""
+  stage_name = terraform.workspace
 }
 
 resource "aws_api_gateway_stage" "kinesis_stream_api_gateway" {
