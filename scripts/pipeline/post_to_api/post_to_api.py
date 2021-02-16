@@ -16,6 +16,7 @@ class APIGatewayCaller:
     def __init__(self, target_production):
         self.choose_target_gateway(target_production)
         self.set_iam_role_session()
+        self.api_gateway_stage = os.getenv('TF_WORKSPACE', "development")
         self.aws_auth = AWS4Auth(
             self.aws_iam_session['Credentials']['AccessKeyId'],
             self.aws_iam_session['Credentials']['SecretAccessKey'],
@@ -50,12 +51,11 @@ class APIGatewayCaller:
     def call_api_gateway(self, json_data, url):
         method = 'PUT'
         data = str(json_data)
-        path = '/development/metrics'
+        path = '/{}/metrics'.format(self.api_gateway_stage)
         headers = {
           'Content-Type': 'application/json',
           'Content-Length': str(len(data)),
           }
-        print(headers)
         response = requests.request(
             method=method, url=url+path, auth=self.aws_auth, json=data, headers=headers)
         print(response.text)
@@ -79,7 +79,7 @@ def main():
 
     with open(args.json_file) as json_file:
         json_data = json.load(json_file)
-        print(json.dumps(json_data, indent = 4))
+        # print(json.dumps(json_data, indent = 4))
         work.call_api_gateway(json_data, args.url)
 
 
