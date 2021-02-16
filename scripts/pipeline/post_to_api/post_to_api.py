@@ -14,21 +14,15 @@ class APIGatewayCaller:
     aws_auth = ''
 
     def __init__(self, target_production):
-        self.choose_target_gateway(target_production)
         self.set_iam_role_session()
         self.api_gateway_stage = os.getenv('TF_WORKSPACE', "development")
+        self.aws_account_id = '679638075911'
         self.aws_auth = AWS4Auth(
             self.aws_iam_session['Credentials']['AccessKeyId'],
             self.aws_iam_session['Credentials']['SecretAccessKey'],
             'eu-west-1',
             'execute-api',
             session_token=self.aws_iam_session['Credentials']['SessionToken'])
-
-    def choose_target_gateway(self, target_production):
-        if target_production:
-            self.aws_account_id = '679638075911'
-        else:
-            self.aws_account_id = '679638075911'
 
     def set_iam_role_session(self):
         if os.getenv('CI'):
@@ -69,9 +63,6 @@ def main():
                         help="Relative path to json file containing metrics data to be pushed")
     parser.add_argument("--url", type=str,
                         help="API URL to use")
-    parser.add_argument('--production', dest='target_production', action='store_const',
-                        const=True, default=False,
-                        help='target the production api gateway')
 
     args = parser.parse_args()
     work = APIGatewayCaller(args.target_production)
