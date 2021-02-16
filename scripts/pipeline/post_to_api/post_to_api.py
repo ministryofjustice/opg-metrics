@@ -25,10 +25,8 @@ class APIGatewayCaller:
     def choose_target_gateway(self, target_production):
         if target_production:
             self.aws_account_id = '679638075911'
-            self.api_gateway_url = 'https://1c370c6bbl.execute-api.eu-west-1.amazonaws.com/dev/metrics'
         else:
             self.aws_account_id = '679638075911'
-            self.api_gateway_url = 'https://1c370c6bbl.execute-api.eu-west-1.amazonaws.com/dev/metrics'
 
     def set_iam_role_session(self):
         if os.getenv('CI'):
@@ -48,10 +46,9 @@ class APIGatewayCaller:
         )
         self.aws_iam_session = session
 
-    def call_api_gateway(self, json_data):
+    def call_api_gateway(self, json_data, url):
         method = 'PUT'
         headers = {'Content-Type': 'application/json'}
-        url = str(self.api_gateway_url)
         response = requests.request(
             method, url, auth=self.aws_auth, data=json_data, headers=headers)
         print(response.text)
@@ -63,6 +60,8 @@ def main():
 
     parser.add_argument("--json_file", type=str,
                         help="Relative path to json file containing metrics data to be pushed")
+    parser.add_argument("--url", type=str,
+                        help="API URL to use")
     parser.add_argument('--production', dest='target_production', action='store_const',
                         const=True, default=False,
                         help='target the production api gateway')
@@ -74,7 +73,7 @@ def main():
     with open(args.json_file) as json_file:
         json_data = json.load(json_file)
         print(json_data)
-        work.call_api_gateway(json_data)
+        work.call_api_gateway(json_data, args.url)
 
 
 if __name__ == "__main__":
