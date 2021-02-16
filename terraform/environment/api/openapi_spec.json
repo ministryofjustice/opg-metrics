@@ -28,6 +28,12 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "200 response",
+            "schema": {
+              "$ref": "#/definitions/PutMetricsResponse"
+            }
+          },
           "202": {
             "description": "202 response",
             "schema": {
@@ -47,11 +53,8 @@
           "credentials": "${allowed_roles}",
           "uri": "arn:aws:apigateway:${region}:kinesis:action/PutRecords",
           "responses": {
-            "default": {
-              "statusCode": "200",
-              "responseTemplates" : {
-                "application/json" : "{ \"status\": \"Processing\" }"
-            }
+            "200": {
+              "statusCode": "200"
             }
           },
           "requestTemplates": {
