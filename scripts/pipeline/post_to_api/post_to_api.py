@@ -54,6 +54,7 @@ class APIGatewayCaller:
         headers = {
           'Content-Type': 'application/json',
           'Content-Length': str(len(str(json_data))),
+          'x-api-key': os.getenv('API_KEY')
           }
         # print(method,url+path,headers)
         response = requests.request(
