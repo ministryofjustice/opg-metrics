@@ -8,6 +8,12 @@ Within the solution we have provided a [OpenAPI specification](/terraform/enviro
 
 Upon a merge into `main` a Github Action will build and publish HTML documentation to github pages. This can be found here [https://ministryofjustice.github.io/opg-metrics/](https://ministryofjustice.github.io/opg-metrics/).
 
+## Authentication
+
+To use the endpoint you will need to request an API Key that is specific to your service. This can be done via the AWS Console and can be setup by a member of the team upon request.
+
+You will need to sign your requests made using this key, a Python implementation of how to do this can be found in [/scripts/pipeline/post_to_api/post_to_api.py](/scripts/pipeline/post_to_api/post_to_api.py) or you can consult the AWS Documentation for other ways to integrate via SDKs available.
+
 ## Integration and Mocking
 
 This OpenAPI specification can be used to build out a Mock service of your choosing. Below is an example using Prism.
