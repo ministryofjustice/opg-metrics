@@ -66,6 +66,19 @@
       }
     }
   },
+  "securityDefinitions" : {
+    "api_key" : {
+      "type" : "apiKey",
+      "name" : "x-api-key",
+      "in" : "header"
+    },
+    "sigv4" : {
+      "type" : "apiKey",
+      "name" : "Authorization",
+      "in" : "header",
+      "x-amazon-apigateway-authtype" : "awsSigv4"
+    }
+  },
   "definitions": {
     "ErrorModel": {
       "type": "object",
