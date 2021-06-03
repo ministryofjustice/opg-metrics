@@ -17,12 +17,12 @@ class APIGatewayCaller:
         self.choose_target_gateway(target_production)
         self.set_iam_role_session()
         self.api_gateway_stage = os.getenv('TF_WORKSPACE', "development")
-        self.aws_auth = AWS4Auth(
-            self.aws_iam_session['Credentials']['AccessKeyId'],
-            self.aws_iam_session['Credentials']['SecretAccessKey'],
-            'eu-west-1',
-            'execute-api',
-            session_token=self.aws_iam_session['Credentials']['SessionToken'])
+        #self.aws_auth = AWS4Auth(
+            #self.aws_iam_session['Credentials']['AccessKeyId'],
+            #self.aws_iam_session['Credentials']['SecretAccessKey'],
+            #'eu-west-1',
+            #'execute-api',
+            #session_token=self.aws_iam_session['Credentials']['SessionToken'])
 
     def choose_target_gateway(self, target_production):
         if target_production:
@@ -60,7 +60,6 @@ class APIGatewayCaller:
         response = requests.request(
             method=method,
             url=url+path,
-            auth=self.aws_auth,
             json=json_data,
             headers=headers
         )
