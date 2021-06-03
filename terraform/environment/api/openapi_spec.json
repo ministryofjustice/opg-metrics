@@ -123,28 +123,28 @@
                     "type": "string",
                     "title": "The service or project name.",
                     "description": "Gives the ability to query against a particular service to know the purpose of this metric.",
-                    "maxLength": 15,
+                    "maxLength": 25,
                     "pattern": "^[a-zA-Z-_]{1,25}$"
                   },
                   "Category": {
                     "type": "string",
                     "title": "Assign metric a Category (Optional)",
                     "description": "Optionally tag the metric with a Category to better enable finer grouping of data.",
-                    "maxLength": 15,
+                    "maxLength": 25,
                     "pattern": "^[a-zA-Z-_]{1,25}$"
                   },
                   "Subcategory": {
                     "type": "string",
                     "title": "Assign metric a Subcategory (Optional)",
                     "description": "Optionally tag the metric with a Subcategory to better enable finer grouping of data.",
-                    "maxLength": 15,
+                    "maxLength": 25,
                     "pattern": "^[a-zA-Z-_]{1,25}$"
                   },
                   "MeasureName": {
                     "type": "string",
                     "title": "The metric name",
                     "description": "The name of the metric you want to record the measure under.",
-                    "maxLength": 15,
+                    "maxLength": 25,
                     "pattern": "^[a-zA-Z-_]{1,25}$"
                   },
                   "MeasureValue": {
