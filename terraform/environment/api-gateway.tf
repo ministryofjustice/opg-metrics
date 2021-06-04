@@ -40,3 +40,8 @@ data "template_file" "_" {
   template = local.openapispec
   vars     = local.openapi_template_vars
 }
+
+resource "aws_cloudwatch_log_group" "kinesis_stream_api_gateway" {
+  name              = "API-Gateway-Execution-Logs_${aws_api_gateway_rest_api.kinesis_stream_api_gateway.id}/${var.terraform.workspace}"
+  retention_in_days = 7
+}
