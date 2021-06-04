@@ -47,3 +47,54 @@ resource "aws_cloudwatch_log_group" "kinesis_stream_api_gateway" {
   name              = "API-Gateway-Execution-Logs_${aws_api_gateway_rest_api.kinesis_stream_api_gateway.id}/${terraform.workspace}"
   retention_in_days = 7
 }
+
+
+resource "aws_api_gateway_account" "kinesis_stream_api_gateway" {
+  cloudwatch_role_arn = aws_iam_role.cloudwatch_kinesis_stream_api_gateway.arn
+}
+
+resource "aws_iam_role" "cloudwatch_kinesis_stream_api_gateway" {
+  name = "api_gateway_cloudwatch_kinesis_stream_api_gateway"
+
+  assume_role_policy = data.aws_iam_policy_document.cloudwatch_kinesis_stream_api_gateway_assume_role.json
+}
+
+
+data "aws_iam_policy_document" "cloudwatch_kinesis_stream_api_gateway_assume_role" {
+  statement {
+    effect  = "Allow"
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      identifiers = ["apigateway.amazonaws.com"]
+      type        = "Service"
+    }
+  }
+}
+
+resource "aws_iam_role_policy" "cloudwatch" {
+  name = "default"
+  role = aws_iam_role.cloudwatch.id
+
+  policy = data.aws_iam_policy_document.cloudwatch_kinesis_stream_api_gateway_permissions.json
+}
+
+data "aws_iam_policy_document" "cloudwatch_kinesis_stream_api_gateway_permissions" {
+  statement {
+    effect = "Allow"
+
+    actions = [
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:DescribeLogGroups",
+      "logs:DescribeLogStreams",
+      "logs:PutLogEvents",
+      "logs:GetLogEvents",
+      "logs:FilterLogEvents",
+    ]
+
+    resources = [
+      "*",
+    ]
+  }
+}
