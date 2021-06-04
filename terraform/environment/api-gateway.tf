@@ -43,6 +43,6 @@ data "template_file" "_" {
 }
 
 resource "aws_cloudwatch_log_group" "kinesis_stream_api_gateway" {
-  name              = "API-Gateway-Execution-Logs_${aws_api_gateway_rest_api.kinesis_stream_api_gateway.id}/${var.terraform.workspace}"
+  name              = "API-Gateway-Execution-Logs_${aws_api_gateway_rest_api.kinesis_stream_api_gateway.id}/${terraform.workspace}"
   retention_in_days = 7
 }
