@@ -13,10 +13,11 @@ resource "aws_api_gateway_deployment" "kinesis_stream_api_gateway" {
 }
 
 resource "aws_api_gateway_stage" "kinesis_stream_api_gateway" {
-  depends_on    = [aws_cloudwatch_log_group.kinesis_stream_api_gateway]
-  deployment_id = aws_api_gateway_deployment.kinesis_stream_api_gateway.id
-  rest_api_id   = aws_api_gateway_rest_api.kinesis_stream_api_gateway.id
-  stage_name    = terraform.workspace
+  depends_on         = [aws_cloudwatch_log_group.kinesis_stream_api_gateway]
+  deployment_id      = aws_api_gateway_deployment.kinesis_stream_api_gateway.id
+  rest_api_id        = aws_api_gateway_rest_api.kinesis_stream_api_gateway.id
+  cache_cluster_size = "0.5"
+  stage_name         = terraform.workspace
 }
 
 resource "aws_api_gateway_rest_api" "kinesis_stream_api_gateway" {
