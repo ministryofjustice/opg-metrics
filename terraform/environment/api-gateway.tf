@@ -72,9 +72,9 @@ data "aws_iam_policy_document" "cloudwatch_kinesis_stream_api_gateway_assume_rol
   }
 }
 
-resource "aws_iam_role_policy" "cloudwatch" {
+resource "aws_iam_role_policy" "cloudwatchcloudwatch_kinesis_stream_api_gateway_permissions" {
   name = "default"
-  role = aws_iam_role.cloudwatch.id
+  role = aws_iam_role.cloudwatch_kinesis_stream_api_gateway.id
 
   policy = data.aws_iam_policy_document.cloudwatch_kinesis_stream_api_gateway_permissions.json
 }
