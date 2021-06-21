@@ -2,7 +2,7 @@ locals {
   account_name = lookup(var.account_mapping, terraform.workspace, "development")
   environment  = lower(terraform.workspace)
 
-  dns_namespace_acc = local.environment == "production" ? "" : "${local.account_name}."
+  dns_namespace_env = local.environment == "production" ? "" : "${local.account_name}."
 
   mandatory_moj_tags = {
     business-unit    = "OPG"
