@@ -18,6 +18,9 @@ resource "aws_route53_record" "opg_metrics" {
 resource "aws_api_gateway_domain_name" "opg_metrics" {
   certificate_arn = aws_acm_certificate_validation.certificate_view.certificate_arn
   domain_name     = "${local.dns_namespace_env}api.${data.aws_route53_zone.opg_metrics.name}"
+  endpoint_configuration {
+    types = ["REGIONAL"]
+  }
 }
 
 resource "aws_route53_record" "certificate_validation_view" {
