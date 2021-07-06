@@ -4,6 +4,7 @@ data "aws_route53_zone" "opg_metrics" {
 }
 
 resource "aws_route53_record" "opg_metrics" {
+  provider = aws.management
   # <environment.>api.metrics.opg.service.justice.gov.uk
   name    = "${local.dns_namespace_env}api.${data.aws_route53_zone.opg_metrics.name}"
   type    = "A"
