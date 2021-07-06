@@ -4,6 +4,7 @@ data "aws_route53_zone" "opg_metrics" {
 }
 
 resource "aws_route53_record" "opg_metrics" {
+  provider = aws.management
   # <environment.>api.metrics.opg.service.justice.gov.uk
   name    = "${local.dns_namespace_env}api.${data.aws_route53_zone.opg_metrics.name}"
   type    = "A"
@@ -16,8 +17,9 @@ resource "aws_route53_record" "opg_metrics" {
 }
 
 resource "aws_api_gateway_domain_name" "opg_metrics" {
-  certificate_arn = aws_acm_certificate_validation.certificate_view.certificate_arn
-  domain_name     = "${local.dns_namespace_env}api.${data.aws_route53_zone.opg_metrics.name}"
+  regional_certificate_arn = aws_acm_certificate_validation.certificate_view.certificate_arn
+  domain_name              = "${local.dns_namespace_env}api.${data.aws_route53_zone.opg_metrics.name}"
+  security_policy          = "TLS_1_2"
   endpoint_configuration {
     types = ["REGIONAL"]
   }
