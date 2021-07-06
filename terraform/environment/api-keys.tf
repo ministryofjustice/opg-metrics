@@ -18,9 +18,9 @@ resource "aws_api_gateway_usage_plan" "trusted_services" {
   }
 
   quota_settings {
-    limit  = 20
+    limit  = 4000
     offset = 2
-    period = "WEEK"
+    period = "DAY"
   }
 
   throttle_settings {
