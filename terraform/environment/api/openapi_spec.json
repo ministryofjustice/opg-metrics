@@ -140,6 +140,13 @@
                     "maxLength": 25,
                     "pattern": "^[a-zA-Z-_]{1,25}$"
                   },
+                  "Environment": {
+                    "type": "string",
+                    "title": "Sets the environment the metric has come from (Optional)",
+                    "description": "Optionally sets the environment the metric has come from, e.g. development, preproduction, live.",
+                    "maxLength": 25,
+                    "pattern": "^[a-zA-Z-_]{1,25}$"
+                  },
                   "MeasureName": {
                     "type": "string",
                     "title": "The metric name",
@@ -169,7 +176,7 @@
       }
     },
     "PutMetricsResponse": {
-      "title": "OPG Metrics successfule response definition.",
+      "title": "OPG Metrics successful response definition.",
       "description": "Confirms the data was accepted by the system and is processing the data.",
       "type": "object",
       "properties": {

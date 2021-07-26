@@ -22,6 +22,7 @@
         "Project": "opgtest",
         "Category": "client",
         "Subcategory": "webvitals",
+        "Environment": "development",
         "MeasureName": "cumulative_layout_shift",
         "MeasureValue": "1.1",
         "Time": "1609240692533"
