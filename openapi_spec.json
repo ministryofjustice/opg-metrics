@@ -123,8 +123,8 @@
                     "type": "string",
                     "title": "The service or project name.",
                     "description": "Gives the ability to query against a particular service to know the purpose of this metric.",
-                    "maxLength": 25,
-                    "pattern": "^[a-zA-Z-_]{1,25}$"
+                    "maxLength": 32,
+                    "pattern": "^[a-zA-Z-_]{1,32}$"
                   },
                   "Category": {
                     "type": "string",
@@ -151,15 +151,15 @@
                     "type": "string",
                     "title": "The metric name",
                     "description": "The name of the metric you want to record the measure under.",
-                    "maxLength": 25,
-                    "pattern": "^[a-zA-Z-_]{1,25}$"
+                    "maxLength": 64,
+                    "pattern": "^[a-zA-Z-_]{1,64}$"
                   },
                   "MeasureValue": {
                     "type": "string",
                     "title": "The metric value",
                     "description": "A alpha value that defines the value you want to record.",
-                    "maxLength": 5,
-                    "pattern": "^[0-9\\.]{1,5}$"
+                    "maxLength": 20,
+                    "pattern": "^[0-9\\.]{1,20}$"
                   },
                   "Time": {
                     "type": "string",
