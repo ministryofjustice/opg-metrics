@@ -1,53 +1,73 @@
 {
-  "swagger": "2.0",
+  "openapi": "3.0.3",
   "info": {
     "title": "OPG Metrics Rest API",
-    "version": "0.0.1"
+    "version": "0.0.2"
   },
-  "basePath": "/kinesis",
-  "schemes": ["https"],
   "x-amazon-apigateway-request-validators": {
-    "Validate body": {
-      "validateRequestParameters": false,
-      "validateRequestBody": true
+    "all": {
+      "validateRequestBody": true,
+      "validateRequestParameters": true
+    },
+    "params-only": {
+      "validateRequestBody": false,
+      "validateRequestParameters": true
+    }
+  },
+  "x-amazon-apigateway-gateway-responses": {
+    "BAD_REQUEST_BODY": {
+      "statusCode": 400,
+      "responseTemplates": {
+        "application/json": "{\n     \"message\": $context.error.validationErrorString,\n      \"type\": $context.error.responseType,\n     \"statusCode\": \"'400'\"\n}"
+      }
     }
   },
   "paths": {
     "/metrics": {
       "put": {
-        "consumes": ["application/json"],
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "PutMetrics",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/PutMetrics"
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PutMetrics"
+              }
             }
-          }
-        ],
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "200 response",
-            "schema": {
-              "$ref": "#/definitions/PutMetricsResponse"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PutMetricsResponse"
+                }
+              }
             }
           },
           "202": {
             "description": "202 response",
-            "schema": {
-              "$ref": "#/definitions/PutMetricsResponse"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PutMetricsResponse"
+                }
+              }
             }
           },
           "404": {
             "description": "Not found",
-            "schema": {
-              "$ref": "#/definitions/ErrorModel"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
             }
           }
         },
-        "x-amazon-apigateway-request-validator": "Validate body",
+        "x-amazon-apigateway-request-validator": "all",
         "x-amazon-apigateway-integration": {
           "type": "aws",
           "credentials": "${allowed_roles}",
@@ -66,126 +86,145 @@
       }
     }
   },
-  "securityDefinitions" : {
-    "api_key" : {
-      "type" : "apiKey",
-      "name" : "x-api-key",
-      "in" : "header"
+  "servers": [
+    {
+      "url": "/kinesis"
     }
-  },
-  "definitions": {
-    "ErrorModel": {
-      "type": "object",
-      "required": ["message", "code"],
-      "properties": {
-        "message": {
-          "type": "string",
-          "maxLength": 200,
-          "pattern": "^[0-9a-zA-Z]$"
-        },
-        "code": {
-          "type": "integer",
-          "minimum": 100,
-          "maximum": 600,
-          "pattern": "^[1-9]{3}$",
-          "format": "-"
-        }
+  ],
+  "components": {
+    "securitySchemes": {
+      "api_key": {
+        "type": "apiKey",
+        "name": "x-api-key",
+        "in": "header"
       }
     },
-    "PutMetrics": {
-      "title": "OPG Metrics data object definition.",
-      "description": "The metrics array can contain between 1 and 20 individual metrics at a time.",
-      "required": ["metrics"],
-      "properties": {
-        "metrics": {
-          "maxItems": 20,
-          "type": "array",
-          "title": "Individual metric to be recorded.",
-          "description": "Contains an array of individual metrics to be consumed by the service.",
-          "default": [],
-          "items": {
-            "type": "object",
-            "title": "The first anyOf schema",
-            "description": "A anyOf wrapper around the individual metric.",
-            "default": {},
-            "required": ["metric"],
-            "additionalProperties": false,
-            "properties": {
-              "metric": {
-                "type": "object",
-                "title": "The metric schema.",
-                "description": "The individual metric object that is required to record an entry successfully.",
-                "default": {},
-                "required": ["Project", "Time", "MeasureName", "MeasureValue"],
-                "additionalProperties": false,
-                "properties": {
-                  "Project": {
-                    "type": "string",
-                    "title": "The service or project name.",
-                    "description": "Gives the ability to query against a particular service to know the purpose of this metric.",
-                    "maxLength": 32,
-                    "pattern": "^[a-zA-Z-_0-9]{1,32}$"
-                  },
-                  "Category": {
-                    "type": "string",
-                    "title": "Assign metric a Category (Optional)",
-                    "description": "Optionally tag the metric with a Category to better enable finer grouping of data.",
-                    "maxLength": 25,
-                    "pattern": "^[a-zA-Z-_0-9]{1,25}$"
-                  },
-                  "Subcategory": {
-                    "type": "string",
-                    "title": "Assign metric a Subcategory (Optional)",
-                    "description": "Optionally tag the metric with a Subcategory to better enable finer grouping of data.",
-                    "maxLength": 25,
-                    "pattern": "^[a-zA-Z-_0-9]{1,25}$"
-                  },
-                  "Environment": {
-                    "type": "string",
-                    "title": "Sets the environment the metric has come from (Optional)",
-                    "description": "Optionally sets the environment the metric has come from, e.g. development, preproduction, live.",
-                    "maxLength": 25,
-                    "pattern": "^[a-zA-Z-_0-9]{1,25}$"
-                  },
-                  "MeasureName": {
-                    "type": "string",
-                    "title": "The metric name",
-                    "description": "The name of the metric you want to record the measure under.",
-                    "maxLength": 64,
-                    "pattern": "^[a-zA-Z-_0-9]{1,64}$"
-                  },
-                  "MeasureValue": {
-                    "type": "string",
-                    "title": "The metric value",
-                    "description": "A alpha value that defines the value you want to record.",
-                    "maxLength": 20,
-                    "pattern": "^[0-9\\.]{1,20}$"
-                  },
-                  "Time": {
-                    "type": "string",
-                    "title": "The Time schema",
-                    "description": "A 13 digit timestamp of the metrics event",
-                    "maxLength": 13,
-                    "pattern": "^[0-9]{13}$"
+    "schemas": {
+      "ErrorModel": {
+        "type": "object",
+        "required": ["message", "code"],
+        "properties": {
+          "message": {
+            "type": "string",
+            "maxLength": 200,
+            "pattern": "^[0-9a-zA-Z]$"
+          },
+          "code": {
+            "type": "integer",
+            "minimum": 100,
+            "maximum": 600,
+            "pattern": "^[1-9]{3}$",
+            "format": "-"
+          }
+        }
+      },
+      "PutMetrics": {
+        "title": "OPG Metrics data object definition.",
+        "description": "The metrics array can contain between 1 and 20 individual metrics at a time.",
+        "required": ["metrics"],
+        "properties": {
+          "metrics": {
+            "maxItems": 20,
+            "type": "array",
+            "title": "Individual metric to be recorded.",
+            "description": "Contains an array of individual metrics to be consumed by the service.",
+            "default": [],
+            "items": {
+              "type": "object",
+              "title": "The first anyOf schema",
+              "description": "A anyOf wrapper around the individual metric.",
+              "default": {},
+              "required": ["metric"],
+              "additionalProperties": false,
+              "properties": {
+                "metric": {
+                  "type": "object",
+                  "title": "The metric schema.",
+                  "description": "The individual metric object that is required to record an entry successfully.",
+                  "default": {},
+                  "required": [
+                    "Project",
+                    "Time",
+                    "MeasureName",
+                    "MeasureValue"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "Project": {
+                      "type": "string",
+                      "title": "The service or project name.",
+                      "description": "Gives the ability to query against a particular service to know the purpose of this metric.",
+                      "maxLength": 32,
+                      "pattern": "^[a-zA-Z-_0-9]{1,32}$"
+                    },
+                    "Category": {
+                      "type": "string",
+                      "title": "Assign metric a Category (Optional)",
+                      "description": "Optionally tag the metric with a Category to better enable finer grouping of data.",
+                      "maxLength": 25,
+                      "pattern": "^[a-zA-Z-_0-9]{1,25}$"
+                    },
+                    "Subcategory": {
+                      "type": "string",
+                      "title": "Assign metric a Subcategory (Optional)",
+                      "description": "Optionally tag the metric with a Subcategory to better enable finer grouping of data.",
+                      "maxLength": 25,
+                      "pattern": "^[a-zA-Z-_0-9]{1,25}$"
+                    },
+                    "Environment": {
+                      "type": "string",
+                      "title": "Sets the environment the metric has come from (Optional)",
+                      "description": "Optionally sets the environment the metric has come from, e.g. development, preproduction, live.",
+                      "maxLength": 25,
+                      "pattern": "^[a-zA-Z-_0-9]{1,25}$"
+                    },
+                    "MeasureName": {
+                      "type": "string",
+                      "title": "The metric name",
+                      "description": "The name of the metric you want to record the measure under.",
+                      "maxLength": 64,
+                      "pattern": "^[a-zA-Z-_0-9]{1,64}$"
+                    },
+                    "MeasureValue": {
+                      "type": "string",
+                      "title": "The metric value",
+                      "description": "A alpha value that defines the value you want to record.",
+                      "maxLength": 20,
+                      "pattern": "^[0-9\\.]{1,20}$"
+                    },
+                    "MeasureValueType": {
+                      "type": "string",
+                      "title": "The metric value type",
+                      "description": "A predefined value from DOUBLE | BIGINT | VARCHAR | BOOLEAN. Default is DOUBLE.",
+                      "maxLength": 8,
+                      "pattern": "^[A-Z]{1,8}$"
+                    },
+                    "Time": {
+                      "type": "string",
+                      "title": "The Time schema",
+                      "description": "A 13 digit timestamp of the metrics event",
+                      "maxLength": 13,
+                      "pattern": "^[0-9]{13}$"
+                    }
                   }
                 }
               }
             }
           }
         }
-      }
-    },
-    "PutMetricsResponse": {
-      "title": "OPG Metrics successful response definition.",
-      "description": "Confirms the data was accepted by the system and is processing the data.",
-      "type": "object",
-      "properties": {
-        "status": {
-          "type": "string",
-          "title": "Message to return on success",
-          "description": "Gives confirmation to the client that a request has been accepted.",
-          "maxLength": 20,
-          "pattern": "^[a-zA-Z-_]{1,20}$"
+      },
+      "PutMetricsResponse": {
+        "title": "OPG Metrics successful response definition.",
+        "description": "Confirms the data was accepted by the system and is processing the data.",
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Message to return on success",
+            "description": "Gives confirmation to the client that a request has been accepted.",
+            "maxLength": 20,
+            "pattern": "^[a-zA-Z-_]{1,20}$"
+          }
         }
       }
     }
