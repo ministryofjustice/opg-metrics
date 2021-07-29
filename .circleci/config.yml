@@ -69,7 +69,7 @@ orbs:
   opg-metrics:
     executors:
       terraform:
-        docker: [image: hashicorp/terraform:0.14.3]
+        docker: [image: hashicorp/terraform:1.0.3]
         resource_class: small
 
     jobs:
@@ -87,7 +87,6 @@ orbs:
             type: string
         environment:
           TF_WORKSPACE: "<<parameters.workspace>>"
-          TF_CLI_ARGS_init: "-lock-timeout=300s"
           TF_CLI_ARGS_plan: "-lock-timeout=300s"
           TF_CLI_ARGS_apply: "-lock-timeout=300s -auto-approve"
         steps:

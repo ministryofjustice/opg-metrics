@@ -13,7 +13,7 @@ terraform {
       version = "~> 3.0"
     }
   }
-  required_version = "= 0.14.3"
+  required_version = "= 1.0.3"
 }
 
 variable "default_role" {
