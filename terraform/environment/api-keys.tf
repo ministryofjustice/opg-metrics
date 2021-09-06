@@ -4,82 +4,13 @@ locals {
   ]
 }
 
-# Using sets like this means that there can only be one type of usage plan for all services
-# After this is proven, it will be refactored into a module
-resource "aws_api_gateway_usage_plan" "trusted_services" {
-  for_each     = toset(local.trusted_services)
-  name         = each.value
-  description  = "trusted service usage plan for ${each.value}"
-  product_code = upper(each.value)
-
-  api_stages {
-    api_id = aws_api_gateway_rest_api.kinesis_stream_api_gateway.id
-    stage  = aws_api_gateway_stage.kinesis_stream_api_gateway.stage_name
-  }
-
-  quota_settings {
-    limit  = 10000
-    offset = 2
-    period = "WEEK"
-  }
-
-  throttle_settings {
-    burst_limit = 5
-    rate_limit  = 10
-  }
-}
-
-resource "aws_api_gateway_api_key" "trusted_services" {
-  for_each    = toset(local.trusted_services)
-  name        = each.value
-  description = "trusted service api key for ${each.value}"
-}
-
-resource "aws_api_gateway_usage_plan_key" "trusted_services" {
-  for_each      = toset(local.trusted_services)
-  key_id        = aws_api_gateway_api_key.trusted_services[each.value].id
-  key_type      = "API_KEY"
-  usage_plan_id = aws_api_gateway_usage_plan.trusted_services[each.value].id
-}
-
-resource "aws_secretsmanager_secret" "api_key" {
-  for_each                = toset(local.trusted_services)
-  name                    = each.value
-  recovery_window_in_days = 0
-}
-
-resource "aws_secretsmanager_secret_version" "api_key" {
-  for_each      = toset(local.trusted_services)
-  secret_id     = aws_secretsmanager_secret.api_key[each.value].id
-  secret_string = aws_api_gateway_api_key.trusted_services[each.value].value
-}
-
-resource "aws_secretsmanager_secret_policy" "api_key" {
-  for_each   = toset(local.trusted_services)
-  secret_arn = aws_secretsmanager_secret.api_key[each.value].arn
-
-  policy = data.aws_iam_policy_document.api_key_access[each.value].json
-}
-
-data "aws_iam_policy_document" "api_key_access" {
-  for_each = toset(local.trusted_services)
-  statement {
-
-    effect = "Allow"
-
-    principals {
-      type = "AWS"
-      identifiers = [
-        "arn:aws:iam::367815980639:root/"
-      ]
-    }
-
-    actions = [
-      "secretsmanager:GetSecretValue",
-    ]
-
-    resources = [
-      aws_secretsmanager_secret.api_key[each.value].arn
-    ]
-  }
+module "trusted_service_access_demo" {
+  trusted_service_name           = "demo"
+  source                         = "../modules/trusted_service_access"
+  aws_api_gateway_rest_api       = aws_api_gateway_rest_api.kinesis_stream_api_gateway.id
+  aws_api_gateway_stage          = aws_api_gateway_stage.kinesis_stream_api_gateway.stage_name
+  secret_recovery_window_in_days = 0
+  identifiers_arns = [
+    "arn:aws:iam::367815980639:root/"
+  ]
 }
