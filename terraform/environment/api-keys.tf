@@ -41,3 +41,45 @@ resource "aws_api_gateway_usage_plan_key" "trusted_services" {
   key_type      = "API_KEY"
   usage_plan_id = aws_api_gateway_usage_plan.trusted_services[each.value].id
 }
+
+resource "aws_secretsmanager_secret" "api_key" {
+  for_each                = toset(local.trusted_services)
+  name                    = each.value
+  recovery_window_in_days = 0
+}
+
+resource "aws_secretsmanager_secret_version" "api_key" {
+  for_each      = toset(local.trusted_services)
+  secret_id     = aws_secretsmanager_secret.api_key[each.value].id
+  secret_string = aws_api_gateway_api_key.trusted_services[each.value].value
+}
+
+resource "aws_secretsmanager_secret_policy" "api_key" {
+  for_each   = toset(local.trusted_services)
+  secret_arn = aws_secretsmanager_secret.api_key[each.value].arn
+
+  policy = data.aws_iam_policy_document.api_key_access[each.value].json
+}
+
+data "aws_iam_policy_document" "api_key_access" {
+  for_each = toset(local.trusted_services)
+  statement {
+
+    effect = "Allow"
+
+    principals {
+      type = "AWS"
+      identifiers = [
+        "arn:aws:iam::367815980639:root/"
+      ]
+    }
+
+    actions = [
+      "secretsmanager:GetSecretValue",
+    ]
+
+    resources = [
+      aws_secretsmanager_secret.api_key[each.value].arn
+    ]
+  }
+}
