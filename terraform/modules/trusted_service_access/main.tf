@@ -34,7 +34,7 @@ resource "aws_api_gateway_usage_plan_key" "trusted_services" {
 }
 
 resource "aws_secretsmanager_secret" "api_key" {
-  name                    = var.trusted_service_name
+  name                    = "opg-metrics-api-key/${var.trusted_service_name}"
   recovery_window_in_days = var.secret_recovery_window_in_days
 }
 
