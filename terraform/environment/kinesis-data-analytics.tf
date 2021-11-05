@@ -73,6 +73,4 @@ resource "aws_kinesisanalyticsv2_application" "flink" {
   cloudwatch_logging_options {
     log_stream_arn = aws_cloudwatch_log_stream.flink.arn
   }
-
-  tags = local.tags
 }
