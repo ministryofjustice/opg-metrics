@@ -43,3 +43,6 @@ variable "secret_recovery_window_in_days" {
   type    = number
   default = 7
 }
+variable "secretsmanager_api_keys_kms_key_id" {
+  type = string
+}
