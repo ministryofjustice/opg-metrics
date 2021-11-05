@@ -35,7 +35,6 @@ provider "aws" {
 provider "aws" {
   region = "eu-west-1"
   alias  = "management"
-
   assume_role {
     role_arn     = "arn:aws:iam::311462405659:role/${var.management_role}"
     session_name = "opg-metrics-terraform-session"
