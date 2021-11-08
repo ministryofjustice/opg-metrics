@@ -32,8 +32,8 @@ data "aws_iam_policy_document" "api_key_kms" {
     effect = "Allow"
     actions = [
       "kms:Decrypt",
-      "kms:GenerateDataKey*",
-      "kms:DescribeKey",
+      # "kms:GenerateDataKey*",
+      # "kms:DescribeKey",
     ]
     resources = ["*"]
 
@@ -41,6 +41,23 @@ data "aws_iam_policy_document" "api_key_kms" {
       type = "AWS"
       identifiers = [
         "arn:aws:iam::367815980639:root/"
+      ]
+    }
+    condition {
+      test     = "StringEquals"
+      variable = "kms:ViaService"
+
+      values = [
+        "secretsmanager.${data.aws_region.current.name}.amazonaws.com", # replace with current region data source
+      ]
+    }
+
+    condition {
+      test     = "StringLike"
+      variable = "kms:EncryptionContext:SecretARN"
+
+      values = [
+        "arn:aws:secretsmanager:${data.aws_region.current.name}:Security_Account:secret:alias/api_key_encryption-??????", # replace with current region data source
       ]
     }
   }
