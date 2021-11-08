@@ -1,12 +1,12 @@
 resource "aws_kms_key" "api_key" {
-  description             = "api_key encryption ${local.environment}"
-  deletion_window_in_days = 10
+  description             = "opg metrics api key encryption ${local.environment}"
+  deletion_window_in_days = 7
   enable_key_rotation     = true
   policy                  = data.aws_iam_policy_document.api_key_kms.json
 }
 
 resource "aws_kms_alias" "api_key_alias" {
-  name          = "alias/api_key_encryption"
+  name          = "alias/opg_metrics_api_key_encryption"
   target_key_id = aws_kms_key.api_key.key_id
 }
 
@@ -40,7 +40,7 @@ data "aws_iam_policy_document" "api_key_kms" {
     principals {
       type = "AWS"
       identifiers = [
-        "arn:aws:iam::367815980639:root/"
+        "arn:aws:iam::367815980639:root"
       ]
     }
     condition {
