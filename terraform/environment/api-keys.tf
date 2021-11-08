@@ -6,6 +6,7 @@ module "trusted_service_access_demo" {
   secret_recovery_window_in_days     = 0
   secretsmanager_api_keys_kms_key_id = aws_kms_key.api_key.key_id
   identifiers_arns = [
+    "arn:aws:sts::367815980639:assumed-role/ship-to-opg-metrics20210315172927064900000002/ship-to-opg-metrics",
     "arn:aws:iam::367815980639:role/ship-to-opg-metrics20210315172927064900000002",
     "arn:aws:iam::367815980639:root/"
   ]
@@ -19,6 +20,7 @@ module "trusted_service_access_use_a_lasting_power_of_attorney_development" {
   secret_recovery_window_in_days     = 0
   secretsmanager_api_keys_kms_key_id = aws_kms_key.api_key.key_id
   identifiers_arns = [
+    "arn:aws:sts::367815980639:assumed-role/ship-to-opg-metrics20210315172927064900000002/ship-to-opg-metrics",
     "arn:aws:iam::367815980639:role/ship-to-opg-metrics20210315172927064900000002",
     "arn:aws:iam::367815980639:root/"
   ]

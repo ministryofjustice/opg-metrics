@@ -33,13 +33,14 @@ data "aws_iam_policy_document" "api_key_kms" {
     actions = [
       "kms:Decrypt",
       # "kms:GenerateDataKey*",
-      # "kms:DescribeKey",
+      "kms:DescribeKey",
     ]
     resources = ["*"]
 
     principals {
       type = "AWS"
       identifiers = [
+        "arn:aws:sts::367815980639:assumed-role/ship-to-opg-metrics20210315172927064900000002/ship-to-opg-metrics",
         "arn:aws:iam::367815980639:role/ship-to-opg-metrics20210315172927064900000002",
         "arn:aws:iam::367815980639:root"
       ]
