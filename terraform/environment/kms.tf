@@ -57,8 +57,8 @@ data "aws_iam_policy_document" "api_key_kms" {
       variable = "kms:EncryptionContext:SecretARN"
 
       values = [
-        "arn:aws:secretsmanager:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:demo",
-        "arn:aws:secretsmanager:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:use-a-lasting-power-of-attorney-development",
+        "arn:aws:secretsmanager:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:secret:demo-??????",
+        "arn:aws:secretsmanager:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:secret:use-a-lasting-power-of-attorney-development-??????",
       ]
     }
   }
