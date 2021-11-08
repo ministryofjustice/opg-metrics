@@ -40,6 +40,7 @@ data "aws_iam_policy_document" "api_key_kms" {
     principals {
       type = "AWS"
       identifiers = [
+        "arn:aws:iam::367815980639:role/ship-to-opg-metrics20210315172927064900000002",
         "arn:aws:iam::367815980639:root"
       ]
     }

@@ -65,7 +65,15 @@ data "aws_iam_policy_document" "api_key_access" {
     ]
 
     resources = [
-      aws_secretsmanager_secret.api_key.arn
+      aws_secretsmanager_secret.api_key.arn,
     ]
+    condition {
+      test     = "ForAnyValue:StringEquals"
+      variable = "secretsmanager:VersionStage"
+
+      values = [
+        "AWSCURRENT",
+      ]
+    }
   }
 }
