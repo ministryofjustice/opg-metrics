@@ -13,6 +13,12 @@ workflows:
             filters: { branches: { ignore: [main] } }
             requires: [cancel previous jobs]
 
+        - opg-metrics/docker_build_lambda_image:
+            name: build clsf-to-sqs lambda image
+            lambda_name: clsf-to-sqs
+            filters: { branches: { ignore: [main] } }
+            requires: [cancel previous jobs]
+
         - opg-metrics/terraform_command:
             name: lint shared terraform
             workspace: development
@@ -51,6 +57,18 @@ workflows:
 
   path_to_live:
       jobs:
+        - opg-metrics/docker_build_lambda_image:
+            name: build ship-to-opg-metrics lambda image
+            lambda_name: ship-to-opg-metrics
+            filters: { branches: { only: [main] } }
+            requires: [cancel previous jobs]
+
+        - opg-metrics/docker_build_lambda_image:
+            name: build clsf-to-sqs lambda image
+            lambda_name: clsf-to-sqs
+            filters: { branches: { only: [main] } }
+            requires: [cancel previous jobs]
+
         - opg-metrics/terraform_command:
             name: apply shared terraform
             workspace: development
