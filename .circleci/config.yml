@@ -77,7 +77,7 @@ orbs:
         docker: [image: hashicorp/terraform:1.0.10]
         resource_class: small
       python:
-        docker: [image: cimg/python:3.7]
+        docker: [image: cimg/python:3.8]
         resource_class: small
     commands:
       dockerhub_login:
