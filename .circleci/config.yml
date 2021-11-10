@@ -98,12 +98,6 @@ orbs:
         docker: [image: cimg/python:3.8]
         resource_class: small
     commands:
-      dockerhub_login:
-        steps:
-          - docker/install-docker-credential-helper
-          - docker/check:
-              docker-password: DOCKER_ACCESS_TOKEN
-              docker-username: DOCKER_USER
       install_aws_cli:
         steps:
           - run:
