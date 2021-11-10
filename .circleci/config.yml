@@ -11,6 +11,7 @@ workflows:
             name: build ship-to-opg-metrics lambda image
             lambda_name: ship-to-opg-metrics
             filters: { branches: { ignore: [main] } }
+            requires: [cancel previous jobs]
 
         - opg-metrics/terraform_command:
             name: lint shared terraform
