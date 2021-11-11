@@ -7,6 +7,18 @@ workflows:
             name: cancel previous jobs
             filters: { branches: { ignore: [main] } }
 
+        - opg-metrics/docker_build_lambda_image:
+            name: build ship-to-opg-metrics lambda image
+            lambda_name: ship-to-opg-metrics
+            filters: { branches: { ignore: [main] } }
+            requires: [cancel previous jobs]
+
+        - opg-metrics/docker_build_lambda_image:
+            name: build clsf-to-sqs lambda image
+            lambda_name: clsf-to-sqs
+            filters: { branches: { ignore: [main] } }
+            requires: [cancel previous jobs]
+
         - opg-metrics/terraform_command:
             name: lint shared terraform
             workspace: development
@@ -45,6 +57,16 @@ workflows:
 
   path_to_live:
       jobs:
+        - opg-metrics/docker_build_lambda_image:
+            name: build ship-to-opg-metrics lambda image
+            lambda_name: ship-to-opg-metrics
+            filters: { branches: { only: [main] } }
+
+        - opg-metrics/docker_build_lambda_image:
+            name: build clsf-to-sqs lambda image
+            lambda_name: clsf-to-sqs
+            filters: { branches: { only: [main] } }
+
         - opg-metrics/terraform_command:
             name: apply shared terraform
             workspace: development
@@ -63,7 +85,6 @@ workflows:
                 ]
 
 
-
 orbs:
   slack: circleci/slack@3.3.0
   opg-metrics:
@@ -71,6 +92,30 @@ orbs:
       terraform:
         docker: [image: hashicorp/terraform:1.0.10]
         resource_class: small
+      python:
+        docker: [image: cimg/python:3.8]
+        resource_class: small
+    commands:
+      install_aws_cli:
+        steps:
+          - run:
+              name: Install AWS CLI
+              command: pip install awscli --upgrade
+      ecr_login_lambda:
+        parameters:
+          ecr:
+            type: string
+          account_id:
+            type: string
+        steps:
+          - run:
+              name: Login to ECR
+              command: |
+                temp_role=$(aws sts assume-role --role-arn arn:aws:iam::<< parameters.account_id >>:role/opg-metrics-ci --role-session-name ci)
+                export AWS_ACCESS_KEY_ID=$(echo $temp_role | jq .Credentials.AccessKeyId | xargs)
+                export AWS_SECRET_ACCESS_KEY=$(echo $temp_role | jq .Credentials.SecretAccessKey | xargs)
+                export AWS_SESSION_TOKEN=$(echo $temp_role | jq .Credentials.SessionToken | xargs)
+                aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin << parameters.ecr >>
 
     jobs:
       terraform_command:
@@ -99,6 +144,39 @@ orbs:
                 terraform init
                 terraform <<parameters.terraform_command>>
 
+      docker_build_lambda_image:
+        executor: python
+        parameters:
+          lambda_name:
+            type: string
+        environment:
+            ECR_URL: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/opg-metrics/<< parameters.lambda_name >>
+        steps:
+          - checkout
+          - install_aws_cli
+          - setup_remote_docker:
+              version: 20.10.7
+              docker_layer_caching: false
+          - run:
+              name: Build
+              command: |
+                echo $ECR_URL
+                docker build --file lambda/<< parameters.lambda_name >>/Dockerfile --tag ${ECR_URL}:latest .
+          - ecr_login_lambda:
+              ecr: 311462405659.dkr.ecr.eu-west-1.amazonaws.com
+              account_id: "311462405659"
+          - run:
+              name: Push container
+              command: |
+                export IMAGE_TAG=$(bash ~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+                echo $IMAGE_TAG
+                docker tag ${ECR_URL}:latest ${ECR_URL}:${IMAGE_TAG}
+                if [ "${CIRCLE_BRANCH}" == "main" ]; then
+                  # We want all of the tags pushed
+                  docker push --all-tags ${ECR_URL}
+                else
+                  docker push ${ECR_URL}:${IMAGE_TAG}
+                fi
 
 jobs:
   cancel_redundant_builds:
