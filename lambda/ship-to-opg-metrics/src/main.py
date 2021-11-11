@@ -1,6 +1,8 @@
 import os
 import requests
 import ast
+import boto3
+
 
 def handler(event, context):
     for message in event['Records']:
@@ -12,9 +14,19 @@ def handler(event, context):
     return records
 
 
+def get_api_key(secret_arn):
+    client = boto3.client('secretsmanager')
+    api_key = client.get_secret_value(
+        SecretId=secret_arn
+    )
+
+    return api_key["SecretString"]
+
+
 def call_api_gateway(json_data):
     url = os.getenv('OPG_METRICS_URL')
-    api_key = os.getenv('API_KEY')
+    secret_arn = os.getenv('SECRET_ARN')
+    api_key = get_api_key(secret_arn)
     method = 'PUT'
     path = '/metrics'
     headers = {
