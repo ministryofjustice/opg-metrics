@@ -32,7 +32,6 @@ data "aws_iam_policy_document" "api_key_kms" {
     effect = "Allow"
     actions = [
       "kms:Decrypt",
-      # "kms:GenerateDataKey*",
       "kms:DescribeKey",
     ]
     resources = ["*"]
@@ -40,27 +39,7 @@ data "aws_iam_policy_document" "api_key_kms" {
     principals {
       type = "AWS"
       identifiers = [
-        "arn:aws:sts::367815980639:assumed-role/ship-to-opg-metrics20210315172927064900000002/ship-to-opg-metrics",
-        "arn:aws:iam::367815980639:role/ship-to-opg-metrics20210315172927064900000002",
         "arn:aws:iam::367815980639:root"
-      ]
-    }
-    condition {
-      test     = "StringEquals"
-      variable = "kms:ViaService"
-
-      values = [
-        "secretsmanager.${data.aws_region.current.name}.amazonaws.com",
-      ]
-    }
-
-    condition {
-      test     = "StringLike"
-      variable = "kms:EncryptionContext:SecretARN"
-
-      values = [
-        "arn:aws:secretsmanager:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:secret:demo-??????",
-        "arn:aws:secretsmanager:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:secret:use-a-lasting-power-of-attorney-development-??????",
       ]
     }
   }
