@@ -1,12 +1,15 @@
 import unittest
 import os
 import mock
-from moto import mock_sqs
+from moto import mock_sqs, mock_secretsmanager
+import boto3
 import requests
 import requests_mock
 
 OPG_METRICS_URL = "https://localhost"
-API_KEY = "testapikeystring"
+SECRET_ARN = "secretarn"
+SECRET_VALUE = "secretvalue"
+AWS_REGION = 'eu-west-1'
 
 PAYLOAD = {
     "Records": [
@@ -30,13 +33,18 @@ PAYLOAD = {
     ]
 }
 
+
 @requests_mock.Mocker()
-@mock.patch.dict(os.environ, {'OPG_METRICS_URL': OPG_METRICS_URL, 'API_KEY': API_KEY})
+@mock.patch.dict(os.environ, {'AWS_DEFAULT_REGION': AWS_REGION, 'OPG_METRICS_URL': OPG_METRICS_URL, 'SECRET_ARN': SECRET_ARN, 'SECRET_VALUE': SECRET_VALUE})
+@mock_secretsmanager
 @mock_sqs
 class TestLambdaFunction(unittest.TestCase):
 
     def test_handler(self, m):
         from main import handler
+
+        conn = boto3.client("secretsmanager", region_name=AWS_REGION)
+        conn.create_secret(Name=SECRET_ARN, SecretString=SECRET_VALUE)
 
         m.register_uri('PUT', OPG_METRICS_URL + '/metrics',
                        json={'StatusCode': 200, 'Message': 'SUCCESS'})
@@ -46,18 +54,18 @@ class TestLambdaFunction(unittest.TestCase):
 
         result = handler(event, {})
         self.assertEqual(result, {
-          'metrics': [
-            {
-              'metric':
-              {
-                'Project': 'use-an-lpa',
-                'Category': 'kpi',
-                'Subcategory': 'service',
-                'Environment': 'development',
-                'MeasureName': 'DOWNLOAD_SUMMARY',
-                'MeasureValue': '1',
-                'Time': '1622720114831'
-              }
-            }
-          ]
+            'metrics': [
+                {
+                    'metric':
+                    {
+                        'Project': 'use-an-lpa',
+                        'Category': 'kpi',
+                        'Subcategory': 'service',
+                        'Environment': 'development',
+                        'MeasureName': 'DOWNLOAD_SUMMARY',
+                        'MeasureValue': '1',
+                        'Time': '1622720114831'
+                    }
+                }
+            ]
         })

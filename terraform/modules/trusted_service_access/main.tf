@@ -35,6 +35,7 @@ resource "aws_api_gateway_usage_plan_key" "trusted_services" {
 
 resource "aws_secretsmanager_secret" "api_key" {
   name                    = "opg-metrics-api-key/${var.trusted_service_name}"
+  kms_key_id              = var.secretsmanager_api_keys_kms_key_id
   recovery_window_in_days = var.secret_recovery_window_in_days
 }
 
@@ -64,7 +65,7 @@ data "aws_iam_policy_document" "api_key_access" {
     ]
 
     resources = [
-      aws_secretsmanager_secret.api_key.arn
+      "*"
     ]
   }
 }
