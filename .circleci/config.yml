@@ -216,7 +216,12 @@ orbs:
                 terraform --version
                 cd ~/project/terraform/<<parameters.configuration_path>>
                 terraform init
-                # terraform state list
+                terraform state list
+
+          - run:
+              name: terraform state list
+              command: |
+                terraform state list
 
 
 jobs:
