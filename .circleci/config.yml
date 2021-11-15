@@ -1,17 +1,27 @@
 version: 2.1
 
 workflows:
-  # rotate_api_keys:
-  #   triggers:
-  #     - schedule:
-  #         cron: "0 3 * * *" # Every 3am
-  #         filters:
-  #           branches:
-  #             only:
-  #               - main
-  #   jobs:
-  #     - opg-metrics/rotate_api_keys:
-  #         name: rotate_api_keys
+  rotate_api_keys:
+    triggers:
+      - schedule:
+          cron: "0 3 * * *" # Every 3am
+          filters:
+            branches:
+              only:
+                - main
+    jobs:
+      - opg-metrics/rotate_api_keys:
+          name: taint api keys
+            workspace: development
+            configuration_path: environment
+            filters: { branches: { only: [main] } }
+
+        - opg-metrics/terraform_command:
+              name: replace api keys
+              workspace: development
+              configuration_path: environment
+              terraform_command: apply
+              filters: { branches: { only: [main] } }
 
   pr_build:
       jobs:
@@ -219,7 +229,7 @@ orbs:
                 all_aws_access_keys=$(terraform state list | grep aws_api_gateway_api_key | sed 's/*//g')
                 for access_key in $all_aws_access_keys
                 do
-                  echo $access_key
+                  terraform taint $access_key
                 done
 
 
