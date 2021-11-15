@@ -216,13 +216,9 @@ orbs:
                 terraform --version
                 cd ~/project/terraform/<<parameters.configuration_path>>
                 terraform init
-                terraform workspace <<parameters.workspace>>
-                terraform state list
+                terraform state list | grep aws_api_gateway_api_key | sed 's/*//g'
 
-          - run:
-              name: terraform state list
-              command: |
-                terraform state list
+
 
 
 jobs:
