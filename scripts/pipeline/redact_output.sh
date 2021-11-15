@@ -1,3 +1,3 @@
 #!/usr/bin/env sh
 
-sed -e "s/~ value         = $PARTITION_COLUMN.*/<REDACTED>/"
+sed -e s'/[A-Za-z0-9]\{40,\}/<REDACTED>/g'

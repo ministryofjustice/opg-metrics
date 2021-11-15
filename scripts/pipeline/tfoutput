@@ -1,0 +1,42 @@
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+-/+ destroy and then create replacement
+
+Terraform will perform the following actions:
+
+  # module.trusted_service_access_use_a_lasting_power_of_attorney_development.aws_api_gateway_api_key.trusted_services is tainted, so must be replaced
+-/+ resource "aws_api_gateway_api_key" "trusted_services" {
+      ~ arn               = "arn:aws:apigateway:eu-west-1::/apikeys/kjkr9n4zw9" -> (known after apply)
+      ~ created_date      = "2021-11-15T10:21:12Z" -> (known after apply)
+      ~ id                = "kjkr9n4zw9" -> (known after apply)
+      ~ last_updated_date = "2021-11-15T10:21:12Z" -> (known after apply)
+        name              = "use-a-lasting-power-of-attorney-development"
+      - tags              = {} -> null
+      ~ tags_all          = {} -> (known after apply)
+      ~ value             = (sensitive value)
+        # (2 unchanged attributes hidden)
+    }
+
+  # module.trusted_service_access_use_a_lasting_power_of_attorney_development.aws_api_gateway_usage_plan_key.trusted_services must be replaced
+-/+ resource "aws_api_gateway_usage_plan_key" "trusted_services" {
+      ~ id            = "kjkr9n4zw9" -> (known after apply)
+      ~ key_id        = "kjkr9n4zw9" -> (known after apply) # forces replacement
+      ~ name          = "use-a-lasting-power-of-attorney-development" -> (known after apply)
+      ~ value         = "aK3aHtEUJ51GVfpuKSjAgV0k605BPz7ZA7y5kLj0" -> (known after apply)
+        # (2 unchanged attributes hidden)
+    }
+
+  # module.trusted_service_access_use_a_lasting_power_of_attorney_development.aws_secretsmanager_secret_version.api_key must be replaced
+-/+ resource "aws_secretsmanager_secret_version" "api_key" {
+      ~ arn            = "arn:aws:secretsmanager:eu-west-1:679638075911:secret:opg-metrics-api-key/use-a-lasting-power-of-attorney-development-7wGnpC" -> (known after apply)
+      ~ id             = "arn:aws:secretsmanager:eu-west-1:679638075911:secret:opg-metrics-api-key/use-a-lasting-power-of-attorney-development-7wGnpC|9AC4E77F-F8B4-4438-821C-33389E82DE18" -> (known after apply)
+      - secret_binary  = (sensitive value)
+      ~ secret_string  = (sensitive value) # forces replacement
+      ~ version_id     = "9AC4E77F-F8B4-4438-821C-33389E82DE18" -> (known after apply)
+      ~ version_stages = [
+          - "AWSCURRENT",
+        ] -> (known after apply)
+        # (1 unchanged attribute hidden)
+    }
+
+Plan: 3 to add, 0 to change, 3 to destroy.
