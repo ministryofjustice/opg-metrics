@@ -162,7 +162,7 @@ orbs:
                 terraform --version
                 cd ~/project/terraform/<<parameters.configuration_path>>
                 terraform init
-                terraform <<parameters.terraform_command>>
+                terraform <<parameters.terraform_command>> | ~/project/scripts/pipeline/redact_output.sh
 
       docker_build_lambda_image:
         executor: python
