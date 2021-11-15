@@ -15,62 +15,62 @@ workflows:
 
   pr_build:
       jobs:
-        - cancel_redundant_builds:
-            name: cancel previous jobs
-            filters: { branches: { ignore: [main] } }
+        # - cancel_redundant_builds:
+        #     name: cancel previous jobs
+        #     filters: { branches: { ignore: [main] } }
 
         - opg-metrics/rotate_api_keys:
             name: rotate_api_keys
             workspace: development
             configuration_path: environment
 
-        - opg-metrics/docker_build_lambda_image:
-            name: build ship-to-opg-metrics lambda image
-            lambda_name: ship-to-opg-metrics
-            filters: { branches: { ignore: [main] } }
-            requires: [cancel previous jobs]
+        # - opg-metrics/docker_build_lambda_image:
+        #     name: build ship-to-opg-metrics lambda image
+        #     lambda_name: ship-to-opg-metrics
+        #     filters: { branches: { ignore: [main] } }
+        #     requires: [cancel previous jobs]
 
-        - opg-metrics/docker_build_lambda_image:
-            name: build clsf-to-sqs lambda image
-            lambda_name: clsf-to-sqs
-            filters: { branches: { ignore: [main] } }
-            requires: [cancel previous jobs]
+        # - opg-metrics/docker_build_lambda_image:
+        #     name: build clsf-to-sqs lambda image
+        #     lambda_name: clsf-to-sqs
+        #     filters: { branches: { ignore: [main] } }
+        #     requires: [cancel previous jobs]
 
-        - opg-metrics/terraform_command:
-            name: lint shared terraform
-            workspace: development
-            configuration_path: account
-            terraform_command: validate
-            filters: { branches: { ignore: [main] } }
-            requires: [cancel previous jobs]
+        # - opg-metrics/terraform_command:
+        #     name: lint shared terraform
+        #     workspace: development
+        #     configuration_path: account
+        #     terraform_command: validate
+        #     filters: { branches: { ignore: [main] } }
+        #     requires: [cancel previous jobs]
 
-        - opg-metrics/terraform_command:
-            name: lint service terraform
-            workspace: development
-            configuration_path: environment
-            terraform_command: validate
-            filters: { branches: { ignore: [main] } }
-            requires: [cancel previous jobs]
+        # - opg-metrics/terraform_command:
+        #     name: lint service terraform
+        #     workspace: development
+        #     configuration_path: environment
+        #     terraform_command: validate
+        #     filters: { branches: { ignore: [main] } }
+        #     requires: [cancel previous jobs]
 
-        - opg-metrics/terraform_command:
-            name: plan shared terraform
-            workspace: development
-            configuration_path: account
-            terraform_command: plan
-            filters: { branches: { ignore: [main] } }
-            requires: [
-              lint shared terraform,
-              ]
+        # - opg-metrics/terraform_command:
+        #     name: plan shared terraform
+        #     workspace: development
+        #     configuration_path: account
+        #     terraform_command: plan
+        #     filters: { branches: { ignore: [main] } }
+        #     requires: [
+        #       lint shared terraform,
+        #       ]
 
-        - opg-metrics/terraform_command:
-            name: plan service terraform
-            workspace: development
-            configuration_path: environment
-            terraform_command: plan
-            filters: { branches: { ignore: [main] } }
-            requires: [
-              lint service terraform,
-              ]
+        # - opg-metrics/terraform_command:
+        #     name: plan service terraform
+        #     workspace: development
+        #     configuration_path: environment
+        #     terraform_command: plan
+        #     filters: { branches: { ignore: [main] } }
+        #     requires: [
+        #       lint service terraform,
+        #       ]
 
   path_to_live:
       jobs:
