@@ -14,14 +14,12 @@ workflows:
           name: taint api keys
           workspace: development
           configuration_path: environment
-          filters: { branches: { only: [main] } }
 
       - opg-metrics/terraform_command:
             name: replace api keys
             workspace: development
             configuration_path: environment
             terraform_command: apply
-            filters: { branches: { only: [main] } }
 
   pr_build:
       jobs:
