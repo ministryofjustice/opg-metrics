@@ -1,6 +1,26 @@
 version: 2.1
 
 workflows:
+  rotate_api_keys:
+    triggers:
+      - schedule:
+          cron: "0 3 * * *" # Every 3am
+          filters:
+            branches:
+              only:
+                - main
+    jobs:
+      - opg-metrics/rotate_api_keys:
+          name: taint api keys
+          workspace: development
+          configuration_path: environment
+
+      - opg-metrics/terraform_command:
+            name: replace api keys
+            workspace: development
+            configuration_path: environment
+            terraform_command: apply
+
   pr_build:
       jobs:
         - cancel_redundant_builds:
@@ -125,10 +145,10 @@ orbs:
             description: Terraform workspace name
             type: string
           configuration_path:
-            description: Terraform workspace name
+            description: Terraform configuration path
             type: string
           terraform_command:
-            description: Terraform workspace name
+            description: Terraform command to execute
             type: string
         environment:
           TF_WORKSPACE: "<<parameters.workspace>>"
@@ -177,6 +197,36 @@ orbs:
                 else
                   docker push ${ECR_URL}:${IMAGE_TAG}
                 fi
+
+      rotate_api_keys:
+        executor: terraform
+        parameters:
+          workspace:
+            description: Terraform workspace name
+            type: string
+          configuration_path:
+            description: Terraform configuration path
+            type: string
+        environment:
+          TF_WORKSPACE: "<<parameters.workspace>>"
+          TF_CLI_ARGS_plan: "-lock-timeout=300s"
+          TF_CLI_ARGS_apply: "-lock-timeout=300s -auto-approve"
+        steps:
+          - checkout
+          - run:
+              name: terraform taint api keys
+              command: |
+                terraform --version
+                cd ~/project/terraform/<<parameters.configuration_path>>
+                terraform init
+                all_aws_access_keys=$(terraform state list | grep aws_api_gateway_api_key | sed 's/*//g')
+                for access_key in $all_aws_access_keys
+                do
+                  terraform taint $access_key
+                done
+
+
+
 
 jobs:
   cancel_redundant_builds:
