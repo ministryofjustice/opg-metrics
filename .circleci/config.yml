@@ -216,12 +216,9 @@ orbs:
                 terraform --version
                 cd ~/project/terraform/<<parameters.configuration_path>>
                 terraform init
+                terraform state list | grep aws_iam_access_key |sed 's/*//g'
                 all_aws_access_keys=$(terraform state list | grep aws_iam_access_key |sed 's/*//g')
-                for access_key in $all_aws_access_keys
-                do
-                  echo $access_key
-
-                done
+                echo $all_aws_access_keys
 
 jobs:
   cancel_redundant_builds:
