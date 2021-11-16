@@ -20,6 +20,7 @@ workflows:
             workspace: development
             configuration_path: environment
             terraform_command: apply
+            requires: [taint api keys]
 
   pr_build:
       jobs:
