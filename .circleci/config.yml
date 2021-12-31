@@ -32,11 +32,13 @@ workflows:
             name: test ship-to-opg-metrics lambda
             lambda_name: ship-to-opg-metrics
             filters: { branches: { ignore: [main] } }
+            requires: [cancel previous jobs]
 
         - opg-metrics/test_lambda:
             name: test clsf-to-sqs lambda
             lambda_name: clsf-to-sqs
             filters: { branches: { ignore: [main] } }
+            requires: [cancel previous jobs]
 
         - opg-metrics/docker_build_lambda_image:
             name: build ship-to-opg-metrics lambda image
