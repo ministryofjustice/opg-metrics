@@ -223,7 +223,7 @@ orbs:
                 cd ~/project/lambda/<<parameters.lambda_name>>/src
                 pip install -r requirements_dev.txt
                 pytest --junitxml=results/test_results.xml
-          - store_artifacts:
+          - store_test_results:
               path: results/
 
       rotate_api_keys:
