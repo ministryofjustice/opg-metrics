@@ -220,7 +220,7 @@ orbs:
           - run:
               name: Run Tests
               command: |
-                cd ~/project/lambda/<<parameters.configuration_path>>
+                cd ~/project/lambda/<<parameters.lambda_name>>
                 pip install -r requirements_dev.txt
                 pytest
 
