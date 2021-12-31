@@ -222,7 +222,7 @@ orbs:
               command: |
                 cd ~/project/lambda/<<parameters.lambda_name>>/src
                 pip install -r requirements_dev.txt
-                pytest --junitxml=results/test_results.xml
+                pytest --junitxml=results/pytest/results.xml
           - store_test_results:
               path: results/
 
