@@ -126,7 +126,7 @@ orbs:
         steps:
           - run:
               name: Install pytest
-              command: pip install pytest
+              command: pip install pytest mock
       install_aws_cli:
         steps:
           - run:
