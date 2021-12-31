@@ -224,7 +224,7 @@ orbs:
                 pip install -r requirements_dev.txt
                 pytest --junitxml=results/pytest/results.xml
           - store_test_results:
-              path: results/
+              path: ~/project/lambda/<<parameters.lambda_name>>/src/results/
 
       rotate_api_keys:
         executor: terraform
