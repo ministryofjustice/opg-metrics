@@ -28,6 +28,11 @@ workflows:
             name: cancel previous jobs
             filters: { branches: { ignore: [main] } }
 
+        - opg-metrics/test_lambda:
+            name: test ship-to-opg-metrics lambda
+            lambda_name: ship-to-opg-metrics
+            filters: { branches: { ignore: [main] } }
+
         - opg-metrics/docker_build_lambda_image:
             name: build ship-to-opg-metrics lambda image
             lambda_name: ship-to-opg-metrics
@@ -117,6 +122,11 @@ orbs:
         docker: [image: cimg/python:3.8]
         resource_class: small
     commands:
+      install_pytest:
+        steps:
+          - run:
+              name: Install pytest
+              command: pip install pytest
       install_aws_cli:
         steps:
           - run:
@@ -198,6 +208,21 @@ orbs:
                 else
                   docker push ${ECR_URL}:${IMAGE_TAG}
                 fi
+
+      test_lambda:
+        executor: python
+        parameters:
+          lambda_name:
+            type: string
+        steps:
+          - checkout
+          - install_pytest
+          - run:
+              name: Run Tests
+              command: |
+                cd ~/project/lambda/<<parameters.configuration_path>>
+                pip install -r requirements_dev.txt
+                pytest
 
       rotate_api_keys:
         executor: terraform
