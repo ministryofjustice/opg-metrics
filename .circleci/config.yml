@@ -28,17 +28,29 @@ workflows:
             name: cancel previous jobs
             filters: { branches: { ignore: [main] } }
 
+        - opg-metrics/test_lambda:
+            name: test ship-to-opg-metrics lambda
+            lambda_name: ship-to-opg-metrics
+            filters: { branches: { ignore: [main] } }
+            requires: [cancel previous jobs]
+
+        - opg-metrics/test_lambda:
+            name: test clsf-to-sqs lambda
+            lambda_name: clsf-to-sqs
+            filters: { branches: { ignore: [main] } }
+            requires: [cancel previous jobs]
+
         - opg-metrics/docker_build_lambda_image:
             name: build ship-to-opg-metrics lambda image
             lambda_name: ship-to-opg-metrics
             filters: { branches: { ignore: [main] } }
-            requires: [cancel previous jobs]
+            requires: [cancel previous jobs, test clsf-to-sqs lambda, test ship-to-opg-metrics lambda]
 
         - opg-metrics/docker_build_lambda_image:
             name: build clsf-to-sqs lambda image
             lambda_name: clsf-to-sqs
             filters: { branches: { ignore: [main] } }
-            requires: [cancel previous jobs]
+            requires: [cancel previous jobs, test clsf-to-sqs lambda, test ship-to-opg-metrics lambda]
 
         - opg-metrics/terraform_command:
             name: lint shared terraform
@@ -78,15 +90,27 @@ workflows:
 
   path_to_live:
       jobs:
+        - opg-metrics/test_lambda:
+            name: test ship-to-opg-metrics lambda
+            lambda_name: ship-to-opg-metrics
+            filters: { branches: { only: [main] } }
+
+        - opg-metrics/test_lambda:
+            name: test clsf-to-sqs lambda
+            lambda_name: clsf-to-sqs
+            filters: { branches: { only: [main] } }
+
         - opg-metrics/docker_build_lambda_image:
             name: build ship-to-opg-metrics lambda image
             lambda_name: ship-to-opg-metrics
             filters: { branches: { only: [main] } }
+            requires: [test clsf-to-sqs lambda, test ship-to-opg-metrics lambda]
 
         - opg-metrics/docker_build_lambda_image:
             name: build clsf-to-sqs lambda image
             lambda_name: clsf-to-sqs
             filters: { branches: { only: [main] } }
+            requires: [test clsf-to-sqs lambda, test ship-to-opg-metrics lambda]
 
         - opg-metrics/terraform_command:
             name: apply shared terraform
@@ -117,6 +141,11 @@ orbs:
         docker: [image: cimg/python:3.8]
         resource_class: small
     commands:
+      install_pytest:
+        steps:
+          - run:
+              name: Install pytest
+              command: pip install pytest mock
       install_aws_cli:
         steps:
           - run:
@@ -198,6 +227,23 @@ orbs:
                 else
                   docker push ${ECR_URL}:${IMAGE_TAG}
                 fi
+
+      test_lambda:
+        executor: python
+        parameters:
+          lambda_name:
+            type: string
+        steps:
+          - checkout
+          - install_pytest
+          - run:
+              name: Run Tests
+              command: |
+                cd ~/project/lambda/<<parameters.lambda_name>>/src
+                pip install -r requirements_dev.txt
+                pytest --junitxml=results/pytest/results.xml
+          - store_test_results:
+              path: ~/project/lambda/<<parameters.lambda_name>>/src/results/
 
       rotate_api_keys:
         executor: terraform

@@ -1,4 +1,4 @@
-moto[sqs]==2.2.12
-coverage==5.5
-pylint==2.7.2
-pytest==6.2.2
+moto[sqs]==2.3.0
+coverage==6.2
+pylint==2.12.2
+pytest==6.2.5
