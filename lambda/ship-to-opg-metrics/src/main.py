@@ -3,10 +3,11 @@ import ast
 import logging
 import requests
 import boto3
-from aws_xray_sdk.core import patch_all
+from aws_xray_sdk.core import patch_all, xray_recorder
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
+xray_recorder.configure(service='ship_to_opg_metrics')
 patch_all()
 
 
