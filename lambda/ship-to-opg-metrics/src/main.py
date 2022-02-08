@@ -1,13 +1,19 @@
 import os
-import requests
 import ast
+import logging
+import requests
 import boto3
+from aws_xray_sdk.core import patch_all
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+patch_all()
 
 
 def handler(event, context):
     for message in event['Records']:
         records = ast.literal_eval(message["body"])
-        print(records)
+        logger.info("processing record: %s", records)
 
         call_api_gateway(records)
 
@@ -41,4 +47,4 @@ def call_api_gateway(json_data):
         json=json_data,
         headers=headers
     )
-    print(response.json())
+    logger.info(response.json())
