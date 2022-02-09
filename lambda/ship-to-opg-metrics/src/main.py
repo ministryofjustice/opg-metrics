@@ -12,7 +12,8 @@ patch_all()
 
 
 def handler(event, context):
-    xray_recorder.begin_subsegment('ship_to_metrics')
+    subsegment = xray_recorder.begin_subsegment('ship_to_metrics')
+    subsegment.put_annotation('service', 'opg_metrics')
     for message in event['Records']:
         records = ast.literal_eval(message["body"])
         logger.info("processing record: %s", records)
