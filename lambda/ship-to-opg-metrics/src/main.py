@@ -7,17 +7,18 @@ from aws_xray_sdk.core import patch_all, xray_recorder
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
-xray_recorder.configure(service='ship_to_opg_metrics')
+xray_recorder.begin_segment('opg_metrics')
 patch_all()
 
 
 def handler(event, context):
+    xray_recorder.begin_subsegment('ship_to_metrics')
     for message in event['Records']:
         records = ast.literal_eval(message["body"])
         logger.info("processing record: %s", records)
 
         call_api_gateway(records)
-
+    xray_recorder.end_subsegment()
     return records
 
 
