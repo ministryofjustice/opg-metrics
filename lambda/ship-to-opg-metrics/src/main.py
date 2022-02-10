@@ -1,16 +1,25 @@
 import os
-import requests
 import ast
+import logging
+import requests
 import boto3
+from aws_xray_sdk.core import patch_all, xray_recorder
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+xray_recorder.begin_segment('opg_metrics')
+patch_all()
 
 
 def handler(event, context):
+    subsegment = xray_recorder.begin_subsegment('ship_to_metrics')
+    subsegment.put_annotation('service', 'opg_metrics')
     for message in event['Records']:
         records = ast.literal_eval(message["body"])
-        print(records)
+        logger.info("processing record: %s", records)
 
         call_api_gateway(records)
-
+    xray_recorder.end_subsegment()
     return records
 
 
@@ -41,4 +50,4 @@ def call_api_gateway(json_data):
         json=json_data,
         headers=headers
     )
-    print(response.json())
+    logger.info(response.json())
