@@ -3,5 +3,3 @@
 *.tfstate
 *.tfstate.backup
 .DS_Store
-node_modules
-docs/openapi/docs
