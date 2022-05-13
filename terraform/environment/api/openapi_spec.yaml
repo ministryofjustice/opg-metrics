@@ -1,7 +1,7 @@
 ---
 openapi: 3.0.3
 servers:
-- url: "/kinesis"
+  - url: "/kinesis"
 info:
   description: >-
     This REST API allows you to pass Metric data to be stored in the OPG Metrics
@@ -9,10 +9,10 @@ info:
   title: OPG Metrics REST API
   version: 0.0.2
   contact:
-    email: ''
+    email: ""
   license:
     name: MIT
-    url: 'https://opensource.org/licenses/MIT'
+    url: "https://opensource.org/licenses/MIT"
 tags: []
 x-amazon-apigateway-request-validators:
   all:
@@ -34,26 +34,86 @@ x-amazon-apigateway-gateway-responses:
 paths:
   "/metrics":
     put:
+      summary: Pass an Array of Metrics
+      description: >-
+        Allows you to pass an Array of Metric objects to the endpoint for
+        processing by the service
+      security: []
+      deprecated: false
       requestBody:
         content:
           application/json:
             schema:
               "$ref": "#/components/schemas/PutMetrics"
+              description: Array of Metrics
+            examples:
+              single:
+                summary: A single record
+                value:
+                  {
+                    "metrics":
+                      [
+                        {
+                          "metric":
+                            {
+                              "Project": "opgtest",
+                              "MeasureName": "release",
+                              "MeasureValue": "1.0",
+                              "Time": "1609240692503",
+                            },
+                        },
+                      ],
+                  }
+              multiple:
+                summary: Multiple records
+                value:
+                  {
+                    "metrics": [
+                      {
+                        "metric": {
+                          "Project": "opgtest",
+                          "MeasureName": "release",
+                          "MeasureValue": "1.0",
+                          "Time": "1609240692503"
+                        }
+                      },
+                      {
+                        "metric": {
+                          "Project": "opgtest",
+                          "Category": "client",
+                          "MeasureName": "login_btn_click",
+                          "MeasureValue": "1.0",
+                          "Time": "1609240692523"
+                        }
+                      },
+                      {
+                        "metric": {
+                          "Project": "opgtest",
+                          "Category": "client",
+                          "Subcategory": "webvitals",
+                          "Environment": "development",
+                          "MeasureName": "cumulative_layout_shift",
+                          "MeasureValue": "1.1",
+                          "Time": "1609240692533"
+                        }
+                      }
+                    ]
+                  }
         required: true
       responses:
-        '200':
+        "200":
           description: 200 response
           content:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PutMetricsResponse"
-        '202':
+        "202":
           description: 202 response
           content:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PutMetricsResponse"
-        '404':
+        "404":
           description: Not found
           content:
             application/json:
@@ -65,8 +125,8 @@ paths:
         credentials: "${allowed_roles}"
         uri: arn:aws:apigateway:${region}:kinesis:action/PutRecords
         responses:
-          '200':
-            statusCode: '200'
+          "200":
+            statusCode: "200"
         requestTemplates:
           application/json: |-
             {
@@ -84,7 +144,7 @@ paths:
         httpMethod: POST
 externalDocs:
   description: See OPG Metrics git repository
-  url: 'https://github.com/ministryofjustice/opg-metrics/main/README.md'
+  url: "https://github.com/ministryofjustice/opg-metrics/main/README.md"
 components:
   securitySchemes:
     api_key:
@@ -95,8 +155,8 @@ components:
     ErrorModel:
       type: object
       required:
-      - message
-      - code
+        - message
+        - code
       properties:
         message:
           type: string
@@ -110,16 +170,18 @@ components:
           format: "-"
     PutMetrics:
       title: OPG Metrics data object definition.
-      description: The metrics array can contain between 1 and 20 individual metrics
+      description:
+        The metrics array can contain between 1 and 20 individual metrics
         at a time.
       required:
-      - metrics
+        - metrics
       properties:
         metrics:
           maxItems: 20
           type: array
           title: Individual metric to be recorded.
-          description: Contains an array of individual metrics to be consumed by the
+          description:
+            Contains an array of individual metrics to be consumed by the
             service.
           default: []
           items:
@@ -128,68 +190,76 @@ components:
             description: A anyOf wrapper around the individual metric.
             default: {}
             required:
-            - metric
+              - metric
             additionalProperties: false
             properties:
               metric:
                 type: object
                 title: The metric schema.
-                description: The individual metric object that is required to record
+                description:
+                  The individual metric object that is required to record
                   an entry successfully.
                 default: {}
                 required:
-                - Project
-                - Time
-                - MeasureName
-                - MeasureValue
+                  - Project
+                  - Time
+                  - MeasureName
+                  - MeasureValue
                 additionalProperties: false
                 properties:
                   Project:
                     type: string
                     title: The service or project name.
-                    description: Gives the ability to query against a particular service
+                    description:
+                      Gives the ability to query against a particular service
                       to know the purpose of this metric.
                     maxLength: 32
                     pattern: "^[a-zA-Z-_0-9]{1,32}$"
                   Category:
                     type: string
                     title: Assign metric a Category (Optional)
-                    description: Optionally tag the metric with a Category to better
+                    description:
+                      Optionally tag the metric with a Category to better
                       enable finer grouping of data.
                     maxLength: 25
                     pattern: "^[a-zA-Z-_0-9]{1,25}$"
                   Subcategory:
                     type: string
                     title: Assign metric a Subcategory (Optional)
-                    description: Optionally tag the metric with a Subcategory to better
+                    description:
+                      Optionally tag the metric with a Subcategory to better
                       enable finer grouping of data.
                     maxLength: 25
                     pattern: "^[a-zA-Z-_0-9]{1,25}$"
                   Environment:
                     type: string
                     title: Sets the environment the metric has come from (Optional)
-                    description: Optionally sets the environment the metric has come
+                    description:
+                      Optionally sets the environment the metric has come
                       from, e.g. development, preproduction, live.
                     maxLength: 25
                     pattern: "^[a-zA-Z-_0-9]{1,25}$"
                   MeasureName:
                     type: string
                     title: The metric name
-                    description: The name of the metric you want to record the measure
+                    description:
+                      The name of the metric you want to record the measure
                       under.
                     maxLength: 64
                     pattern: "^[a-zA-Z-_0-9]{1,64}$"
                   MeasureValue:
                     type: string
                     title: The metric value
-                    description: A alpha value that defines the value you want to
+                    description:
+                      A alpha value that defines the value you want to
                       record.
                     maxLength: 20
                     pattern: "^[0-9\\.]{1,20}$"
                   MeasureValueType:
                     type: string
                     title: The metric value type
-                    description: A predefined value from DOUBLE | BIGINT | VARCHAR
+                    description:
+                      A predefined value from DOUBLE | BIGINT | VARCHAR
                       | BOOLEAN. Default is DOUBLE.
                     maxLength: 8
                     pattern: "^[A-Z]{1,8}$"
@@ -201,7 +271,8 @@ components:
                     pattern: "^[0-9]{13}$"
     PutMetricsResponse:
       title: OPG Metrics successful response definition.
-      description: Confirms the data was accepted by the system and is processing
+      description:
+        Confirms the data was accepted by the system and is processing
         the data.
       type: object
       properties:
