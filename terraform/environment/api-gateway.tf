@@ -37,7 +37,7 @@ resource "aws_api_gateway_rest_api" "kinesis_stream_api_gateway" {
 }
 
 locals {
-  openapispec = file("./api/openapi_spec.json")
+  openapispec = file("./api/openapi_spec.yaml")
   openapi_template_vars = {
     region        = data.aws_region.current.name
     name          = var.name

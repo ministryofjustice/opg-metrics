@@ -2,7 +2,7 @@
 
 The OPG Metrics Service allows you to send a PUT request to a endpoint with a JSON package in the body to record data. You don't have to use this point of entry however, the service is designed in a way that should you choose to, you can integrate directly with the Timestream database or the Kinesis Data Stream.
 
-Within the solution we have provided a [OpenAPI specification](/terraform/environment/api/openapi_spec.json) and an [example JSON packet](/terraform/environment/api/examples/put_metrics.json) for help in understanding the integration.
+Within the solution we have provided a [OpenAPI specification](/terraform/environment/api/openapi_spec.yaml) and an [example JSON packet](/terraform/environment/api/examples/put_metrics.json) for help in understanding the integration.
 
 ## Documentation
 
@@ -27,7 +27,7 @@ metrics-api:
       - 4010:4010
     command:
       - mock
-      - https://github.com/ministryofjustice/opg-metrics/tree/main/terraform/environment/api/openapi_spec.json
+      - https://github.com/ministryofjustice/opg-metrics/tree/main/terraform/environment/api/openapi_spec.yaml
       - -h
       - 0.0.0.0
       - --dynamic
