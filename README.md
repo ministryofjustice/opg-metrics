@@ -42,6 +42,16 @@ If you choose to use the API Gateway endpoint, you can find more information in 
 
 For additional methods see the [Plugins and integrations](#plugins-and-integrations) section below.
 
+## Generate Documentation
+
+To generate a documentation site from the API Spec, run the following commands.
+
+`yarn install`
+
+`yarn run redoc:build`
+
+Navigate to /docs/openapi/docs/ and open index.html in your browser.
+
 ## Plugins and integrations
 
 The service is built to allow flexibility and ease of integration into a wide range of services. More information on existing integrations can be found in [docs/integrations/README.md](docs/integrations/README.md).
