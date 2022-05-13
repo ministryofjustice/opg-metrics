@@ -1,0 +1,14 @@
+{
+  "name": "opg-metrics",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:ministryofjustice/opg-metrics.git",
+  "author": "Ministry of Justice",
+  "license": "MIT",
+  "scripts": {
+    "redoc:build": "redoc-cli build terraform/environment/api/openapi_spec.yaml -o docs/openapi/docs/index.html"
+  },
+  "devDependencies": {
+    "redoc-cli": "^0.13.13"
+  }
+}
