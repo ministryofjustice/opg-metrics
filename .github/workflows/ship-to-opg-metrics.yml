@@ -1,0 +1,30 @@
+name: Test ship-to-opg-metrics
+on: [pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3.0.2
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.8
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          cd lambda/ship-to-opg-metrics/src
+          pip install -r requirements_dev.txt
+      - name: Test with pytest
+        run: |
+          cd lambda/ship-to-opg-metrics/src
+          pytest --doctest-modules --junitxml=junit/test-results-ship-to-opg-metrics.xml --cov=com --cov-report=xml --cov-report=html
+      - name: Upload pytest test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: pytest-results-ship-to-opg-metrics
+          path: junit/test-results-ship-to-opg-metrics.xml
+        # Use always() to always run this step to publish test results when there are test failures
+        if: ${{ always() }}
