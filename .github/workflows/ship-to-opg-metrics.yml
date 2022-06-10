@@ -20,7 +20,7 @@ jobs:
       - name: Test with pytest
         run: |
           cd lambda/ship-to-opg-metrics/src
-          pytest --doctest-modules --junitxml=junit/test-results-ship-to-opg-metrics.xml --cov=com --cov-report=xml --cov-report=html
+          pytest --doctest-modules --junitxml=junit/test-results-ship-to-opg-metrics.xml
       - name: Upload pytest test results
         uses: actions/upload-artifact@v3
         with:
