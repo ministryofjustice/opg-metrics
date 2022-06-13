@@ -38,16 +38,27 @@ jobs:
 
     steps:
       - name: Check out code
+        id: checkout_code
         uses: actions/checkout@v3.0.2
-      - name: Set up Python 3.8
-        uses: actions/setup-python@v3
-        with:
-          python-version: 3.8
-      - name: Install dependencies
+
+      - name: Build Container
+        id: build_container
         run: |
-          python -m pip install --upgrade pip
-          cd lambda/ship-to-opg-metrics/src
-          pip install -r requirements.txt
-      - name: Build Lambda
-        run: cd lambda/ship-to-opg-metrics/src
-          # TODO: Build docker image and publish to ECR
+          cd lambda/ship-to-opg-metrics
+          docker build --file Dockerfile --tag ecr_url_todo:latest .
+
+      - name: Trivy Image Vulnerability Scanner
+        id: trivy_scan
+        uses: aquasecurity/trivy-action@0.3.0
+        with:
+          image-ref: ecr_url_todo:latest
+          severity: 'HIGH,CRITICAL'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        id: trivy_upload_sarif
+        uses: github/codeql-action/upload-sarif@v2
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
