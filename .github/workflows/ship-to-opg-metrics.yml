@@ -1,9 +1,9 @@
-name: Test ship-to-opg-metrics
+name: ship-to-opg-metrics Lambda
 on: [pull_request]
 
 jobs:
   test:
-    name: Test Ship to OPG Metrics Lambda
+    name: Test Lambda
     runs-on: ubuntu-latest
 
     steps:
@@ -36,7 +36,7 @@ jobs:
         if: ${{ always() }}
 
   build:
-    name: Build Ship to OPG Metrics Lambda
+    name: Build, Scan and Push Lambda
     runs-on: ubuntu-latest
     needs: ['test']
 
@@ -48,13 +48,13 @@ jobs:
       - name: Build Container
         id: build_container
         run: |
-          docker build --file lambda/ship-to-opg-metrics/Dockerfile --tag ecr_url_todo:latest .
+          docker build --file lambda/ship-to-opg-metrics/Dockerfile --tag ship-to-opg-metrics:latest .
 
       - name: Trivy Image Vulnerability Scanner
         id: trivy_scan
         uses: aquasecurity/trivy-action@0.3.0
         with:
-          image-ref: ecr_url_todo:latest
+          image-ref: ship-to-opg-metrics:latest
           severity: 'HIGH,CRITICAL'
           format: 'sarif'
           output: 'trivy-results.sarif'
@@ -65,3 +65,41 @@ jobs:
         if: always()
         with:
           sarif_file: 'trivy-results.sarif'
+
+      - name: Bump version
+        id: bump_version
+        uses: anothrNick/github-tag-action@1.36.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          INITIAL_VERSION: 0.0.0
+          DEFAULT_BUMP: minor
+          PRERELEASE_SUFFIX: ${{ env.BRANCH_NAME }}
+          RELEASE_BRANCHES: main
+          WITH_V: true
+
+      - uses: unfor19/install-aws-cli-action@v1
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1.6.1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+          aws-region: eu-west-1
+          role-to-assume: arn:aws:iam::311462405659:role/opg-metrics
+          role-duration-seconds: 900
+          role-session-name: OPGMetricsECRGithubAction
+      - name: ECR Login
+        id: login_ecr
+        uses: aws-actions/amazon-ecr-login@v1.4.0
+        with:
+          registries: 311462405659
+      - name: Push Container
+        env:
+          ECR_REGISTRY: ${{ steps.login_ecr.outputs.registry }}
+          MAINTENANCE_ECR_REPOSITORY: opg-metrics/ship-to-opg-metrics
+        run: |
+          docker tag ship-to-opg-metrics:latest $ECR_REGISTRY/$MAINTENANCE_ECR_REPOSITORY:${{ steps.bump_version.outputs.tag }}
+          if [ $BRANCH_NAME == "main" ]; then
+            docker tag ship-to-opg-metrics:latest $ECR_REGISTRY/$MAINTENANCE_ECR_REPOSITORY:main-${{ steps.bump_version.outputs.tag }}
+            docker tag ship-to-opg-metrics:latest $ECR_REGISTRY/$MAINTENANCE_ECR_REPOSITORY:latest
+          fi
+            docker push --all-tags $ECR_REGISTRY/$MAINTENANCE_ECR_REPOSITORY
