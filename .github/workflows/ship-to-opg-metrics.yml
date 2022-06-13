@@ -3,6 +3,7 @@ on: [pull_request]
 
 jobs:
   build:
+    name: Test Ship to OPG Metrics Lambda
     runs-on: ubuntu-latest
 
     steps:
