@@ -1,0 +1,99 @@
+name: "[Analysis] Terraform PR"
+
+on: [pull_request]
+
+permissions:
+  actions: read
+  checks: read
+  contents: none
+  deployments: none
+  issues: none
+  packages: none
+  pull-requests: write
+  repository-projects: none
+  security-events: none
+  statuses: none
+
+jobs:
+  tfsec:
+    name: TFSec Static analysis
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        terraform_path: [
+          'terraform/account',
+          'terraform/environment',
+        ]
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+      - name: tfsec with pr comments
+        uses: tfsec/tfsec-pr-commenter-action@v1.2.0
+        with:
+          working_directory: ${{ matrix.terraform_path }}
+          github_token: ${{secrets.GITHUB_TOKEN}}
+      - name: Run tfsec
+        uses: tfsec/tfsec-sarif-action@v0.1.3
+        with:
+          sarif_file: tfsec.sarif
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: tfsec.sarif
+
+  terraform_workflow:
+    name: "Terraform Account Plan"
+    runs-on: ubuntu-latest
+    needs: ['tfsec']
+    outputs:
+      tag: ${{ steps.bump_version.outputs.tag }}
+    strategy:
+      matrix:
+        terraform_path: [
+          'terraform/account',
+          'terraform/environment',
+        ]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: '0'
+      - name: Extract branch name
+        run: |
+          if [ "${{ github.head_ref }}" == "" ]; then
+            echo BRANCH_NAME=main >> $GITHUB_ENV
+          else
+            echo BRANCH_NAME=${{ github.head_ref }} >> $GITHUB_ENV
+          fi
+        id: extract_branch
+      - uses: unfor19/install-aws-cli-action@v1
+      - uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.2.2
+      - name: Configure AWS Credentials For Terraform
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+          aws-region: eu-west-1
+          role-duration-seconds: 3600
+          role-session-name: OPGMetricsECRGithubAction
+
+      - name: Lint Terraform
+        id: tf_lint
+        run: terraform fmt -check -recursive
+        working-directory: ./${{ matrix.terraform_path }}
+        continue-on-error: true
+
+      - name: Terraform Init
+        run: terraform init -input=false
+        working-directory: ./${{ matrix.terraform_path }}
+
+      - name: Terraform Plan
+        env:
+          TF_WORKSPACE: ${{ inputs.workspace_name }}
+        run: |
+          terraform workspace show
+          terraform plan -input=false -parallelism=30
+        working-directory: ./${{ matrix.terraform_path }}
