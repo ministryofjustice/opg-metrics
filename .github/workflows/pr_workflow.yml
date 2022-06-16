@@ -5,6 +5,18 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write
+  security-events: write
+  pull-requests: read
+  actions: none
+  checks: none
+  deployments: none
+  issues: none
+  packages: none
+  repository-projects: none
+  statuses: none
+
 jobs:
   test:
     name: Test Lambdas
