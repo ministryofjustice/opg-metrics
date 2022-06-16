@@ -18,6 +18,12 @@ permissions:
   statuses: none
 
 jobs:
+  test_ship_to_opg_metrics_array:
+    name: Test Lambda
+    uses: ./.github/workflows/python_build_test_array_job.yml
+    with:
+      lambda_name: '["ship-to-opg-metrics", "clsf-to-sqs"]'
+
   test_ship_to_opg_metrics:
     name: Test ship-to-opg-metrics Lambda
     uses: ./.github/workflows/python_build_test_job.yml
