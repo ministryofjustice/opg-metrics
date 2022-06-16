@@ -1,5 +1,3 @@
-# TODO: Make a repeatable workflow, create main.yml and then pass in each lambda name
-
 name: Lambdas
 on: [pull_request]
 
