@@ -1,5 +1,9 @@
-name: Lambdas
-on: [pull_request]
+name: "[Workflow] PR"
+
+on:
+  pull_request:
+    branches:
+      - main
 
 jobs:
   test:
@@ -146,7 +150,7 @@ jobs:
         with:
           sarif_file: tfsec.sarif
 
-  terraform_workflow:
+  terraform_plan_workflow:
     name: "Terraform Account Plan"
     runs-on: ubuntu-latest
     needs: ['tfsec']
@@ -195,7 +199,7 @@ jobs:
 
       - name: Terraform Plan
         env:
-          TF_WORKSPACE: ${{ inputs.workspace_name }}
+          TF_WORKSPACE: development
         run: |
           terraform workspace show
           terraform plan -input=false -parallelism=30
