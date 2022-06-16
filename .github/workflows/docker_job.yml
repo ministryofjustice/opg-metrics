@@ -7,7 +7,7 @@ on:
         type: string
 
 jobs:
-  test:
+  docker_build_scan_push:
     name: Build, Scan and Push Lambdas
     runs-on: ubuntu-latest
     steps:
