@@ -2,7 +2,7 @@ on:
   workflow_call:
     inputs:
       terraform_path:
-        description: 'The name of the lambda to run'
+        description: 'The names of the terraform paths'
         required: true
         type: string
 
@@ -10,6 +10,9 @@ jobs:
   tfsec:
     name: Terraform Plan
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        terraform_path: ${{ fromJSON(inputs.lambda_name) }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -38,12 +41,12 @@ jobs:
       - name: Lint Terraform
         id: tf_lint
         run: terraform fmt -check -recursive
-        working-directory: ./${{ inputs.terraform_path }}
+        working-directory: ./${{ matrix.terraform_path }}
         continue-on-error: true
 
       - name: Terraform Init
         run: terraform init -input=false
-        working-directory: ./${{ inputs.terraform_path }}
+        working-directory: ./${{ matrix.terraform_path }}
 
       - name: Terraform Plan
         env:
@@ -51,4 +54,4 @@ jobs:
         run: |
           terraform workspace show
           terraform plan -input=false -parallelism=30
-        working-directory: ./${{ inputs.terraform_path }}
+        working-directory: ./${{ matrix.terraform_path }}

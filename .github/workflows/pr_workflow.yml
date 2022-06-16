@@ -18,78 +18,23 @@ permissions:
   statuses: none
 
 jobs:
-  test_ship_to_opg_metrics_array:
+  test_lambdas:
     name: Test Lambda
-    uses: ./.github/workflows/python_build_test_array_job.yml
+    uses: ./.github/workflows/python_build_test_job.yml
     with:
       lambda_name: '["ship-to-opg-metrics", "clsf-to-sqs"]'
 
-  test_ship_to_opg_metrics:
-    name: Test ship-to-opg-metrics Lambda
-    uses: ./.github/workflows/python_build_test_job.yml
-    with:
-      lambda_name: ship-to-opg-metrics
-
-  test_clsf_to_sqs:
-    name: Test clsf-to-sqs Lambda
-    uses: ./.github/workflows/python_build_test_job.yml
-    with:
-      lambda_name: clsf-to-sqs
-
-  docker_build_scan_push_ship_to_opg_metrics:
-    name: Build, Scan and Push ship-to-opg-metrics
-    needs: [
-      'test_ship_to_opg_metrics',
-      'test_clsf_to_sqs',
-    ]
-    uses: ./.github/workflows/python_build_test_job.yml
-    with:
-      lambda_name: ship-to-opg-metrics
-    secrets: inherit
-
-  docker_build_scan_push_clsf_to_sqs:
-    name: Build, Scan and Push clsf-to-sqs
-    needs: [
-      'test_ship_to_opg_metrics',
-      'test_clsf_to_sqs',
-    ]
-    uses: ./.github/workflows/python_build_test_job.yml
-    with:
-      lambda_name: clsf-to-sqs
-    secrets: inherit
-
-  tfsec_account:
-    name: TFSec Static analysis account
+  tfsec:
+    name: TFSec Static analysis
     uses: ./.github/workflows/tfsec_job.yml
     with:
-      terraform_path: 'terraform/account'
+      terraform_path: '["terraform/account", "terraform/environment"]'
     secrets: inherit
 
-  tfsec_environment:
-    name: TFSec Static analysis environment
-    uses: ./.github/workflows/tfsec_job.yml
-    with:
-      terraform_path: 'terraform/environment'
-    secrets: inherit
-
-  terraform_plan_workflow_account:
+  terraform_plan_workflow:
     name: Terraform Account Plan
-    needs: [
-      'tfsec_account',
-      'tfsec_environment'
-    ]
+    needs: ['tfsec']
     uses: ./.github/workflows/terraform_account_job.yml
     with:
-      terraform_path: 'terraform/account'
-    secrets: inherit
-
-  terraform_plan_workflow_environment:
-    name: Terraform Environment Plan
-    needs: [
-      'tfsec_account',
-      'tfsec_environment'
-    ]
-    uses: ./.github/workflows/terraform_account_job.yml
-    with:
-      terraform_path: 'terraform/environment'
+      terraform_path: '["terraform/account", "terraform/environment"]'
     secrets: inherit
