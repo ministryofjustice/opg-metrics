@@ -24,6 +24,14 @@ jobs:
     with:
       lambda_name: '["ship-to-opg-metrics", "clsf-to-sqs"]'
 
+  docker_build_scan_push:
+    name: Build, Scan and Push
+    needs: ['test_lambdas']
+    uses: ./.github/workflows/python_build_test_job.yml
+    with:
+      lambda_name: '["ship-to-opg-metrics", "clsf-to-sqs"]'
+    secrets: inherit
+
   tfsec:
     name: TFSec Static analysis
     uses: ./.github/workflows/tfsec_job.yml

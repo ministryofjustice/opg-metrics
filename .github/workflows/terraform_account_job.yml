@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        terraform_path: ${{ fromJSON(inputs.lambda_name) }}
+        terraform_path: ${{ fromJSON(inputs.terraform_path) }}
     steps:
       - uses: actions/checkout@v2
         with:
