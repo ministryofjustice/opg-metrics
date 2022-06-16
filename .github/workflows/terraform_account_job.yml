@@ -38,12 +38,12 @@ jobs:
       - name: Lint Terraform
         id: tf_lint
         run: terraform fmt -check -recursive
-        working-directory: ./${{ input.terraform_path }}
+        working-directory: ./${{ inputs.terraform_path }}
         continue-on-error: true
 
       - name: Terraform Init
         run: terraform init -input=false
-        working-directory: ./${{ input.terraform_path }}
+        working-directory: ./${{ inputs.terraform_path }}
 
       - name: Terraform Plan
         env:
@@ -51,4 +51,4 @@ jobs:
         run: |
           terraform workspace show
           terraform plan -input=false -parallelism=30
-        working-directory: ./${{ input.terraform_path }}
+        working-directory: ./${{ inputs.terraform_path }}
