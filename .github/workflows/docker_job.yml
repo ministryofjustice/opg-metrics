@@ -65,11 +65,11 @@ jobs:
       - name: Push Container
         env:
           ECR_REGISTRY: ${{ steps.login_ecr.outputs.registry }}
-          MAINTENANCE_ECR_REPOSITORY: opg-metrics/${{ inputs.lambda_name }}
+          ECR_REPOSITORY: opg-metrics/${{ inputs.lambda_name }}
         run: |
-          docker tag ${{ inputs.lambda_name }}:latest $ECR_REGISTRY/$MAINTENANCE_ECR_REPOSITORY:${{ steps.bump_version.outputs.tag }}
+          docker tag ${{ inputs.lambda_name }}:latest $ECR_REGISTRY/$ECR_REPOSITORY:${{ steps.bump_version.outputs.tag }}
           if [ $BRANCH_NAME == "main" ]; then
-            docker tag ${{ inputs.lambda_name }}:latest $ECR_REGISTRY/$MAINTENANCE_ECR_REPOSITORY:main-${{ steps.bump_version.outputs.tag }}
-            docker tag ${{ inputs.lambda_name }}:latest $ECR_REGISTRY/$MAINTENANCE_ECR_REPOSITORY:latest
+            docker tag ${{ inputs.lambda_name }}:latest $ECR_REGISTRY/$ECR_REPOSITORY:main-${{ steps.bump_version.outputs.tag }}
+            docker tag ${{ inputs.lambda_name }}:latest $ECR_REGISTRY/$ECR_REPOSITORY:latest
           fi
-            docker push --all-tags $ECR_REGISTRY/$MAINTENANCE_ECR_REPOSITORY
+            docker push --all-tags $ECR_REGISTRY/$ECR_REPOSITORY
