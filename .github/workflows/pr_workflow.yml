@@ -44,9 +44,9 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   terraform_plan_workflow:
-    name: Terraform Account Plan
+    name: Terraform Plan
     needs: ['tfsec']
-    uses: ./.github/workflows/terraform_account_job.yml
+    uses: ./.github/workflows/terraform_plan_job.yml
     with:
       terraform_path: '["terraform/account", "terraform/environment"]'
     secrets:
