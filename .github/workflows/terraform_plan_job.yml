@@ -5,6 +5,11 @@ on:
         description: 'The names of the terraform paths'
         required: true
         type: string
+    secrets:
+      AWS_ACCESS_KEY_ID_ACTIONS:
+        required: true
+      AWS_SECRET_ACCESS_KEY_ACTIONS:
+        required: true
 
 jobs:
   tfsec:

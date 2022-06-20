@@ -5,6 +5,13 @@ on:
         description: 'The name of the lambda Docker container'
         required: true
         type: string
+    secrets:
+      GITHUB_TOKEN:
+          required: true
+      AWS_ACCESS_KEY_ID_ACTIONS:
+        required: true
+      AWS_SECRET_ACCESS_KEY_ACTIONS:
+        required: true
 
 jobs:
   docker_build_scan_push:

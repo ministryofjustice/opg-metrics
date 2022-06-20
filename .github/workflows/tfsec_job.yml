@@ -5,6 +5,9 @@ on:
         description: 'The names of the terraform paths'
         required: true
         type: string
+    secrets:
+      GITHUB_TOKEN:
+          required: true
 
 jobs:
   tfsec:
