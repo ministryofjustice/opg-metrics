@@ -27,17 +27,21 @@ jobs:
   docker_build_scan_push:
     name: Build, Scan and Push
     needs: ['test_lambdas']
-    uses: ./.github/workflows/python_build_test_job.yml
+    uses: ./.github/workflows/docker_job.yml
     with:
       lambda_name: '["ship-to-opg-metrics", "clsf-to-sqs"]'
-    secrets: inherit
+    secrets:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
 
   tfsec:
     name: TFSec Static analysis
     uses: ./.github/workflows/tfsec_job.yml
     with:
       terraform_path: '["terraform/account", "terraform/environment"]'
-    secrets: inherit
+    secrets:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   terraform_plan_workflow:
     name: Terraform Account Plan
@@ -45,7 +49,9 @@ jobs:
     uses: ./.github/workflows/terraform_account_job.yml
     with:
       terraform_path: '["terraform/account", "terraform/environment"]'
-    secrets: inherit
+    secrets:
+      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
 
   terraform_apply_workflow:
     name: "Terraform Apply"
