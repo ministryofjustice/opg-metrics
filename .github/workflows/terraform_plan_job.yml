@@ -6,9 +6,9 @@ on:
         required: true
         type: string
     secrets:
-      AWS_ACCESS_KEY_ID_ACTIONS:
+      aws_access_key_id_actions:
         required: true
-      AWS_SECRET_ACCESS_KEY_ACTIONS:
+      aws_secret_access_key_actions:
         required: true
 
 jobs:
@@ -37,8 +37,8 @@ jobs:
       - name: Configure AWS Credentials For Terraform
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+          aws-access-key-id: ${{ secrets.aws_access_key_id_actions }}
+          aws-secret-access-key: ${{ secrets.aws_secret_access_key_actions }}
           aws-region: eu-west-1
           role-duration-seconds: 3600
           role-session-name: OPGMetricsECRGithubAction

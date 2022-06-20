@@ -31,9 +31,9 @@ jobs:
     with:
       lambda_name: '["ship-to-opg-metrics", "clsf-to-sqs"]'
     secrets:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+      github_token: ${{ secrets.GITHUB_TOKEN }}
+      aws_access_key_id_actions: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+      aws_secret_access_key_actions: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
 
   tfsec:
     name: TFSec Static analysis
@@ -41,7 +41,7 @@ jobs:
     with:
       terraform_path: '["terraform/account", "terraform/environment"]'
     secrets:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      github_token: ${{ secrets.GITHUB_TOKEN }}
 
   terraform_plan_workflow:
     name: Terraform Plan
@@ -50,8 +50,8 @@ jobs:
     with:
       terraform_path: '["terraform/account", "terraform/environment"]'
     secrets:
-      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+      aws_access_key_id_actions: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+      aws_secret_access_key_actions: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
 
   terraform_apply_workflow:
     name: "Terraform Apply"

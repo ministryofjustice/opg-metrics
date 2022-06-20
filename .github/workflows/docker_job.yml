@@ -6,11 +6,11 @@ on:
         required: true
         type: string
     secrets:
-      GITHUB_TOKEN:
+      github_token:
           required: true
-      AWS_ACCESS_KEY_ID_ACTIONS:
+      aws_access_key_id_actions:
         required: true
-      AWS_SECRET_ACCESS_KEY_ACTIONS:
+      aws_secret_access_key_actions:
         required: true
 
 jobs:
@@ -47,7 +47,7 @@ jobs:
         id: bump_version
         uses: anothrNick/github-tag-action@1.36.0
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.github_token }}
           INITIAL_VERSION: 0.0.0
           DEFAULT_BUMP: minor
           PRERELEASE_SUFFIX: ${{ env.BRANCH_NAME }}
@@ -58,8 +58,8 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1.6.1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+          aws-access-key-id: ${{ secrets.aws_access_key_id_actions }}
+          aws-secret-access-key: ${{ secrets.aws_secret_access_key_actions }}
           aws-region: eu-west-1
           role-to-assume: arn:aws:iam::311462405659:role/opg-metrics-ci
           role-duration-seconds: 900
