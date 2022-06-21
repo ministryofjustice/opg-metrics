@@ -1,7 +1,7 @@
 name: "[Analysis - Infrastructure] TFSec To Github Security"
 
 on:
-  workflow_call:
+  workflow_dispatch:
   push:
     branches: [ main, master ]
     paths:
