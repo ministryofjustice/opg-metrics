@@ -6,15 +6,15 @@ on:
       - main
 
 permissions:
-  contents: write
-  security-events: write
-  pull-requests: read
-  actions: none
-  checks: none
+  actions: read
+  checks: read
+  contents: none
   deployments: none
   issues: none
   packages: none
+  pull-requests: write
   repository-projects: none
+  security-events: none
   statuses: none
 
 jobs:
