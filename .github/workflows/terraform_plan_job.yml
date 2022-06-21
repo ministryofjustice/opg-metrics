@@ -2,7 +2,7 @@ on:
   workflow_call:
     inputs:
       terraform_path:
-        description: 'The names of the terraform paths'
+        description: 'The name of the terraform paths'
         required: true
         type: string
       workspace:
@@ -16,12 +16,8 @@ on:
         required: true
 
 jobs:
-  tfsec:
-    name: Terraform Plan
+  terraform_workflow:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        terraform_path: ${{ fromJSON(inputs.terraform_path) }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -50,12 +46,12 @@ jobs:
       - name: Lint Terraform
         id: tf_lint
         run: terraform fmt -check -recursive
-        working-directory: ./${{ matrix.terraform_path }}
+        working-directory: ./${{ inputs.terraform_path }}
         continue-on-error: true
 
       - name: Terraform Init
         run: terraform init -input=false
-        working-directory: ./${{ matrix.terraform_path }}
+        working-directory: ./${{ inputs.terraform_path }}
 
       - name: Terraform Plan
         env:
@@ -63,4 +59,12 @@ jobs:
         run: |
           terraform workspace show
           terraform plan -input=false -parallelism=30
-        working-directory: ./${{ matrix.terraform_path }}
+        working-directory: ./${{ inputs.terraform_path }}
+
+      - name: Terraform Apply Environment
+        env:
+          TF_WORKSPACE: ${{ inputs.workspace }}
+        if: github.ref == 'refs/heads/main'
+        run: |
+          terraform apply -lock-timeout=300s -input=false -auto-approve -parallelism=30
+        working-directory: ./${{ inputs.terraform_path }}
