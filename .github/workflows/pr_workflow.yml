@@ -56,6 +56,7 @@ jobs:
     uses: ./.github/workflows/terraform_plan_job.yml
     with:
       terraform_path: '["terraform/account", "terraform/environment"]'
+      workspace: development
     secrets:
       aws_access_key_id_actions: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
       aws_secret_access_key_actions: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}

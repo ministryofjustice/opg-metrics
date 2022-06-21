@@ -5,6 +5,10 @@ on:
         description: 'The names of the terraform paths'
         required: true
         type: string
+      workspace:
+        description: 'Terraform workspace'
+        required: true
+        type: string
     secrets:
       aws_access_key_id_actions:
         required: true
@@ -55,7 +59,7 @@ jobs:
 
       - name: Terraform Plan
         env:
-          TF_WORKSPACE: development
+          TF_WORKSPACE: ${{ inputs.workspace }}
         run: |
           terraform workspace show
           terraform plan -input=false -parallelism=30
