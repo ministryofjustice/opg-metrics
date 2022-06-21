@@ -1,0 +1,45 @@
+on:
+  schedule:
+    - cron: '0 2 * * *' # Every 2am
+
+jobs:
+  taint_api_keys:
+    name: Taint API Keys
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+      - name: Terraform Init
+        run: terraform init -input=false
+        working-directory: ./terraform/environment
+      - name: Terraform taint api keys
+        env:
+          TF_WORKSPACE: development
+        run: |
+          all_aws_access_keys=$(terraform state list | grep aws_api_gateway_api_key | sed 's/*//g')
+          for access_key in $all_aws_access_keys
+          do
+            terraform taint $access_key
+          done
+        working-directory: ./terraform/environment
+
+  replace_api_keys:
+    name: Replace API Keys
+    runs-on: ubuntu-latest
+    needs: ['taint_api_keys']
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+      - name: Terraform Init
+        run: terraform init -input=false
+        working-directory: ./terraform/environment
+      - name: Terraform replace api keys
+        env:
+          TF_WORKSPACE: development
+        run: |
+          terraform apply | ~/project/scripts/pipeline/redact_output.sh
+        working-directory: ./terraform/environment
