@@ -6,8 +6,8 @@ on:
         required: true
         type: string
     secrets:
-      github_token:
-          required: true
+      token:
+        required: true
       aws_access_key_id_actions:
         required: true
       aws_secret_access_key_actions:
@@ -47,7 +47,7 @@ jobs:
         id: bump_version
         uses: anothrNick/github-tag-action@1.36.0
         env:
-          GITHUB_TOKEN: ${{ secrets.github_token }}
+          GITHUB_TOKEN: ${{ secrets.token }}
           INITIAL_VERSION: 0.0.0
           DEFAULT_BUMP: minor
           PRERELEASE_SUFFIX: ${{ env.BRANCH_NAME }}
