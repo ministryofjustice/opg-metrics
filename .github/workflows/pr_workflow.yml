@@ -36,10 +36,10 @@ jobs:
       aws_secret_access_key_actions: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
 
   tfsec:
-    name: TFSec Static analysis
-    uses: ./.github/workflows/tfsec_job.yml
+    uses: ministryofjustice/opg-github-workflows/.github/workflows/analysis-infrastructure-tfsec-pr-feedback.yml@main
     with:
       terraform_path: '["terraform/account", "terraform/environment"]'
+      soft_fail: true
     secrets:
       source_github_token: ${{ secrets.GITHUB_TOKEN }}
 
