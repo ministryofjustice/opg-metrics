@@ -2,12 +2,9 @@ name: "[Analysis - Infrastructure] TFSec Pull Request Feedback"
 
 on:
   workflow_dispatch:
-  push:
+  pull_request:
     branches: [ main, master ]
-  schedule:
-    # 8am every wednesday
-    - cron: '0 8 * * 3'
-
+    paths: ["**.tf"]
   
 permissions:
   contents: read
