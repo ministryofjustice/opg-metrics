@@ -20,7 +20,7 @@ permissions:
   packages: none
   pull-requests: write
   repository-projects: none
-  security-events: none
+  security-events: write
   statuses: none
 
 jobs:
