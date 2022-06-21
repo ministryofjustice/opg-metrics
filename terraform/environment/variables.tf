@@ -5,5 +5,5 @@ variable "name" {
 
 variable "flink_name" {
   default     = "opg-metrics-flink"
-  description = "Name used for Kinesis Analytics Application and its resources."
+  description = "Name used for Kinesis Analytics Application and its resources"
 }
