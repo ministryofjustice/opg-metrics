@@ -1,27 +1,27 @@
 name: "[Analysis - Infrastructure] TFSec Pull Request Feedback"
 
 on:
-  pull_request:
-    branches: [ main ]
-    paths:
-      - "**.tf"
+  workflow_dispatch:
+  push:
+    branches: [ main, master ]
+  schedule:
+    # 8am every wednesday
+    - cron: '0 8 * * 3'
 
+  
 permissions:
-  actions: read
-  checks: read
-  contents: none
+  contents: read
+  security-events: write
+  pull-requests: read
+  actions: none
+  checks: none
   deployments: none
   issues: none
   packages: none
-  pull-requests: write
   repository-projects: none
-  security-events: none
   statuses: none
-
 jobs:
-  tfsec_pr_feedback:
-    uses: ministryofjustice/opg-github-workflows/.github/workflows/analysis-infrastructure-tfsec-pr-feedback.yml@main
+  sast_to_github_security:
+    uses: ministryofjustice/opg-github-workflows/.github/workflows/analysis-application-codeql-sast-to-github-security.yml@main
     with:
-      terraform_path: '["terraform/account", "terraform/environment"]'
-    secrets:
-      source_github_token: ${{ secrets.GITHUB_TOKEN }}
+      application_languages: '["python"]'
