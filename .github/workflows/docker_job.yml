@@ -1,7 +1,7 @@
 on:
   workflow_call:
     inputs:
-      lambda_name:
+      lambda_names:
         description: 'The name of the lambda Docker container'
         required: true
         type: string
@@ -17,6 +17,9 @@ jobs:
   docker_build_scan_push:
     name: Build, Scan and Push Lambdas
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        lambda_name: ${{ fromJSON(inputs.lambda_names) }}
     steps:
       - name: Check out code
         id: checkout_code
@@ -25,13 +28,13 @@ jobs:
       - name: Build Container
         id: build_container
         run: |
-          docker build --file lambda/${{ inputs.lambda_name }}/Dockerfile --tag ${{ inputs.lambda_name }}:latest .
+          docker build --file lambda/${{ matrix.lambda_name }}/Dockerfile --tag ${{ matrix.lambda_name }}:latest .
 
       - name: Trivy Image Vulnerability Scanner
         id: trivy_scan
         uses: aquasecurity/trivy-action@0.3.0
         with:
-          image-ref: ${{ inputs.lambda_name }}:latest
+          image-ref: ${{ matrix.lambda_name }}:latest
           severity: 'HIGH,CRITICAL'
           format: 'sarif'
           output: 'trivy-results.sarif'
@@ -72,11 +75,11 @@ jobs:
       - name: Push Container
         env:
           ECR_REGISTRY: ${{ steps.login_ecr.outputs.registry }}
-          ECR_REPOSITORY: opg-metrics/${{ inputs.lambda_name }}
+          ECR_REPOSITORY: opg-metrics/${{ matrix.lambda_name }}
         run: |
-          docker tag ${{ inputs.lambda_name }}:latest $ECR_REGISTRY/$ECR_REPOSITORY:${{ steps.bump_version.outputs.tag }}
+          docker tag ${{ matrix.lambda_name }}:latest $ECR_REGISTRY/$ECR_REPOSITORY:${{ steps.bump_version.outputs.tag }}
           if [ $BRANCH_NAME == "main" ]; then
-            docker tag ${{ inputs.lambda_name }}:latest $ECR_REGISTRY/$ECR_REPOSITORY:main-${{ steps.bump_version.outputs.tag }}
-            docker tag ${{ inputs.lambda_name }}:latest $ECR_REGISTRY/$ECR_REPOSITORY:latest
+            docker tag ${{ matrix.lambda_name }}:latest $ECR_REGISTRY/$ECR_REPOSITORY:main-${{ steps.bump_version.outputs.tag }}
+            docker tag ${{ matrix.lambda_name }}:latest $ECR_REGISTRY/$ECR_REPOSITORY:latest
           fi
             docker push --all-tags $ECR_REGISTRY/$ECR_REPOSITORY
