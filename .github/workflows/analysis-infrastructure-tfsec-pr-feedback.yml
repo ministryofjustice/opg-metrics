@@ -11,8 +11,8 @@ on:
   
 permissions:
   contents: read
-  security-events: write
-  pull-requests: read
+  security-events: none
+  pull-requests: write
   actions: none
   checks: none
   deployments: none
@@ -21,7 +21,9 @@ permissions:
   repository-projects: none
   statuses: none
 jobs:
-  sast_to_github_security:
-    uses: ministryofjustice/opg-github-workflows/.github/workflows/analysis-application-codeql-sast-to-github-security.yml@main
+  tfsec_pr_feedback:
+    uses: ministryofjustice/opg-github-workflows/.github/workflows/analysis-infrastructure-tfsec-pr-feedback.yml@main
     with:
-      application_languages: '["python"]'
+      terraform_path: '["terraform/account", "terraform/environment"]'
+    secrets:
+      source_github_token: ${{ secrets.GITHUB_TOKEN }}
