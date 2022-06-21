@@ -24,14 +24,21 @@ jobs:
     with:
       lambda_name: '["ship-to-opg-metrics", "clsf-to-sqs"]'
 
+  create_tags:
+    name: Create Tags
+    needs: ['test_lambdas']
+    uses: ./.github/workflows/tags_job.yml
+    secrets:
+      source_github_token: ${{ secrets.GITHUB_TOKEN }}
+
   docker_build_scan_push:
     name: Build, Scan and Push
-    needs: ['test_lambdas']
+    needs: ['create_tags']
     uses: ./.github/workflows/docker_job.yml
     with:
       lambda_names: '["ship-to-opg-metrics", "clsf-to-sqs"]'
+      tag: ${{ needs.create_tags.outputs.version_tag }}
     secrets:
-      source_github_token: ${{ secrets.GITHUB_TOKEN }}
       aws_access_key_id_actions: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
       aws_secret_access_key_actions: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
 

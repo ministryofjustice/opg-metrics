@@ -5,9 +5,12 @@ on:
         description: 'The name of the lambda Docker container'
         required: true
         type: string
-    secrets:
-      source_github_token:
+      tag:
+        description: 'Tag for docker image'
         required: true
+        type: string
+
+    secrets:
       aws_access_key_id_actions:
         required: true
       aws_secret_access_key_actions:
@@ -46,17 +49,6 @@ jobs:
         with:
           sarif_file: 'trivy-results.sarif'
 
-      - name: Bump version
-        id: bump_version
-        uses: anothrNick/github-tag-action@1.36.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.source_github_token }}
-          INITIAL_VERSION: 0.0.0
-          DEFAULT_BUMP: minor
-          PRERELEASE_SUFFIX: ${{ env.BRANCH_NAME }}
-          RELEASE_BRANCHES: main
-          WITH_V: true
-
       - uses: unfor19/install-aws-cli-action@v1
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1.6.1
@@ -77,9 +69,9 @@ jobs:
           ECR_REGISTRY: ${{ steps.login_ecr.outputs.registry }}
           ECR_REPOSITORY: opg-metrics/${{ matrix.lambda_name }}
         run: |
-          docker tag ${{ matrix.lambda_name }}:latest $ECR_REGISTRY/$ECR_REPOSITORY:${{ steps.bump_version.outputs.tag }}
+          docker tag ${{ matrix.lambda_name }}:latest $ECR_REGISTRY/$ECR_REPOSITORY:${{ inputs.tag }}
           if [ $BRANCH_NAME == "main" ]; then
-            docker tag ${{ matrix.lambda_name }}:latest $ECR_REGISTRY/$ECR_REPOSITORY:main-${{ steps.bump_version.outputs.tag }}
+            docker tag ${{ matrix.lambda_name }}:latest $ECR_REGISTRY/$ECR_REPOSITORY:main-${{ inputs.tag }}
             docker tag ${{ matrix.lambda_name }}:latest $ECR_REGISTRY/$ECR_REPOSITORY:latest
           fi
             docker push --all-tags $ECR_REGISTRY/$ECR_REPOSITORY
