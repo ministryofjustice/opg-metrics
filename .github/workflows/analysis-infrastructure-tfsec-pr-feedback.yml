@@ -24,4 +24,4 @@ jobs:
     with:
       terraform_path: '["terraform/account", "terraform/environment"]'
     secrets:
-      github_token: ${{ secrets.GITHUB_TOKEN }}
+      source_github_token: ${{ secrets.GITHUB_TOKEN }}
