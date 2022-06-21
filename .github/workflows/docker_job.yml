@@ -9,7 +9,6 @@ on:
         description: 'Tag for docker image'
         required: true
         type: string
-
     secrets:
       aws_access_key_id_actions:
         required: true
