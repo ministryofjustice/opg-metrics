@@ -8,13 +8,13 @@ on:
 permissions:
   actions: read
   checks: read
-  contents: none
+  contents: write
   deployments: none
   issues: none
   packages: none
   pull-requests: write
   repository-projects: none
-  security-events: none
+  security-events: write
   statuses: none
 
 jobs:
