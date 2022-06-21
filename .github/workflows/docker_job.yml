@@ -1,0 +1,77 @@
+on:
+  workflow_call:
+    inputs:
+      lambda_names:
+        description: 'The name of the lambda Docker container'
+        required: true
+        type: string
+      tag:
+        description: 'Tag for docker image'
+        required: true
+        type: string
+
+    secrets:
+      aws_access_key_id_actions:
+        required: true
+      aws_secret_access_key_actions:
+        required: true
+
+jobs:
+  docker_build_scan_push:
+    name: Build, Scan and Push Lambdas
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        lambda_name: ${{ fromJSON(inputs.lambda_names) }}
+    steps:
+      - name: Check out code
+        id: checkout_code
+        uses: actions/checkout@v3.0.2
+
+      - name: Build Container
+        id: build_container
+        run: |
+          docker build --file lambda/${{ matrix.lambda_name }}/Dockerfile --tag ${{ matrix.lambda_name }}:latest .
+
+      - name: Trivy Image Vulnerability Scanner
+        id: trivy_scan
+        uses: aquasecurity/trivy-action@0.3.0
+        with:
+          image-ref: ${{ matrix.lambda_name }}:latest
+          severity: 'HIGH,CRITICAL'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        id: trivy_upload_sarif
+        uses: github/codeql-action/upload-sarif@v2
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+      - uses: unfor19/install-aws-cli-action@v1
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1.6.1
+        with:
+          aws-access-key-id: ${{ secrets.aws_access_key_id_actions }}
+          aws-secret-access-key: ${{ secrets.aws_secret_access_key_actions }}
+          aws-region: eu-west-1
+          role-to-assume: arn:aws:iam::311462405659:role/opg-metrics-ci
+          role-duration-seconds: 900
+          role-session-name: OPGMetricsECRGithubAction
+      - name: ECR Login
+        id: login_ecr
+        uses: aws-actions/amazon-ecr-login@v1.4.0
+        with:
+          registries: 311462405659
+      - name: Push Container
+        env:
+          ECR_REGISTRY: ${{ steps.login_ecr.outputs.registry }}
+          ECR_REPOSITORY: opg-metrics/${{ matrix.lambda_name }}
+        run: |
+          docker tag ${{ matrix.lambda_name }}:latest $ECR_REGISTRY/$ECR_REPOSITORY:${{ inputs.tag }}
+          if [ $BRANCH_NAME == "main" ]; then
+            docker tag ${{ matrix.lambda_name }}:latest $ECR_REGISTRY/$ECR_REPOSITORY:main-${{ inputs.tag }}
+            docker tag ${{ matrix.lambda_name }}:latest $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          fi
+            docker push --all-tags $ECR_REGISTRY/$ECR_REPOSITORY

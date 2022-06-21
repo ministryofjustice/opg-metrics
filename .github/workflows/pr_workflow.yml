@@ -1,0 +1,61 @@
+name: "[Workflow] PR"
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  actions: read
+  checks: read
+  contents: write
+  deployments: none
+  issues: none
+  packages: none
+  pull-requests: write
+  repository-projects: none
+  security-events: write
+  statuses: none
+
+jobs:
+  test_lambdas:
+    name: Test Lambda
+    uses: ./.github/workflows/python_build_test_job.yml
+    with:
+      lambda_name: '["ship-to-opg-metrics", "clsf-to-sqs"]'
+
+  create_tags:
+    name: Create Tags
+    needs: ['test_lambdas']
+    uses: ./.github/workflows/tags_job.yml
+    secrets:
+      source_github_token: ${{ secrets.GITHUB_TOKEN }}
+
+  docker_build_scan_push:
+    name: Build, Scan and Push
+    needs: ['create_tags']
+    uses: ./.github/workflows/docker_job.yml
+    with:
+      lambda_names: '["ship-to-opg-metrics", "clsf-to-sqs"]'
+      tag: ${{ needs.create_tags.outputs.version_tag }}
+    secrets:
+      aws_access_key_id_actions: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+      aws_secret_access_key_actions: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+
+  tfsec:
+    uses: ministryofjustice/opg-github-workflows/.github/workflows/analysis-infrastructure-tfsec-pr-feedback.yml@main
+    with:
+      terraform_path: '["terraform/account", "terraform/environment"]'
+      soft_fail: true
+    secrets:
+      source_github_token: ${{ secrets.GITHUB_TOKEN }}
+
+  terraform_plan_workflow:
+    name: Terraform Plan
+    needs: ['tfsec']
+    uses: ./.github/workflows/terraform_plan_job.yml
+    with:
+      terraform_path: '["terraform/account", "terraform/environment"]'
+    secrets:
+      aws_access_key_id_actions: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+      aws_secret_access_key_actions: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}

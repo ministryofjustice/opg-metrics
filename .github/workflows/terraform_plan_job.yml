@@ -1,0 +1,62 @@
+on:
+  workflow_call:
+    inputs:
+      terraform_path:
+        description: 'The names of the terraform paths'
+        required: true
+        type: string
+    secrets:
+      aws_access_key_id_actions:
+        required: true
+      aws_secret_access_key_actions:
+        required: true
+
+jobs:
+  tfsec:
+    name: Terraform Plan
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        terraform_path: ${{ fromJSON(inputs.terraform_path) }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: '0'
+      - name: Extract branch name
+        run: |
+          if [ "${{ github.head_ref }}" == "" ]; then
+            echo BRANCH_NAME=main >> $GITHUB_ENV
+          else
+            echo BRANCH_NAME=${{ github.head_ref }} >> $GITHUB_ENV
+          fi
+        id: extract_branch
+      - uses: unfor19/install-aws-cli-action@v1
+      - uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.0.10
+      - name: Configure AWS Credentials For Terraform
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.aws_access_key_id_actions }}
+          aws-secret-access-key: ${{ secrets.aws_secret_access_key_actions }}
+          aws-region: eu-west-1
+          role-duration-seconds: 3600
+          role-session-name: OPGMetricsECRGithubAction
+
+      - name: Lint Terraform
+        id: tf_lint
+        run: terraform fmt -check -recursive
+        working-directory: ./${{ matrix.terraform_path }}
+        continue-on-error: true
+
+      - name: Terraform Init
+        run: terraform init -input=false
+        working-directory: ./${{ matrix.terraform_path }}
+
+      - name: Terraform Plan
+        env:
+          TF_WORKSPACE: development
+        run: |
+          terraform workspace show
+          terraform plan -input=false -parallelism=30
+        working-directory: ./${{ matrix.terraform_path }}

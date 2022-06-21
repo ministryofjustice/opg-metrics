@@ -1,0 +1,35 @@
+on:
+  workflow_call:
+    outputs:
+      version_tag:
+        description: "Version Tag"
+        value: ${{ jobs.create_tags.outputs.version_tag }}
+    secrets:
+      source_github_token:
+          required: true
+
+jobs:
+  create_tags:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Extract branch name
+        id: extract_branch
+        run: |
+          if [ "$GITHUB_EVENT_NAME" == "push" ]; then
+            echo BRANCH_NAME=main >> $GITHUB_ENV
+          else
+            echo BRANCH_NAME=${{ github.head_ref }} >> $GITHUB_ENV
+          fi
+      - name: Bump version
+        id: bump_version
+        uses: anothrNick/github-tag-action@1.36.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.source_github_token }}
+          INITIAL_VERSION: 0.0.0
+          DEFAULT_BUMP: minor
+          PRERELEASE_SUFFIX: ${{ env.BRANCH_NAME }}
+          RELEASE_BRANCHES: main
+          WITH_V: true
+    outputs:
+      version_tag: ${{ steps.bump_version.outputs.tag }}
