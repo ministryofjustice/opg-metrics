@@ -1,0 +1,23 @@
+name: "[Analysis - Infrastructure] TFSec Pull Request Feedback"
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - "**.tf"
+
+permissions:
+  actions: read
+  checks: read
+  contents: none
+  deployments: none
+  issues: none
+  packages: none
+  pull-requests: write
+  repository-projects: none
+  security-events: none
+  statuses: none
+
+jobs:
+  tfsec_pr_feedback:
+    uses: ministryofjustice/opg-github-workflows/.github/workflows/analysis-infrastructure-tfsec-pr-feedback.yml
