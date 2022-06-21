@@ -20,4 +20,8 @@ permissions:
 
 jobs:
   tfsec_pr_feedback:
-    uses: ministryofjustice/opg-github-workflows/.github/workflows/analysis-infrastructure-tfsec-pr-feedback.yml
+    uses: ministryofjustice/opg-github-workflows/.github/workflows/analysis-infrastructure-tfsec-pr-feedback.yml@main
+    with:
+      terraform_path: '["terraform/account", "terraform/environment"]'
+    secrets:
+      github_token: ${{ secrets.GITHUB_TOKEN }}
