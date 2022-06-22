@@ -32,21 +32,11 @@ jobs:
         run: |
           docker build --file lambda/${{ matrix.lambda_name }}/Dockerfile --tag ${{ matrix.lambda_name }}:latest .
 
-      - name: Trivy Image Vulnerability Scanner
-        id: trivy_scan
-        uses: aquasecurity/trivy-action@0.3.0
+      - name: Trivy
+        uses: ministryofjustice/opg-github-workflows/.github/workflows/analysis-containers-trivy-to-github-security.yml@main
         with:
-          image-ref: ${{ matrix.lambda_name }}:latest
-          severity: 'HIGH,CRITICAL'
-          format: 'sarif'
-          output: 'trivy-results.sarif'
-
-      - name: Upload Trivy scan results to GitHub Security tab
-        id: trivy_upload_sarif
-        uses: github/codeql-action/upload-sarif@v2
-        if: always()
-        with:
-          sarif_file: 'trivy-results.sarif'
+          terraform_path: ${{ format('{0}{1}{2}', '["', matrix.lambda_name, '"]') }}
+          job_strategy_fail_fast: false
 
       - uses: unfor19/install-aws-cli-action@v1
       - name: Configure AWS Credentials
