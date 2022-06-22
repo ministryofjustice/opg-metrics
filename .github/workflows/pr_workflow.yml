@@ -18,6 +18,9 @@ permissions:
   statuses: none
 
 jobs:
+  branch_name:
+    uses: ministryofjustice/opg-github-workflows/.github/workflows/data-parse-branch-name.yml@main
+
   test_lambdas:
     name: Test Lambda
     uses: ./.github/workflows/python_build_test_job.yml
@@ -26,8 +29,10 @@ jobs:
 
   create_tags:
     name: Create Tags
-    needs: ['test_lambdas']
+    needs: ['branch_name', 'test_lambdas']
     uses: ./.github/workflows/tags_job.yml
+    with:
+      branch_name: ${{ env.BRANCH_NAME }}
     secrets:
       source_github_token: ${{ secrets.GITHUB_TOKEN }}
 
