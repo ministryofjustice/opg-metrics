@@ -32,7 +32,7 @@ jobs:
     needs: ['branch_name', 'test_lambdas']
     uses: ./.github/workflows/tags_job.yml
     with:
-      branch_name: ${{ steps.branch_name.outputs.raw_branch_name }}
+      branch_name: ${{ jobs.branch_name.outputs.raw_branch_name }}
     secrets:
       source_github_token: ${{ secrets.GITHUB_TOKEN }}
 
