@@ -1,4 +1,5 @@
-[![CircleCI](https://circleci.com/gh/ministryofjustice/opg-metrics.svg?style=shield)](https://circleci.com/gh/ministryofjustice/opg-metrics)
+![path_to_live_workflow](https://github.com/ministryofjustice/opg-metrics/actions/workflows/path_to_live_workflow.yml/badge.svg)
+![path_to_live_workflow](https://img.shields.io/github/license/ministryofjustice/opg-metrics.svg)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 [![pre-commit](https://github.com/ministryofjustice/opg-metrics/workflows/Swagger-Documentation/badge.svg)](https://github.com/ministryofjustice/opg-metrics/workflows/Swagger-Documentation)
 
