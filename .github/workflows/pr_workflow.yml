@@ -21,6 +21,10 @@ jobs:
   branch_name:
     uses: ministryofjustice/opg-github-workflows/.github/workflows/data-parse-branch-name.yml@main
 
+  build_flink:
+    name: Build Apache Flink Jar
+    uses: ./.github/workflows/apache_flink_job.yml
+
   test_lambdas:
     name: Test Lambda
     uses: ./.github/workflows/python_build_test_job.yml
