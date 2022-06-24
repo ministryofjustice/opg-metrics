@@ -30,7 +30,7 @@ jobs:
       - name: Download Apache Flink Jar
         if: ${{ inputs.download_flink_artifact == true }}
         id: download
-        uses: actions/upload-artifact@v3
+        uses: actions/download-artifact@v3
         with:
           name: kinesis-to-timestream-app
           path: kinesis-analytics-application
