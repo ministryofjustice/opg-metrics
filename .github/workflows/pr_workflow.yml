@@ -19,7 +19,8 @@ permissions:
 
 jobs:
   branch_name:
-    uses: ministryofjustice/opg-github-workflows/.github/workflows/data-parse-branch-name.yml@main
+    uses: ./.github/workflows/data-parse-branch-name.yml
+    #uses: ministryofjustice/opg-github-workflows/.github/workflows/data-parse-branch-name.yml@main
 
   build_flink:
     name: Build Apache Flink Jar
