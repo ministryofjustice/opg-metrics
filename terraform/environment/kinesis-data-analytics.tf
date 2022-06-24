@@ -1,11 +1,11 @@
 resource "aws_s3_bucket" "flink" {
   bucket = var.flink_name
 }
-
+# http data source https://registry.terraform.io/providers/hashicorp/http/latest/docs/data-sources/http
 resource "aws_s3_bucket_object" "flink" {
   bucket = aws_s3_bucket.flink.bucket
   key    = var.flink_name
-  source = "../../kinesis-analytics-application/timestreamsink-1.0-SNAPSHOT.jar"
+  source = "../../kinesis-analytics-application/sample-kinesis-to-timestream-app-0.1-SNAPSHOT.jar"
 }
 
 resource "aws_cloudwatch_log_group" "flink" {
