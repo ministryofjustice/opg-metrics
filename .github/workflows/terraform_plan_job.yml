@@ -9,6 +9,11 @@ on:
         description: 'Terraform workspace'
         required: true
         type: string
+      download_flink_artifact:
+        description: 'Download Apache Flink Artifact'
+        default: false
+        required: false
+        type: boolean
     secrets:
       aws_access_key_id_actions:
         required: true
@@ -23,6 +28,7 @@ jobs:
         with:
           fetch-depth: '0'
       - name: Download Apache Flink Jar
+        if: ${{ inputs.download_flink_artifact == true }}
         id: download
         uses: actions/upload-artifact@v3
         with:

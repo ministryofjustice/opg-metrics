@@ -62,7 +62,7 @@ jobs:
 
   terraform_account_workflow:
     name: Terraform Account
-    needs: ['tfsec', 'docker_build_scan_push', 'build_flink']
+    needs: ['tfsec', 'docker_build_scan_push']
     uses: ./.github/workflows/terraform_plan_job.yml
     with:
       terraform_path: 'terraform/account'
@@ -73,11 +73,12 @@ jobs:
 
   terraform_environment_workflow:
     name: Terraform Environment
-    needs: ['terraform_account_workflow']
+    needs: ['terraform_account_workflow', 'build_flink']
     uses: ./.github/workflows/terraform_plan_job.yml
     with:
       terraform_path: 'terraform/environment'
       workspace: development
+      download_flink_artifact: true
     secrets:
       aws_access_key_id_actions: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
       aws_secret_access_key_actions: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
