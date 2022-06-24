@@ -30,5 +30,3 @@ jobs:
         with:
           name: kinesis-to-timestream-app
           path: integrations/flink_connector/sample-kinesis-to-timestream-app/target/sample-kinesis-to-timestream-app-0.1-SNAPSHOT.jar
-
-# Built jar file in integrations/flink_connector/sample-kinesis-to-timestream-app/target/sample-kinesis-to-timestream-app-0.1-SNAPSHOT.jar
