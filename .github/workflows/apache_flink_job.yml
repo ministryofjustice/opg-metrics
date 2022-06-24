@@ -2,6 +2,11 @@ name: Build and Publish Apache Flink kinesis connector
 
 on:
   workflow_call:
+    secrets:
+      aws_access_key_id_actions:
+        required: true
+      aws_secret_access_key_actions:
+        required: true
 
 # Based on https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
 jobs:
@@ -25,5 +30,11 @@ jobs:
           ls
           cd integrations/flink_connector/sample-kinesis-to-timestream-app
           mvn clean compile && mvn package
+      - uses: shallwefootball/s3-upload-action@master
+        with:
+          aws_key_id: ${{ secrets.aws_access_key_id_actions }}
+          aws_secret_access_key: ${{ secrets.aws_secret_access_key_actions}}
+          aws_bucket: 'opg-metrics'
+          source_dir: 'integrations/flink_connector/sample-kinesis-to-timestream-app/target'
 
-# Built jar file in target/sample-kinesis-to-timestream-app-0.1-SNAPSHOT-shaded.jar
+# Built jar file in integrations/flink_connector/sample-kinesis-to-timestream-app/target/sample-kinesis-to-timestream-app-0.1-SNAPSHOT.jar
