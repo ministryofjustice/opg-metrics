@@ -76,9 +76,11 @@ data "aws_iam_policy_document" "api_key_kms" {
 resource "aws_kms_key" "s3_kinesis_data_analytics" {
   description             = "This key is used to encrypt bucket objects"
   deletion_window_in_days = 10
+  enable_key_rotation     = true
 }
 
 resource "aws_kms_key" "s3_flink" {
   description             = "This key is used to encrypt bucket objects"
   deletion_window_in_days = 10
+  enable_key_rotation     = true
 }
