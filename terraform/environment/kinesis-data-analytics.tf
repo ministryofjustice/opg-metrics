@@ -8,8 +8,9 @@ variable "timestream_artifact_name" {
 }
 
 resource "aws_s3_bucket_public_access_block" "flink" {
-  bucket            = aws_s3_bucket.flink.id
-  block_public_acls = true
+  bucket              = aws_s3_bucket.flink.id
+  block_public_acls   = true
+  block_public_policy = true
 }
 
 resource "aws_s3_bucket_object" "flink" {
