@@ -1,3 +1,4 @@
+#tfsec:ignore:aws-s3-enable-versioning
 resource "aws_s3_bucket" "kinesis_data_analytics" {
   bucket = var.name
   acl    = "private"
