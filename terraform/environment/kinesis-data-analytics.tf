@@ -15,6 +15,17 @@ resource "aws_s3_bucket_public_access_block" "flink" {
   restrict_public_buckets = true
 }
 
+resource "aws_s3_bucket_server_side_encryption_configuration" "flink" {
+  bucket = aws_s3_bucket.flink.bucket
+
+  rule {
+    apply_server_side_encryption_by_default {
+      kms_master_key_id = aws_kms_key.s3_flink.arn
+      sse_algorithm     = "aws:kms"
+    }
+  }
+}
+
 resource "aws_s3_bucket_object" "flink" {
   bucket = aws_s3_bucket.flink.bucket
   key    = var.flink_name
