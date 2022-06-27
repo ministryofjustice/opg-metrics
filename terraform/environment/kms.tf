@@ -84,3 +84,9 @@ resource "aws_kms_key" "s3_flink" {
   deletion_window_in_days = 10
   enable_key_rotation     = true
 }
+
+resource "aws_kms_key" "kinesis_metrics_input" {
+  description             = "This key is used to encrypt kinesis streams"
+  deletion_window_in_days = 10
+  enable_key_rotation     = true
+}
