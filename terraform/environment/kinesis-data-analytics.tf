@@ -1,9 +1,15 @@
+#tfsec:ignore:aws-s3-enable-versioning
 resource "aws_s3_bucket" "flink" {
   bucket = var.flink_name
 }
 
 variable "timestream_artifact_name" {
   type = string
+}
+
+resource "aws_s3_bucket_public_access_block" "flink" {
+  bucket            = aws_s3_bucket.flink.id
+  block_public_acls = true
 }
 
 resource "aws_s3_bucket_object" "flink" {
