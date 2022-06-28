@@ -68,6 +68,7 @@ jobs:
       - name: Terraform Plan
         env:
           TF_WORKSPACE: ${{ inputs.workspace }}
+          TF_VAR_timestream_artifact_name: ${{ inputs.download_artifact_name }}
         run: |
           terraform workspace show
           terraform plan -input=false -parallelism=30
@@ -76,6 +77,7 @@ jobs:
       - name: Terraform Apply Environment
         env:
           TF_WORKSPACE: ${{ inputs.workspace }}
+          TF_VAR_timestream_artifact_name: ${{ inputs.download_artifact_name }}
         if: github.ref == 'refs/heads/main'
         run: |
           terraform apply -lock-timeout=300s -input=false -auto-approve -parallelism=30
