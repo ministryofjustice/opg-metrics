@@ -2,10 +2,14 @@ resource "aws_s3_bucket" "flink" {
   bucket = var.flink_name
 }
 
+variable "timestream_artifact_name" {
+  type = string
+}
+
 resource "aws_s3_bucket_object" "flink" {
   bucket = aws_s3_bucket.flink.bucket
   key    = var.flink_name
-  source = "../../kinesis-analytics-application/timestreamsink-1.0-SNAPSHOT.jar"
+  source = "../../kinesis-analytics-application/${var.timestream_artifact_name}.jar"
 }
 
 resource "aws_cloudwatch_log_group" "flink" {
