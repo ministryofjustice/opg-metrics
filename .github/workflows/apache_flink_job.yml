@@ -26,7 +26,6 @@ jobs:
       - name: Build with Maven
         id: maven_build
         run: |
-          ls
           cd integrations/flink_connector/sample-kinesis-to-timestream-app
           mvn clean compile && mvn package -Djar.finalName=opg-metrics-kinesis-to-timestream-app
           echo ::set-output name=artifact_name::opg-metrics-kinesis-to-timestream-app
