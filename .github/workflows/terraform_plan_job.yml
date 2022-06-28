@@ -9,6 +9,19 @@ on:
         description: 'Terraform workspace'
         required: true
         type: string
+      download_artifact:
+        description: 'Download Artifact'
+        required: false
+        default: false
+        type: boolean
+      download_artifact_name:
+        description: 'Artifact name'
+        required: false
+        type: string
+      download_artifact_path_name:
+        description: 'Local artifact path location'
+        required: false
+        type: string
     secrets:
       aws_access_key_id_actions:
         required: true
@@ -22,6 +35,13 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: '0'
+      - name: Download Artifact
+        if: ${{ inputs.download_artifact == true }}
+        id: download
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ inputs.download_artifact_name }}
+          path: ${{ inputs.download_artifact_path_name }}
       - uses: unfor19/install-aws-cli-action@v1
       - uses: hashicorp/setup-terraform@v1
         with:
