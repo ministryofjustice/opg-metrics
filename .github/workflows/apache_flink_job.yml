@@ -21,7 +21,6 @@ jobs:
           distribution: 'adopt'
       - name: Build with Maven
         run: |
-          ls
           cd integrations/flink_connector/sample-kinesis-to-timestream-app
           mvn clean compile && mvn package
       - name: Upload Apache Flink Jar
