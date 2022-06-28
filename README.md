@@ -11,6 +11,10 @@ Building a new metrics service for OPG.
 
 To find out more about this service, see our [about this service](ABOUT_THIS_SERVICE.md) documentation.
 
+## C4 Model
+
+To understand how the service works [see our C4 Model](docs/architecture/diagrams/0003-c4-model.md).
+
 ## Prerequisites
 
 aws-vault for managing AWS access.
