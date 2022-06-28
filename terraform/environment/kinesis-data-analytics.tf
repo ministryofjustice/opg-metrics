@@ -5,7 +5,7 @@ resource "aws_s3_bucket" "flink" {
 resource "aws_s3_bucket_object" "flink" {
   bucket = aws_s3_bucket.flink.bucket
   key    = var.flink_name
-  source = "../../kinesis-analytics-application/sample-kinesis-to-timestream-app-0.1-SNAPSHOT.jar"
+  source = "../../kinesis-analytics-application/opg-metrics-kinesis-to-timestream-app.jar"
 }
 
 resource "aws_cloudwatch_log_group" "flink" {
