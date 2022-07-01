@@ -50,7 +50,7 @@ data "aws_iam_policy_document" "api_kms_aws_service_decrypt_describe_keys_permis
     ]
     principals {
       type        = "AWS"
-      identifiers = [data.aws_iam_role.flink_execution.id]
+      identifiers = ["arn:aws:iam::${data.aws_iam_role.flink_execution.id}:root"]
     }
     resources = ["*"]
   }
