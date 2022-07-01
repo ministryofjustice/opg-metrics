@@ -21,20 +21,39 @@ data "aws_iam_policy_document" "api_kms_key" {
 
 data "aws_iam_policy_document" "s3_kinesis_data_analytics_kms_key" {
   source_policy_documents = [
-    data.aws_iam_policy_document.kms_key_administrator.json
+    data.aws_iam_policy_document.kms_key_administrator.json,
+    data.aws_iam_policy_document.api_kms_aws_service_decrypt_describe_keys_permissions.json
   ]
 }
 
 data "aws_iam_policy_document" "s3_flink_kms_key" {
   source_policy_documents = [
-    data.aws_iam_policy_document.kms_key_administrator.json
+    data.aws_iam_policy_document.kms_key_administrator.json,
+    data.aws_iam_policy_document.api_kms_aws_service_decrypt_describe_keys_permissions.json
   ]
 }
 
 data "aws_iam_policy_document" "kinesis_metrics_input_kms_key" {
   source_policy_documents = [
-    data.aws_iam_policy_document.kms_key_administrator.json
+    data.aws_iam_policy_document.kms_key_administrator.json,
+    data.aws_iam_policy_document.api_kms_aws_service_decrypt_describe_keys_permissions.json
   ]
+}
+
+data "aws_iam_policy_document" "api_kms_aws_service_decrypt_describe_keys_permissions" {
+  statement {
+    sid    = "aws service decrypt and describe keys permissions"
+    effect = "Allow"
+    actions = [
+      "kms:Decrypt",
+      "kms:DescribeKey",
+    ]
+    principals {
+      type        = "AWS"
+      identifiers = [data.aws_iam_role.flink_execution.id]
+    }
+    resources = ["*"]
+  }
 }
 
 data "aws_iam_policy_document" "api_kms_cross_account_decryption" {
