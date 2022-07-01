@@ -2,7 +2,7 @@ resource "aws_kms_key" "api_key" {
   description             = "opg metrics api key encryption ${local.environment}"
   deletion_window_in_days = 7
   enable_key_rotation     = true
-  policy                  = data.aws_iam_policy_document.api_key_kms.json
+  policy                  = data.aws_iam_policy_document.api_kms_key.json
 }
 
 resource "aws_kms_alias" "api_key_alias" {
@@ -12,21 +12,51 @@ resource "aws_kms_alias" "api_key_alias" {
 
 # See the following link for further information
 # https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html
-data "aws_iam_policy_document" "api_key_kms" {
+data "aws_iam_policy_document" "api_kms_key" {
+  source_policy_documents = [
+    data.aws_iam_policy_document.api_kms_cross_account_decryption.json,
+    data.aws_iam_policy_document.kms_key_administrator.json
+  ]
+}
+
+data "aws_iam_policy_document" "s3_kinesis_data_analytics_kms_key" {
+  source_policy_documents = [
+    data.aws_iam_policy_document.kms_key_administrator.json,
+    data.aws_iam_policy_document.api_kms_aws_service_decrypt_describe_keys_permissions.json
+  ]
+}
+
+data "aws_iam_policy_document" "s3_flink_kms_key" {
+  source_policy_documents = [
+    data.aws_iam_policy_document.kms_key_administrator.json,
+    data.aws_iam_policy_document.api_kms_aws_service_decrypt_describe_keys_permissions.json
+  ]
+}
+
+data "aws_iam_policy_document" "kinesis_metrics_input_kms_key" {
+  source_policy_documents = [
+    data.aws_iam_policy_document.kms_key_administrator.json,
+    data.aws_iam_policy_document.api_kms_aws_service_decrypt_describe_keys_permissions.json
+  ]
+}
+
+data "aws_iam_policy_document" "api_kms_aws_service_decrypt_describe_keys_permissions" {
   statement {
-    sid       = "Enable Root account permissions on Key"
-    effect    = "Allow"
-    actions   = ["kms:*"]
-    resources = ["*"]
-
+    sid    = "aws service decrypt and describe keys permissions"
+    effect = "Allow"
+    actions = [
+      "kms:Decrypt",
+      "kms:DescribeKey",
+    ]
     principals {
-      type = "AWS"
-      identifiers = [
-        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root",
-      ]
+      type        = "AWS"
+      identifiers = [data.aws_iam_role.flink_execution.id]
     }
+    resources = ["*"]
   }
+}
 
+data "aws_iam_policy_document" "api_kms_cross_account_decryption" {
   statement {
     sid    = "cross account decryption permissions"
     effect = "Allow"
@@ -44,7 +74,9 @@ data "aws_iam_policy_document" "api_key_kms" {
       ]
     }
   }
+}
 
+data "aws_iam_policy_document" "kms_key_administrator" {
   statement {
     sid       = "Key Administrator"
     effect    = "Allow"
@@ -71,4 +103,25 @@ data "aws_iam_policy_document" "api_key_kms" {
       identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass"]
     }
   }
+}
+
+resource "aws_kms_key" "s3_kinesis_data_analytics" {
+  description             = "This key is used to encrypt bucket objects"
+  deletion_window_in_days = 10
+  enable_key_rotation     = true
+  policy                  = data.aws_iam_policy_document.s3_kinesis_data_analytics_kms_key.json
+}
+
+resource "aws_kms_key" "s3_flink" {
+  description             = "This key is used to encrypt bucket objects"
+  deletion_window_in_days = 10
+  enable_key_rotation     = true
+  policy                  = data.aws_iam_policy_document.s3_flink_kms_key.json
+}
+
+resource "aws_kms_key" "kinesis_metrics_input" {
+  description             = "This key is used to encrypt kinesis streams"
+  deletion_window_in_days = 10
+  enable_key_rotation     = true
+  policy                  = data.aws_iam_policy_document.kinesis_metrics_input_kms_key.json
 }
