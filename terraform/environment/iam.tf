@@ -21,11 +21,13 @@ data "aws_iam_policy_document" "kinesis_apigateway" {
 
     effect = "Allow"
 
+    #tfsec:ignore:aws-iam-no-policy-wildcards
     actions = [
       "apigateway:*",
       "kinesis:*",
     ]
 
+    #tfsec:ignore:aws-iam-no-policy-wildcards
     resources = [
       "*"
     ]
@@ -101,10 +103,12 @@ data "aws_iam_policy_document" "flink_execution_one" {
   statement {
     effect = "Allow"
 
+    #tfsec:ignore:aws-iam-no-policy-wildcards
     actions = [
       "timestream:*",
     ]
 
+    #tfsec:ignore:aws-iam-no-policy-wildcards
     resources = [
       "*",
     ]
@@ -177,10 +181,12 @@ data "aws_iam_policy_document" "flink_execution_two" {
     sid    = "TimestreamAccess"
     effect = "Allow"
 
+    #tfsec:ignore:aws-iam-no-policy-wildcards
     actions = [
       "timestream:*",
     ]
 
+    #tfsec:ignore:aws-iam-no-policy-wildcards
     resources = [
       "*",
     ]

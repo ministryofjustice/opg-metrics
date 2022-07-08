@@ -100,6 +100,7 @@ data "aws_iam_policy_document" "cloudwatch_kinesis_stream_api_gateway_permission
       "logs:FilterLogEvents",
     ]
 
+    #tfsec:ignore:aws-iam-no-policy-wildcards
     resources = [
       "*",
     ]
