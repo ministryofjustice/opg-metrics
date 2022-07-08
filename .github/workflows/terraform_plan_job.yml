@@ -45,7 +45,7 @@ jobs:
       - uses: unfor19/install-aws-cli-action@v1
       - uses: hashicorp/setup-terraform@v1
         with:
-          terraform_version: 1.0.10
+          terraform_version: 1.2.3
       - name: Configure AWS Credentials For Terraform
         uses: aws-actions/configure-aws-credentials@v1
         with:
