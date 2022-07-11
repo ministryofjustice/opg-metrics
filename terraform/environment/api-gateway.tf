@@ -13,11 +13,12 @@ resource "aws_api_gateway_deployment" "kinesis_stream_api_gateway" {
 }
 
 resource "aws_api_gateway_stage" "kinesis_stream_api_gateway" {
-  depends_on         = [aws_cloudwatch_log_group.kinesis_stream_api_gateway]
-  deployment_id      = aws_api_gateway_deployment.kinesis_stream_api_gateway.id
-  rest_api_id        = aws_api_gateway_rest_api.kinesis_stream_api_gateway.id
-  cache_cluster_size = "0.5"
-  stage_name         = terraform.workspace
+  depends_on           = [aws_cloudwatch_log_group.kinesis_stream_api_gateway]
+  deployment_id        = aws_api_gateway_deployment.kinesis_stream_api_gateway.id
+  rest_api_id          = aws_api_gateway_rest_api.kinesis_stream_api_gateway.id
+  cache_cluster_size   = "0.5"
+  stage_name           = terraform.workspace
+  xray_tracing_enabled = true
 }
 
 resource "aws_api_gateway_base_path_mapping" "kinesis_stream_api_gateway" {
@@ -99,6 +100,7 @@ data "aws_iam_policy_document" "cloudwatch_kinesis_stream_api_gateway_permission
       "logs:FilterLogEvents",
     ]
 
+    #tfsec:ignore:aws-iam-no-policy-wildcards
     resources = [
       "*",
     ]
