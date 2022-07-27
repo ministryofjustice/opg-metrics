@@ -11,6 +11,9 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 2
+      - uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.2.3
       - name: Terraform Init
         run: terraform init -input=false
         working-directory: ./terraform/environment
@@ -34,6 +37,9 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 2
+      - uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.2.3
       - name: Terraform Init
         run: terraform init -input=false
         working-directory: ./terraform/environment
