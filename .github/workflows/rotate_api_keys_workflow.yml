@@ -1,6 +1,6 @@
 on:
   schedule:
-    - cron: '0 2 * * *' # Every 2am
+    - cron: '0 2 * * *' # Every 2 a.m.
 
 jobs:
   taint_api_keys:
@@ -11,12 +11,26 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 2
+
+      - uses: unfor19/install-aws-cli-action@v1
+
       - uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: 1.2.3
+
+      - name: Configure AWS Credentials For Terraform
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+          aws-region: eu-west-1
+          role-duration-seconds: 3600
+          role-session-name: OPGMetricsECRGithubAction
+
       - name: Terraform Init
         run: terraform init -input=false
         working-directory: ./terraform/environment
+
       - name: Terraform taint api keys
         env:
           TF_WORKSPACE: development
@@ -37,12 +51,26 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 2
+
+      - uses: unfor19/install-aws-cli-action@v1
+
       - uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: 1.2.3
+
+      - name: Configure AWS Credentials For Terraform
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+          aws-region: eu-west-1
+          role-duration-seconds: 3600
+          role-session-name: OPGMetricsECRGithubAction
+
       - name: Terraform Init
         run: terraform init -input=false
         working-directory: ./terraform/environment
+
       - name: Terraform replace api keys
         env:
           TF_WORKSPACE: development
