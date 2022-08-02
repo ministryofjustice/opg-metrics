@@ -1,7 +1,6 @@
 on:
-  pull_request:
-    branches:
-      - main
+  schedule:
+    - cron: '0 2 * * *' # Every 2 a.m.
 
 jobs:
   taint_api_keys:
