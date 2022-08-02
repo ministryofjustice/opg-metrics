@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Generate Swagger UI
-        uses: Legion2/swagger-ui-action@v1.0.2
+        uses: Legion2/swagger-ui-action@v1.1.6
         with:
           output: swagger-ui
           spec-file: terraform/environment/api/openapi_spec.yaml
