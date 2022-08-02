@@ -80,5 +80,5 @@ jobs:
           TF_WORKSPACE: development
           TF_VAR_timestream_artifact_name: opg-metrics-kinesis-to-timestream-app
         run: |
-          terraform apply | ~/home/runner/work/opg-metrics/opg-metrics/scripts/pipeline/redact_output.sh
+          terraform apply | ~/work/opg-metrics/opg-metrics/scripts/pipeline/redact_output.sh
         working-directory: ./terraform/environment
