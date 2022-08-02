@@ -1,6 +1,7 @@
 on:
-  schedule:
-    - cron: '0 2 * * *' # Every 2 a.m.
+  pull_request:
+    branches:
+      - main
 
 jobs:
   taint_api_keys:
@@ -14,9 +15,10 @@ jobs:
 
       - uses: unfor19/install-aws-cli-action@v1
 
-      - uses: hashicorp/setup-terraform@v1
+      - uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.2.3
+          terraform_wrapper: false
 
       - name: Configure AWS Credentials For Terraform
         uses: aws-actions/configure-aws-credentials@v1
@@ -34,6 +36,7 @@ jobs:
       - name: Terraform taint api keys
         env:
           TF_WORKSPACE: development
+          TF_VAR_timestream_artifact_name: opg-metrics-kinesis-to-timestream-app
         run: |
           all_aws_access_keys=$(terraform state list | grep aws_api_gateway_api_key | sed 's/*//g')
           for access_key in $all_aws_access_keys
@@ -54,9 +57,10 @@ jobs:
 
       - uses: unfor19/install-aws-cli-action@v1
 
-      - uses: hashicorp/setup-terraform@v1
+      - uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.2.3
+          terraform_wrapper: false
 
       - name: Configure AWS Credentials For Terraform
         uses: aws-actions/configure-aws-credentials@v1
@@ -74,6 +78,7 @@ jobs:
       - name: Terraform replace api keys
         env:
           TF_WORKSPACE: development
+          TF_VAR_timestream_artifact_name: opg-metrics-kinesis-to-timestream-app
         run: |
-          terraform apply | ~/project/scripts/pipeline/redact_output.sh
+          terraform apply | ~/work/opg-metrics/opg-metrics/scripts/pipeline/redact_output.sh
         working-directory: ./terraform/environment
