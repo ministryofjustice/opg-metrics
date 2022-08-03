@@ -5,6 +5,9 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   # Set the job key. The key is displayed as the job name
@@ -17,10 +20,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Generate Swagger UI
-        uses: Legion2/swagger-ui-action@v1.0.2
+        uses: Legion2/swagger-ui-action@v1
         with:
           output: swagger-ui
           spec-file: terraform/environment/api/openapi_spec.yaml
