@@ -1,0 +1,44 @@
+on:
+  workflow_call:
+    inputs:
+      lambda_names:
+        description: 'The name of the lambda Docker container'
+        required: true
+        type: string
+      tag:
+        description: 'Tag for docker image'
+        required: true
+        type: string
+
+jobs:
+  docker_build_scan_push:
+    name: Build and Scan Lambda Containers
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        lambda_name: ${{ fromJSON(inputs.lambda_names) }}
+    steps:
+      - name: Check out code
+        id: checkout_code
+        uses: actions/checkout@v3.0.2
+
+      - name: Build Container
+        id: build_container
+        run: |
+          docker build --file lambda/${{ matrix.lambda_name }}/Dockerfile --tag ${{ matrix.lambda_name }}:latest .
+
+      - name: Trivy Image Vulnerability Scanner
+        id: trivy_scan
+        uses: aquasecurity/trivy-action@0.3.0
+        with:
+          image-ref: ${{ matrix.lambda_name }}:latest
+          severity: 'HIGH,CRITICAL'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        id: trivy_upload_sarif
+        uses: github/codeql-action/upload-sarif@v2
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
