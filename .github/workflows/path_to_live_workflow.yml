@@ -46,11 +46,10 @@ jobs:
     uses: ./.github/workflows/docker_build_scan_job.yml
     with:
       lambda_names: '["ship-to-opg-metrics", "clsf-to-sqs"]'
-      tag: ${{ needs.create_tags.outputs.version_tag }}
 
   docker_push_ecr:
     name: Push Containers
-    needs: ['docker_build_scan']
+    needs: ['docker_build_scan', 'create_tags']
     uses: ./.github/workflows/docker_push_ecr_job.yml
     with:
       lambda_names: '["ship-to-opg-metrics", "clsf-to-sqs"]'

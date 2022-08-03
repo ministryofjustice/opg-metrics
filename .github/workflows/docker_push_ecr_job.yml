@@ -16,7 +16,7 @@ on:
         required: true
 
 jobs:
-  docker_build_scan_push:
+  docker_push:
     name: Push Lambdas to ECR
     runs-on: ubuntu-latest
     strategy:

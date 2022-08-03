@@ -5,13 +5,9 @@ on:
         description: 'The name of the lambda Docker container'
         required: true
         type: string
-      tag:
-        description: 'Tag for docker image'
-        required: true
-        type: string
 
 jobs:
-  docker_build_scan_push:
+  docker_build_scan:
     name: Build and Scan Lambda Containers
     runs-on: ubuntu-latest
     strategy:
