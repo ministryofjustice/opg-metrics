@@ -16,8 +16,8 @@ on:
         required: true
 
 jobs:
-  docker_push:
-    name: Push Lambdas to ECR
+  docker_build_scan_push:
+    name: Build, Scan and Push Lambdas
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -27,9 +27,33 @@ jobs:
         id: checkout_code
         uses: actions/checkout@v3.0.2
 
-      - uses: unfor19/install-aws-cli-action@v1
+      - name: Build Container
+        id: build_container
+        run: |
+          docker build --file lambda/${{ matrix.lambda_name }}/Dockerfile --tag ${{ matrix.lambda_name }}:latest .
+
+      - name: Trivy Image Vulnerability Scanner
+        id: trivy_scan
+        uses: aquasecurity/trivy-action@0.3.0
+        with:
+          image-ref: ${{ matrix.lambda_name }}:latest
+          severity: 'HIGH,CRITICAL'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        id: trivy_upload_sarif
+        uses: github/codeql-action/upload-sarif@v2
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+      - name: Install AWS CLI
+        uses: unfor19/install-aws-cli-action@v1
+        if: ${{ github.actor != 'dependabot[bot]' }}
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1.6.1
+        if: ${{ github.actor != 'dependabot[bot]' }}
         with:
           aws-access-key-id: ${{ secrets.aws_access_key_id_actions }}
           aws-secret-access-key: ${{ secrets.aws_secret_access_key_actions }}
@@ -40,9 +64,11 @@ jobs:
       - name: ECR Login
         id: login_ecr
         uses: aws-actions/amazon-ecr-login@v1.4.0
+        if: ${{ github.actor != 'dependabot[bot]' }}
         with:
           registries: 311462405659
       - name: Push Container
+        if: ${{ github.actor != 'dependabot[bot]' }}
         env:
           ECR_REGISTRY: ${{ steps.login_ecr.outputs.registry }}
           ECR_REPOSITORY: opg-metrics/${{ matrix.lambda_name }}
