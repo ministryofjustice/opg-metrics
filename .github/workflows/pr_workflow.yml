@@ -40,10 +40,18 @@ jobs:
     secrets:
       source_github_token: ${{ secrets.GITHUB_TOKEN }}
 
-  docker_build_scan_push:
-    name: Build, Scan and Push
+  docker_build_scan:
+    name: Build and Scan Lambda Containers
     needs: ['create_tags']
-    uses: ./.github/workflows/docker_job.yml
+    uses: ./.github/workflows/docker_build_scan_job.yml
+    with:
+      lambda_names: '["ship-to-opg-metrics", "clsf-to-sqs"]'
+
+  docker_push_ecr:
+    name: Push Containers
+    if: ${{ github.actor != 'dependabot[bot]' }}
+    needs: ['docker_build_scan', 'create_tags']
+    uses: ./.github/workflows/docker_push_ecr_job.yml
     with:
       lambda_names: '["ship-to-opg-metrics", "clsf-to-sqs"]'
       tag: ${{ needs.create_tags.outputs.version_tag }}
@@ -61,7 +69,8 @@ jobs:
 
   terraform_account_workflow:
     name: Terraform Account
-    needs: ['tfsec', 'docker_build_scan_push']
+    if: ${{ github.actor != 'dependabot[bot]' }}
+    needs: ['tfsec', 'docker_push_ecr']
     uses: ./.github/workflows/terraform_plan_job.yml
     with:
       terraform_path: 'terraform/account'
@@ -72,6 +81,7 @@ jobs:
 
   terraform_environment_workflow:
     name: Terraform Environment
+    if: ${{ github.actor != 'dependabot[bot]' }}
     needs: ['terraform_account_workflow', 'build_flink']
     uses: ./.github/workflows/terraform_plan_job.yml
     with:
