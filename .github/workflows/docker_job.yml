@@ -48,9 +48,12 @@ jobs:
         with:
           sarif_file: 'trivy-results.sarif'
 
-      - uses: unfor19/install-aws-cli-action@v1
+      - name: Install AWS CLI
+        uses: unfor19/install-aws-cli-action@v1
+        if: ${{ github.actor != 'dependabot[bot]' }}
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1.6.1
+        if: ${{ github.actor != 'dependabot[bot]' }}
         with:
           aws-access-key-id: ${{ secrets.aws_access_key_id_actions }}
           aws-secret-access-key: ${{ secrets.aws_secret_access_key_actions }}
@@ -61,9 +64,11 @@ jobs:
       - name: ECR Login
         id: login_ecr
         uses: aws-actions/amazon-ecr-login@v1.4.0
+        if: ${{ github.actor != 'dependabot[bot]' }}
         with:
           registries: 311462405659
       - name: Push Container
+        if: ${{ github.actor != 'dependabot[bot]' }}
         env:
           ECR_REGISTRY: ${{ steps.login_ecr.outputs.registry }}
           ECR_REPOSITORY: opg-metrics/${{ matrix.lambda_name }}
