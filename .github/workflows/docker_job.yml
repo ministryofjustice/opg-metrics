@@ -63,7 +63,7 @@ jobs:
           role-session-name: OPGMetricsECRGithubAction
       - name: ECR Login
         id: login_ecr
-        uses: aws-actions/amazon-ecr-login@v1.4.0
+        uses: aws-actions/amazon-ecr-login@v1.5.0
         if: ${{ github.actor != 'dependabot[bot]' }}
         with:
           registries: 311462405659
