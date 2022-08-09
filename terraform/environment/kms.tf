@@ -41,7 +41,9 @@ data "aws_iam_policy_document" "api_key_kms" {
       identifiers = [
         "arn:aws:iam::367815980639:root",
         "arn:aws:iam::311462405659:root",
-        "arn:aws:iam::288342028542:root"
+        "arn:aws:iam::288342028542:root",
+        "arn:aws:iam::492687888235:root",
+        "arn:aws:iam::649098267436:root"
       ]
     }
   }
