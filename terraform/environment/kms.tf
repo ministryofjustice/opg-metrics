@@ -42,6 +42,8 @@ data "aws_iam_policy_document" "api_key_kms" {
         "arn:aws:iam::367815980639:root",
         "arn:aws:iam::311462405659:root",
         "arn:aws:iam::288342028542:root",
+        "arn:aws:iam::679638075911:root",
+        "arn:aws:iam::997462338508:root",
         "arn:aws:iam::492687888235:role/api-ecs-preproduction-20200204165900331400000008",
         "arn:aws:iam::492687888235:role/api-ecs-preproduction-2021040714392497160000000a",
         "arn:aws:iam::649098267436:role/api-ecs-production-20190802114727697300000001",
