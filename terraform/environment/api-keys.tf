@@ -72,8 +72,8 @@ module "trusted_service_access_sirius_production" {
   ]
 }
 
-module "trusted_service_access_shared_development" {
-  trusted_service_name               = "shared-development"
+module "trusted_service_access_jenkins_development" {
+  trusted_service_name               = "jenkins-development"
   source                             = "../modules/trusted_service_access"
   aws_api_gateway_rest_api           = aws_api_gateway_rest_api.kinesis_stream_api_gateway.id
   aws_api_gateway_stage              = aws_api_gateway_stage.kinesis_stream_api_gateway.stage_name
@@ -84,8 +84,8 @@ module "trusted_service_access_shared_development" {
   ]
 }
 
-module "trusted_service_access_shared_production" {
-  trusted_service_name               = "shared-production"
+module "trusted_service_access_jenkins_production" {
+  trusted_service_name               = "jenkins-production"
   source                             = "../modules/trusted_service_access"
   aws_api_gateway_rest_api           = aws_api_gateway_rest_api.kinesis_stream_api_gateway.id
   aws_api_gateway_stage              = aws_api_gateway_stage.kinesis_stream_api_gateway.stage_name
