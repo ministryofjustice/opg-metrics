@@ -80,7 +80,7 @@ module "trusted_service_access_jenkins_development" {
   secret_recovery_window_in_days     = 0
   secretsmanager_api_keys_kms_key_id = aws_kms_key.api_key.key_id
   identifiers_arns = [
-    "arn:aws:iam::679638075911:root"
+    "arn:aws:iam::679638075911:role/jenkins-primary-20190425141320485900000006"
   ]
 }
 
@@ -92,6 +92,6 @@ module "trusted_service_access_jenkins_production" {
   secret_recovery_window_in_days     = 0
   secretsmanager_api_keys_kms_key_id = aws_kms_key.api_key.key_id
   identifiers_arns = [
-    "arn:aws:iam::997462338508:root"
+    "arn:aws:iam::997462338508:role/jenkins-primary-20190430083911121200000007"
   ]
 }
