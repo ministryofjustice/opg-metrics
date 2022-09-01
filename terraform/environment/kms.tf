@@ -45,7 +45,9 @@ data "aws_iam_policy_document" "api_key_kms" {
         "arn:aws:iam::492687888235:role/api-ecs-preproduction-20200204165900331400000008",
         "arn:aws:iam::492687888235:role/api-ecs-preproduction-2021040714392497160000000a",
         "arn:aws:iam::649098267436:role/api-ecs-production-20190802114727697300000001",
-        "arn:aws:iam::649098267436:role/api-ecs-production-2021080908515105620000000a"
+        "arn:aws:iam::649098267436:role/api-ecs-production-2021080908515105620000000a",
+        "arn:aws:iam::679638075911:role/jenkins-primary-20190425141320485900000006",
+        "arn:aws:iam::997462338508:role/jenkins-primary-20190430083911121200000007"
       ]
     }
   }
