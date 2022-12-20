@@ -1,0 +1,18 @@
+{
+    "configurations": [
+        {
+            "type": "aws-sam",
+            "request": "direct-invoke",
+            "name": "kinesis_timestream_connector:HelloWorldFunction",
+            "invokeTarget": {
+                "target": "template",
+                "templatePath": "${workspaceFolder}/kinesis_timestream_connector/template.yml",
+                "logicalId": "HelloWorldFunction"
+            },
+            "lambda": {
+                "payload": {"path": "${workspaceFolder}/kinesis_timestream_connector/events/event.json"},
+                "environmentVariables": {}
+            }
+        }
+    ]
+}
