@@ -23,9 +23,9 @@ ARG FUNCTION_DIR
 RUN mkdir -p ${FUNCTION_DIR}
 
 # Copy function code
-COPY src/main.py ${FUNCTION_DIR}
+COPY lambda/clsf-to-sqs/src/main.py ${FUNCTION_DIR}
 
-COPY src/requirements.txt requirements.txt
+COPY lambda/clsf-to-sqs/src/requirements.txt requirements.txt
 
 # Install the runtime interface client
 RUN python -m pip install --upgrade pip
