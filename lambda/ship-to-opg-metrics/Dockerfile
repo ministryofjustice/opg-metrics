@@ -1,21 +1,16 @@
 # Define function directory
 ARG FUNCTION_DIR="/function"
 
-FROM python:alpine AS python-alpine
-RUN apk add --no-cache \
-    libstdc++
-
-FROM python-alpine as build-image
+FROM public.ecr.aws/docker/library/python:buster as build-image
 
 # Install aws-lambda-cpp build dependencies
-RUN apk add --no-cache \
-    build-base \
-    libtool \
-    autoconf \
-    automake \
+RUN apt-get update && \
+    apt-get install -y \
+    g++ \
     make \
     cmake \
-    libcurl
+    unzip \
+    libcurl4-openssl-dev
 
 # Include global arg in this stage of the build
 ARG FUNCTION_DIR
@@ -30,11 +25,11 @@ COPY lambda/clsf-to-sqs/src/requirements.txt requirements.txt
 # Install the runtime interface client
 RUN python -m pip install --upgrade pip
 RUN python -m pip install \
-        --target ${FUNCTION_DIR} \
-        --requirement requirements.txt
+    --target ${FUNCTION_DIR} \
+    --requirement requirements.txt
 
 # Multi-stage build: grab a fresh copy of the base image
-FROM python-alpine
+FROM public.ecr.aws/docker/library/python:buster
 
 # Include global arg in this stage of the build
 ARG FUNCTION_DIR
