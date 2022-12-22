@@ -1,6 +1,82 @@
+resource "aws_iam_role" "lambda_go_connector" {
+  name               = "LambdaKinesisRole"
+  assume_role_policy = data.aws_iam_policy_document.lambda_go_connector_assume_role_policy.json
+}
+
+data "aws_iam_policy_document" "lambda_go_connector_assume_role_policy" {
+  statement {
+    effect  = "Allow"
+    actions = ["sts:AssumeRole"]
+    principals {
+      type = "Service"
+      identifiers = [
+        "lambda.amazonaws.com",
+      ]
+    }
+  }
+}
+
+resource "aws_iam_policy" "lambda_go_connector_kinesis_processing" {
+  name        = "allow_kinesis_processing"
+  path        = "/"
+  description = "IAM policy for logging from a lambda"
+
+  policy = data.aws_iam_policy_document.lambda_go_connector_kinesis_processing_policy.json
+}
+
+data "aws_iam_policy_document" "lambda_go_connector_kinesis_processing_policy" {
+  statement {
+
+    effect = "Allow"
+
+    actions = [
+      "kinesis:ListShards",
+      "kinesis:ListStreams",
+      "kinesis:*"
+    ]
+
+    resources = [
+      "arn:aws:kinesis:*:*:*"
+    ]
+  }
+  statement {
+
+    effect = "Allow"
+
+    actions = [
+      "stream:GetRecord",
+      "stream:GetShardIterator",
+      "stream:DescribeStream",
+      "stream:*"
+    ]
+
+    resources = [
+      "arn:aws:stream:*:*:*"
+    ]
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "kinesis_processing" {
+  role       = aws_iam_role.lambda_go_connector.name
+  policy_arn = aws_iam_policy.lambda_go_connector_kinesis_processing.arn
+}
+
 resource "aws_iam_role" "kinesis_apigateway" {
   name               = "KinesisApiGatewayRole"
   assume_role_policy = data.aws_iam_policy_document.kinesis_apigateway_assume_role_policy.json
+}
+
+data "aws_iam_policy_document" "kinesis_apigateway_assume_role_policy" {
+  statement {
+    actions = ["sts:AssumeRole"]
+    principals {
+      type = "Service"
+      identifiers = [
+        "kinesisanalytics.amazonaws.com",
+        "apigateway.amazonaws.com",
+      ]
+    }
+  }
 }
 
 data "aws_iam_policy_document" "kinesis_apigateway_assume_role_policy" {
