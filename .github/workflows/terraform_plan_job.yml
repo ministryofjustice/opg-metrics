@@ -89,7 +89,6 @@ jobs:
           TF_WORKSPACE: ${{ inputs.workspace }}
           TF_VAR_timestream_artifact_name: ${{ inputs.download_artifact_name }}
           TF_VAR_timestream_connector_artifact_name: ${{ inputs.download_go_artifact_name }}
-
         run: |
           terraform workspace show
           terraform plan -input=false -parallelism=30
