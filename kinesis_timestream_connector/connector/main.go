@@ -31,6 +31,8 @@ func main() {
 func (h handler) Handle(ctx context.Context, kinesisEvent events.KinesisEvent) {
 	kinesisRecords := make([]map[string]string, len(kinesisEvent.Records))
 
+	log.Println("Event recieved on lambda with", len(kinesisEvent.Records), "records")
+
 	for i, record := range kinesisEvent.Records {
 		x := map[string]string{}
 		err := json.Unmarshal(record.Kinesis.Data, &x)
@@ -40,6 +42,8 @@ func (h handler) Handle(ctx context.Context, kinesisEvent events.KinesisEvent) {
 		}
 		kinesisRecords[i] = x
 	}
+
+	log.Println(kinesisRecords)
 
 	records := kinesisRecordsToTimestreamRecords(kinesisRecords)
 	h.c.WriteRecords(context.Background(), &timestreamwrite.WriteRecordsInput{
