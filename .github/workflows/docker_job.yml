@@ -34,7 +34,7 @@ jobs:
 
       - name: Trivy Image Vulnerability Scanner
         id: trivy_scan
-        uses: aquasecurity/trivy-action@0.3.0
+        uses: aquasecurity/trivy-action@0.8.0
         with:
           image-ref: ${{ matrix.lambda_name }}:latest
           severity: 'HIGH,CRITICAL'
@@ -52,7 +52,7 @@ jobs:
         uses: unfor19/install-aws-cli-action@v1
         if: ${{ github.actor != 'dependabot[bot]' }}
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1.6.1
+        uses: aws-actions/configure-aws-credentials@v1.7.0
         if: ${{ github.actor != 'dependabot[bot]' }}
         with:
           aws-access-key-id: ${{ secrets.aws_access_key_id_actions }}
