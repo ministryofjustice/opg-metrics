@@ -22,6 +22,14 @@ on:
         description: 'Local artifact path location'
         required: false
         type: string
+      download_go_artifact_name:
+        description: 'Go Artifact name'
+        required: false
+        type: string
+      download_go_artifact_path_name:
+        description: 'Local go artifact path location'
+        required: false
+        type: string
     secrets:
       aws_access_key_id_actions:
         required: true
@@ -42,6 +50,13 @@ jobs:
         with:
           name: ${{ inputs.download_artifact_name }}
           path: ${{ inputs.download_artifact_path_name }}
+      - name: Download go Artifact
+        if: ${{ inputs.download_artifact == true }}
+        id: download_go
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ inputs.download_go_artifact_name }}
+          path: ${{ inputs.download_go_artifact_path_name }}
 
       - uses: unfor19/install-aws-cli-action@v1
 
@@ -73,6 +88,7 @@ jobs:
         env:
           TF_WORKSPACE: ${{ inputs.workspace }}
           TF_VAR_timestream_artifact_name: ${{ inputs.download_artifact_name }}
+          TF_VAR_timestream_connector_artifact_name: ${{ inputs.download_go_artifact_name }}
         run: |
           terraform workspace show
           terraform plan -input=false -parallelism=30
@@ -82,6 +98,7 @@ jobs:
         env:
           TF_WORKSPACE: ${{ inputs.workspace }}
           TF_VAR_timestream_artifact_name: ${{ inputs.download_artifact_name }}
+          TF_VAR_timestream_connector_artifact_name: ${{ inputs.download_go_artifact_name }}
         if: github.ref == 'refs/heads/main'
         run: |
           terraform apply -lock-timeout=300s -input=false -auto-approve -parallelism=30
