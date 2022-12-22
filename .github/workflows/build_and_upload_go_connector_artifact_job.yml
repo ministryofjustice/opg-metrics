@@ -1,0 +1,32 @@
+name: Build and Publish Go Connector Lambda
+on:
+  workflow_call:
+    outputs:
+      artifact_name:
+        description: "Uploaded artifact name"
+        value: ${{ jobs.build.outputs.artifact_name }}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Go
+        uses: actions/setup-go@v3.5.0
+        with:
+          go-version: '^1.18.3'
+          distribution: 'adopt'
+      - name: Build with Go
+        id: go_build
+        run: |
+          cd kinesis_timestream_connector/connector
+          GOOS=linux GOARCH=amd64 go build -o opg-metrics-kinesis-to-timestream-connector main.go
+          echo ::set-output name=artifact_name::opg-metrics-kinesis-to-timestream-connector
+      - name: Upload Go executable
+        id: upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ steps.go_build.outputs.artifact_name }}
+          path: kinesis_timestream_connector/connector/${{ steps.go_build.outputs.artifact_name }}
+    outputs:
+      artifact_name: ${{ steps.go_build.outputs.artifact_name }}
