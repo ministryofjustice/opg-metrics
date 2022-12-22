@@ -22,11 +22,11 @@ jobs:
           cd kinesis_timestream_connector/connector
           GOOS=linux GOARCH=amd64 go build -o opg-metrics-kinesis-to-timestream-connector main.go
           echo ::set-output name=artifact_name::opg-metrics-kinesis-to-timestream-connector
-      - name: Upload Apache Flink Jar
+      - name: Upload Go executable
         id: upload
         uses: actions/upload-artifact@v3
         with:
           name: ${{ steps.go_build.outputs.artifact_name }}
-          path: kinesis_timestream_connector/connector/target/${{ steps.go_build.outputs.artifact_name }}
+          path: kinesis_timestream_connector/connector/${{ steps.go_build.outputs.artifact_name }}
     outputs:
       artifact_name: ${{ steps.go_build.outputs.artifact_name }}
