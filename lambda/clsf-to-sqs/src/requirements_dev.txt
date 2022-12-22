@@ -1,4 +1,5 @@
-moto[sqs]==2.3.0
-coverage==6.2
-pylint==2.12.2
-pytest==6.2.5
+moto[sqs]==4.0.12
+coverage==7.0.0
+pylint==2.15.9
+pytest==7.2.0
+awslambdaric==2.0.4
