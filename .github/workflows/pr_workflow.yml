@@ -25,6 +25,10 @@ jobs:
     name: Build Apache Flink Jar
     uses: ./.github/workflows/apache_flink_job.yml
 
+  build_go:
+    name: Build Go
+    uses: ./.github/workflows/build_and_upload_go_connector_artifact_job.yml
+
   test_lambdas:
     name: Test Lambda
     uses: ./.github/workflows/python_build_test_job.yml
