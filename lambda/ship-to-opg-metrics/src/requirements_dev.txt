@@ -1,7 +1,8 @@
-moto[sqs]==2.3.0
-moto[secretsmanager]==2.3.0
-coverage==6.2
-pylint==2.12.2
-pytest==6.2.5
-requests-mock
-aws-xray-sdk==2.4.3
+moto[sqs]==4.0.12
+moto[secretsmanager]==4.0.12
+coverage==7.0.0
+pylint==2.15.9
+pytest==7.2.0
+requests-mock==1.10.0
+aws-xray-sdk==2.11.0
+awslambdaric==2.0.4
