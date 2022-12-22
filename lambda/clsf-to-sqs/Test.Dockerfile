@@ -1,7 +1,45 @@
-FROM public.ecr.aws/lambda/python:3.8
+# Define function directory
+ARG FUNCTION_DIR="/function"
 
-RUN pip install requests requests_aws4auth
+FROM public.ecr.aws/docker/library/python:buster as build-image
 
-WORKDIR /var/task
-COPY . ./
+# Install aws-lambda-cpp build dependencies
+RUN apt-get update && \
+    apt-get install -y \
+    g++ \
+    make \
+    cmake \
+    unzip \
+    libcurl4-openssl-dev
+
+# Include global arg in this stage of the build
+ARG FUNCTION_DIR
+# Create function directory
+RUN mkdir -p ${FUNCTION_DIR}
+
+# Copy function code
+COPY src/main.py ${FUNCTION_DIR}
+
+COPY src/requirements.txt requirements.txt
+
+# Install the runtime interface client
+RUN python -m pip install --upgrade pip
+RUN python -m pip install \
+        --target ${FUNCTION_DIR} \
+        --requirement requirements.txt
+
+# Multi-stage build: grab a fresh copy of the base image
+FROM public.ecr.aws/docker/library/python:buster
+
+# Include global arg in this stage of the build
+ARG FUNCTION_DIR
+# Set working directory to function root directory
+WORKDIR ${FUNCTION_DIR}
+
+# Copy in the build image dependencies
+COPY --from=build-image ${FUNCTION_DIR} ${FUNCTION_DIR}
+
+ADD aws-lambda-rie /usr/local/bin/aws-lambda-rie
+RUN ["chmod", "+x", "/usr/local/bin/aws-lambda-rie"]
+ENTRYPOINT [ "/usr/local/bin/aws-lambda-rie", "/usr/local/bin/python", "-m", "awslambdaric" ]
 CMD ["main.handler"]
