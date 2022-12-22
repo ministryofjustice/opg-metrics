@@ -1,13 +1,13 @@
 variable "timestream_connector_artifact_name" {
-  type = string
+  type    = string
+  default = "opg-metrics-kinesis-to-timestream-connector"
 }
 
 # Build Lambda Zip
-
-resource "null_resource" "lambda_go_connector_zip" {
-  provisioner "local-exec" {
-    command = "zip ${var.timestream_connector_artifact_name}.zip ../../kinesis-go-application/${var.timestream_connector_artifact_name}"
-  }
+data "archive_file" "lambda_go_connector_zip" {
+  type        = "zip"
+  source_file = "../../kinesis-go-application/${var.timestream_connector_artifact_name}"
+  output_path = "../../kinesis-go-application/${var.timestream_connector_artifact_name}.zip"
 }
 
 # Create AWS Lambda
@@ -18,7 +18,7 @@ resource "aws_lambda_function" "lambda_go_connector" {
   role          = aws_iam_role.lambda_go_connector.arn
   handler       = "main.handle"
 
-  source_code_hash = filebase64sha256("${var.timestream_connector_artifact_name}.zip")
+  source_code_hash = filebase64sha256("../../kinesis-go-application/${var.timestream_connector_artifact_name}.zip")
 
   runtime = "go1.x"
 
