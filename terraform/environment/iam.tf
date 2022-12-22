@@ -56,6 +56,38 @@ data "aws_iam_policy_document" "lambda_go_connector_kinesis_processing_policy" {
   }
 }
 
+# IAM Policy Creation: Allow Cloudwatch Logging
+
+resource "aws_iam_policy" "lambda_go_connector_logging" {
+  name        = "allow_logging"
+  path        = "/"
+  description = "IAM policy for logging from a lambda"
+
+  policy = data.aws_iam_policy_document.lambda_go_connector_logging_policy.json
+}
+
+data "aws_iam_policy_document" "lambda_go_connector_logging_policy" {
+  statement {
+
+    effect = "Allow"
+
+    actions = [
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents"
+    ]
+
+    resources = [
+      "arn:aws:logs:*:*:*"
+    ]
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_go_connector_logging" {
+  role       = aws_iam_role.lambda_go_connector.name
+  policy_arn = aws_iam_policy.lambda_go_connector_logging.arn
+}
+
 resource "aws_iam_role_policy_attachment" "kinesis_processing" {
   role       = aws_iam_role.lambda_go_connector.name
   policy_arn = aws_iam_policy.lambda_go_connector_kinesis_processing.arn
