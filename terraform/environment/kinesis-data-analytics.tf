@@ -4,7 +4,8 @@ resource "aws_s3_bucket" "flink" {
 }
 
 variable "timestream_artifact_name" {
-  type = string
+  type    = string
+  default = "opg-metrics-kinesis-to-timestream-app"
 }
 
 resource "aws_s3_bucket_public_access_block" "flink" {
