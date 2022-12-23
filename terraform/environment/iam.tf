@@ -11,6 +11,7 @@ data "aws_iam_policy_document" "lambda_go_connector_assume_role_policy" {
       type = "Service"
       identifiers = [
         "lambda.amazonaws.com",
+        "timestream.amazonaws.com",
       ]
     }
   }
@@ -29,12 +30,14 @@ data "aws_iam_policy_document" "lambda_go_connector_kinesis_processing_policy" {
 
     effect = "Allow"
 
+    #tfsec:ignore:aws-iam-no-policy-wildcards
     actions = [
       "kinesis:ListShards",
       "kinesis:ListStreams",
       "kinesis:*"
     ]
 
+    #tfsec:ignore:aws-iam-no-policy-wildcards
     resources = [
       "arn:aws:kinesis:*:*:*"
     ]
@@ -43,6 +46,7 @@ data "aws_iam_policy_document" "lambda_go_connector_kinesis_processing_policy" {
 
     effect = "Allow"
 
+    #tfsec:ignore:aws-iam-no-policy-wildcards
     actions = [
       "stream:GetRecord",
       "stream:GetShardIterator",
@@ -50,8 +54,24 @@ data "aws_iam_policy_document" "lambda_go_connector_kinesis_processing_policy" {
       "stream:*"
     ]
 
+    #tfsec:ignore:aws-iam-no-policy-wildcards
     resources = [
       "arn:aws:stream:*:*:*"
+    ]
+  }
+
+  statement {
+    sid    = "TimestreamAccess"
+    effect = "Allow"
+
+    #tfsec:ignore:aws-iam-no-policy-wildcards
+    actions = [
+      "timestream:*",
+    ]
+
+    #tfsec:ignore:aws-iam-no-policy-wildcards
+    resources = [
+      "*",
     ]
   }
 }
@@ -77,6 +97,7 @@ data "aws_iam_policy_document" "lambda_go_connector_logging_policy" {
       "logs:PutLogEvents"
     ]
 
+    #tfsec:ignore:aws-iam-no-policy-wildcards
     resources = [
       "arn:aws:logs:*:*:*"
     ]
