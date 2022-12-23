@@ -36,6 +36,7 @@ jobs:
         env:
           TF_WORKSPACE: development
           TF_VAR_timestream_artifact_name: opg-metrics-kinesis-to-timestream-app
+          TF_VAR_timestream_connector_artifact_name: opg-metrics-kinesis-to-timestream-connector
         run: |
           all_aws_access_keys=$(terraform state list | grep aws_api_gateway_api_key | sed 's/*//g')
           for access_key in $all_aws_access_keys
@@ -78,6 +79,7 @@ jobs:
         env:
           TF_WORKSPACE: development
           TF_VAR_timestream_artifact_name: opg-metrics-kinesis-to-timestream-app
+          TF_VAR_timestream_connector_artifact_name: opg-metrics-kinesis-to-timestream-connector
         run: |
           terraform apply | ~/work/opg-metrics/opg-metrics/scripts/pipeline/redact_output.sh
         working-directory: ./terraform/environment
