@@ -43,6 +43,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: '0'
+
       - name: Download Artifact
         if: ${{ inputs.download_artifact == true }}
         id: download
@@ -50,6 +51,7 @@ jobs:
         with:
           name: ${{ inputs.download_artifact_name }}
           path: ${{ inputs.download_artifact_path_name }}
+
       - name: Download go Artifact
         if: ${{ inputs.download_artifact == true }}
         id: download_go
@@ -88,7 +90,7 @@ jobs:
         env:
           TF_WORKSPACE: ${{ inputs.workspace }}
           TF_VAR_timestream_artifact_name: ${{ inputs.download_artifact_name }}
-          TF_VAR_timestream_connector_artifact_name: ${{ inputs.download_go_artifact_name }}
+          TF_VAR_timestream_connector_artifact_name: ${{ inputs.download_go_artifact_path_name }}
         run: |
           terraform workspace show
           terraform plan -input=false -parallelism=30
@@ -98,7 +100,7 @@ jobs:
         env:
           TF_WORKSPACE: ${{ inputs.workspace }}
           TF_VAR_timestream_artifact_name: ${{ inputs.download_artifact_name }}
-          TF_VAR_timestream_connector_artifact_name: ${{ inputs.download_go_artifact_name }}
+          TF_VAR_timestream_connector_artifact_name: ${{ inputs.download_go_artifact_path_name }}
         if: github.ref == 'refs/heads/main'
         run: |
           terraform apply -lock-timeout=300s -input=false -auto-approve -parallelism=30
