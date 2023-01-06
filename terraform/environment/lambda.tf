@@ -16,7 +16,7 @@ resource "aws_lambda_function" "lambda_go_connector" {
   filename      = "../../kinesis-go-application/${var.timestream_connector_artifact_name}.zip"
   function_name = "terraform-kinesis-lambda"
   role          = aws_iam_role.lambda_go_connector.arn
-  handler       = "main.handle"
+  handler       = "opg-metrics-kinesis-to-timestream-connector"
 
   source_code_hash = filebase64sha256("../../kinesis-go-application/${var.timestream_connector_artifact_name}.zip")
 
