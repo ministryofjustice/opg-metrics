@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"log"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -11,6 +10,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/timestreamwrite"
 	"github.com/aws/aws-sdk-go-v2/service/timestreamwrite/types"
+	yaml "gopkg.in/yaml.v2"
 )
 
 type handler struct {
@@ -33,9 +33,13 @@ func (h handler) Handle(ctx context.Context, kinesisEvent events.KinesisEvent) {
 
 	log.Println("Event recieved on lambda with", len(kinesisEvent.Records), "records")
 
+	log.Println(kinesisEvent.Records)
+
 	for i, record := range kinesisEvent.Records {
 		x := map[string]string{}
-		err := json.Unmarshal(record.Kinesis.Data, &x)
+
+		log.Println("JSON to unmarshal", string(record.Kinesis.Data))
+		err := yaml.Unmarshal(record.Kinesis.Data, &x)
 		if err != nil {
 			log.Println(err)
 			continue
@@ -46,11 +50,15 @@ func (h handler) Handle(ctx context.Context, kinesisEvent events.KinesisEvent) {
 	log.Println(kinesisRecords)
 
 	records := kinesisRecordsToTimestreamRecords(kinesisRecords)
-	h.c.WriteRecords(context.Background(), &timestreamwrite.WriteRecordsInput{
+	_, err := h.c.WriteRecords(context.Background(), &timestreamwrite.WriteRecordsInput{
 		DatabaseName: aws.String("opg-metrics"),
 		Records:      records,
 		TableName:    aws.String("opg-metrics"),
 	})
+
+	if err != nil {
+		log.Println(err)
+	}
 }
 
 func kinesisRecordsToTimestreamRecords(kinesisRecords []map[string]string) []types.Record {
