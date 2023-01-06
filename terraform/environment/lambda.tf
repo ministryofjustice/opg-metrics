@@ -13,7 +13,7 @@ data "archive_file" "lambda_go_connector_zip" {
 # Create AWS Lambda
 
 resource "aws_lambda_function" "lambda_go_connector" {
-  filename      = "${var.timestream_connector_artifact_name}.zip"
+  filename      = "../../kinesis-go-application/${var.timestream_connector_artifact_name}.zip"
   function_name = "terraform-kinesis-lambda"
   role          = aws_iam_role.lambda_go_connector.arn
   handler       = "main.handle"
