@@ -132,11 +132,14 @@ paths:
             {
                 "StreamName": "${name}",
                 "Records": [
-                   #foreach($elem in $input.path('$.metrics'))
+                    #set($inputRoot = $input.path('$.metrics'))
+                    #foreach($elem in $inputRoot)
                       {
-                        "Data": "$util.base64Encode($util.escapeJavaScript($elem.metric).replaceAll("\\'","'"))",
+                        #set($json = $input.json("$.metrics[$foreach.index].metric"))
+                        "Data":"$util.base64Encode($json)",
                         "PartitionKey": "default"
-                      }#if($foreach.hasNext),#end
+                      }
+                      #if($foreach.hasNext),#end
                     #end
                 ]
             }
