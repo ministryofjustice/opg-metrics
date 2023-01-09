@@ -74,7 +74,7 @@ jobs:
   terraform_environment_workflow:
     name: Terraform Environment
     if: ${{ github.actor != 'dependabot[bot]' }}
-    needs: ['terraform_account_workflow' 'build_go']
+    needs: ['terraform_account_workflow', 'build_go']
     uses: ./.github/workflows/terraform_plan_job.yml
     with:
       terraform_path: 'terraform/environment'
