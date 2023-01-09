@@ -134,7 +134,7 @@ paths:
                 "Records": [
                    #foreach($elem in $input.path('$.metrics'))
                       {
-                        "Data": "$util.base64Encode($util.escapeJavaScript($elem.metric))",
+                        "Data": "$util.base64Encode($util.escapeJavaScript($elem.metric).replaceAll("\\'","'"))",
                         "PartitionKey": "default"
                       }#if($foreach.hasNext),#end
                     #end
