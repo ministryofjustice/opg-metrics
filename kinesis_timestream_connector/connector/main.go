@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"log"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -10,7 +11,6 @@ import (
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/timestreamwrite"
 	"github.com/aws/aws-sdk-go-v2/service/timestreamwrite/types"
-	yaml "gopkg.in/yaml.v2"
 )
 
 type handler struct {
@@ -37,9 +37,9 @@ func (h handler) Handle(ctx context.Context, kinesisEvent events.KinesisEvent) {
 
 	for i, record := range kinesisEvent.Records {
 		x := map[string]string{}
+		log.Println(record.Kinesis.Data)
 
-		log.Println("JSON to unmarshal", string(record.Kinesis.Data))
-		err := yaml.Unmarshal(record.Kinesis.Data, &x)
+		err := json.Unmarshal([]byte(record.Kinesis.Data), &x)
 		if err != nil {
 			log.Println(err)
 			continue
@@ -62,22 +62,24 @@ func (h handler) Handle(ctx context.Context, kinesisEvent events.KinesisEvent) {
 }
 
 func kinesisRecordsToTimestreamRecords(kinesisRecords []map[string]string) []types.Record {
-	records := make([]types.Record, 0)
+	records := make([]types.Record, 0, len(kinesisRecords))
 	for _, kinesisRecord := range kinesisRecords {
 		dimensions := make([]types.Dimension, 0)
 		for key, value := range kinesisRecord {
 			if !isMandatoryData(key) {
-				dimensions = append(dimensions, types.Dimension{Name: &key, Value: &value})
+				dimensions = append(dimensions, types.Dimension{Name: aws.String(key), Value: aws.String(value)})
 			}
 		}
-		records = append(records, types.Record{
+
+		record := types.Record{
 			Dimensions:       dimensions,
 			MeasureName:      aws.String(kinesisRecord["MeasureName"]),
 			MeasureValue:     aws.String(kinesisRecord["MeasureValue"]),
 			MeasureValueType: types.MeasureValueTypeDouble,
 			Time:             aws.String(kinesisRecord["Time"]),
 			TimeUnit:         types.TimeUnitMilliseconds,
-		})
+		}
+		records = append(records, record)
 
 	}
 	return records
@@ -88,6 +90,7 @@ func isMandatoryData(key string) bool {
 	case
 		"MeasureName",
 		"MeasureValue",
+		"MeasureValueType",
 		"Time":
 		return true
 	}
