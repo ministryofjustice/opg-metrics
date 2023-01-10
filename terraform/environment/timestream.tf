@@ -7,7 +7,7 @@ resource "aws_timestreamwrite_table" "timestream_database" {
   table_name    = var.name
 
   retention_properties {
-    magnetic_store_retention_period_in_days = 30
-    memory_store_retention_period_in_hours  = 8
+    magnetic_store_retention_period_in_days = 365 // Store for 1 year
+    memory_store_retention_period_in_hours  = 24  // Fast access for 24 hours
   }
 }
