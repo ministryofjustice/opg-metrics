@@ -24,9 +24,11 @@ If the timestamp passed in the data exceeds the time that the Memory Storage ret
 
 [AWS Configuration Guide](https://docs.aws.amazon.com/timestream/latest/developerguide/configuration.html)
 
+[Existing MoJ Security Policy for logging retention periods](https://security-guidance.service.justice.gov.uk/logging-and-monitoring/#maximum-retention-period) allows us to store this information indefinately.
+
 ## Decision
 
-We will set Magnetic Storage to hold data for 365 days.
+We will set Magnetic Storage to hold data for 3 years or 1095 days. We can extend this at any time should we wish to. This allows us to analyse patterns over multiple years.
 
 We will set Memory Storage to hold data for 24 hours. This will support automated processes that run and insert data for the past 24 hours.
 
