@@ -21,10 +21,6 @@ jobs:
   branch_name:
     uses: ./.github/workflows/data-parse-branch-name.yml
 
-  build_flink:
-    name: Build Apache Flink Jar
-    uses: ./.github/workflows/apache_flink_job.yml
-
   build_go:
     name: Build Go
     uses: ./.github/workflows/build_and_upload_go_connector_artifact_job.yml
@@ -78,14 +74,12 @@ jobs:
   terraform_environment_workflow:
     name: Terraform Environment
     if: ${{ github.actor != 'dependabot[bot]' }}
-    needs: ['terraform_account_workflow', 'build_flink', 'build_go']
+    needs: ['terraform_account_workflow', 'build_go']
     uses: ./.github/workflows/terraform_plan_job.yml
     with:
       terraform_path: 'terraform/environment'
       workspace: development
       download_artifact: true
-      download_artifact_name: ${{ needs.build_flink.outputs.artifact_name }}
-      download_artifact_path_name: 'kinesis-analytics-application'
       download_go_artifact_name: ${{ needs.build_go.outputs.artifact_name }}
       download_go_artifact_path_name: 'kinesis-go-application'
     secrets:
