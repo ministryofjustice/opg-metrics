@@ -52,7 +52,7 @@ jobs:
         uses: unfor19/install-aws-cli-action@v1
         if: ${{ github.actor != 'dependabot[bot]' }}
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1.7.0
+        uses: aws-actions/configure-aws-credentials@v2.0.0
         if: ${{ github.actor != 'dependabot[bot]' }}
         with:
           aws-access-key-id: ${{ secrets.aws_access_key_id_actions }}
