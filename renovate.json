@@ -1,0 +1,75 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:base"],
+  "branchPrefix": "renovate-",
+  "labels": ["Renovate", "Dependencies"],
+  "commitMessageAction": "Renovate update",
+  "lockFileMaintenance": {
+    "enabled": false
+  },
+  "vulnerabilityAlerts": {
+    "groupName": "Security Alerts",
+    "labels": ["Dependencies", "Renovate", "SecurityAlert"],
+    "dependencyDashboardApproval": false,
+    "stabilityDays": 0,
+    "rangeStrategy": "update-lockfile",
+    "commitMessagePrefix": "[SECURITY]",
+    "branchTopic": "{{{datasource}}}-{{{depName}}}-vulnerability",
+    "prCreation": "immediate",
+    "prPriority": 5
+  },
+  "prConcurrentLimit": 1,
+  "prHourlyLimit": 1,
+  "branchConcurrentLimit": 1,
+  "enabledManagers": [
+    "dockerfile",
+    "docker-compose",
+    "github-actions",
+    "gomod",
+    "terraform",
+    "pip_requirements"
+  ],
+  "packageRules": [
+    {
+      "description": [
+        "Go: bundle all updates together"
+      ],
+      "labels": ["Dependencies", "Renovate", "Go"],
+      "groupName": "Go",
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchManagers": ["gomod"]
+    },
+    {
+      "description": [
+        "Github Actions: bundle all updates together"
+      ],
+      "labels": ["devDependencies", "Renovate", "GithubActions"],
+      "groupName": "Github Actions",
+      "matchUpdateTypes": ["minor", "patch", "digest"],
+      "matchManagers": ["github-actions"]
+    },
+    {
+      "description": [
+        "Terraform: bundle all updates together"
+      ],
+      "labels": ["devDependencies", "Renovate", "Terraform"],
+      "groupName": "Terraform",
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchManagers": ["terraform"]
+    },
+    {
+      "description": [
+        "python minor and patch updates (stable for 3 days)"
+      ],
+      "automerge": false,
+      "groupName": "minor and patch updates (Python)",
+      "groupSlug": "all-minor-patch-updates-python",
+      "labels": ["Dependencies", "Renovate"],
+      "matchManagers": ["pip_requirements"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "prCreation": "immediate",
+      "prPriority": 4,
+      "stabilityDays": 3
+    }
+  ]
+}
