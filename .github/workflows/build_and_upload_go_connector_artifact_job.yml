@@ -20,7 +20,7 @@ jobs:
         run: |
           cd kinesis_timestream_connector/connector
           GOOS=linux GOARCH=amd64 go build -o opg-metrics-kinesis-to-timestream-connector main.go
-          echo ::set-output name=artifact_name::opg-metrics-kinesis-to-timestream-connector
+          echo "artifact_name=opg-metrics-kinesis-to-timestream-connector" >> $GITHUB_OUTPUT
       - name: Upload Go executable
         id: upload
         uses: actions/upload-artifact@v3
