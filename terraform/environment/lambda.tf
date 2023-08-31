@@ -14,13 +14,13 @@ data "archive_file" "lambda_go_connector_zip" {
 
 resource "aws_lambda_function" "lambda_go_connector" {
   filename      = "../../kinesis-go-application/${var.timestream_connector_artifact_name}.zip"
-  function_name = "terraform-kinesis-lambda"
+  function_name = "opg-metrics-kinesis-connector"
   role          = aws_iam_role.lambda_go_connector.arn
   handler       = var.timestream_connector_artifact_name
 
   source_code_hash = filebase64sha256("../../kinesis-go-application/${var.timestream_connector_artifact_name}.zip")
 
-  runtime = "go1.x"
+  runtime = "provided.al2"
 
   environment {
     variables = {
