@@ -19,8 +19,8 @@ jobs:
         id: go_build
         run: |
           cd kinesis_timestream_connector/connector
-          GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o opg-metrics-kinesis-to-timestream-connector main.go
-          echo ::set-output name=artifact_name::opg-metrics-kinesis-to-timestream-connector
+          GOARCH=amd64 GOOS=linux go build -tags lambda.norpc -o bootstrap main.go
+          echo ::set-output name=artifact_name::bootstrap
       - name: Upload Go executable
         id: upload
         uses: actions/upload-artifact@v3

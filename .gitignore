@@ -3,3 +3,7 @@
 *.tfstate
 *.tfstate.backup
 .DS_Store
+.tool-versions
+.vscode
+
+kinesis-go-application
