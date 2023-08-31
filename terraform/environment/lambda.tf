@@ -1,6 +1,6 @@
 variable "timestream_connector_artifact_name" {
   type    = string
-  default = "opg-metrics-kinesis-to-timestream-connector"
+  default = "bootstrap"
 }
 
 # Build Lambda Zip
@@ -16,7 +16,7 @@ resource "aws_lambda_function" "lambda_go_connector" {
   filename      = "../../kinesis-go-application/${var.timestream_connector_artifact_name}.zip"
   function_name = "terraform-kinesis-lambda"
   role          = aws_iam_role.lambda_go_connector.arn
-  handler       = "opg-metrics-kinesis-to-timestream-connector"
+  handler       = var.timestream_connector_artifact_name
 
   source_code_hash = filebase64sha256("../../kinesis-go-application/${var.timestream_connector_artifact_name}.zip")
 
