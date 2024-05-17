@@ -7,3 +7,5 @@
 .vscode
 
 kinesis-go-application
+
+__pycache__

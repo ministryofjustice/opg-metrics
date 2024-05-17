@@ -2,7 +2,7 @@ import unittest
 import os
 import boto3
 import mock
-from moto import mock_sqs
+from moto import mock_aws
 
 METRIC_PROJECT_NAME = "use-an-lpa"
 METRIC_CATEGORY = "kpi"
@@ -16,7 +16,7 @@ PAYLOAD = {'awslogs': {'data': 'H4sIAAAAAAAAAFVS22rjMBD9laDXjRNdfJED+xCatCxsm9Jk
 
 
 @mock.patch.dict(os.environ, {'AWS_DEFAULT_REGION': AWS_REGION, 'METRIC_CATEGORY': METRIC_CATEGORY, 'METRIC_SUBCATEGORY': METRIC_SUBCATEGORY, 'METRIC_ENVIRONMENT': METRIC_ENVIRONMENT, 'METRIC_PROJECT_NAME': METRIC_PROJECT_NAME, 'QUEUE_URL': 'https://eu-west-1.queue.amazonaws.com/123456789012/' + QUEUE_URL})
-@mock_sqs
+@mock_aws
 class TestLambdaFunction(unittest.TestCase):
 
     def test_handler(self):

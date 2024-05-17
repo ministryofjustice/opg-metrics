@@ -54,7 +54,6 @@ module "trusted_service_access_sirius_preproduction" {
   secret_recovery_window_in_days     = 0
   secretsmanager_api_keys_kms_key_id = aws_kms_key.api_key.key_id
   identifiers_arns = [
-    "arn:aws:iam::492687888235:role/api-ecs-preproduction-20200204165900331400000008",
     "arn:aws:iam::492687888235:role/api-ecs-preproduction"
   ]
 }
@@ -67,7 +66,6 @@ module "trusted_service_access_sirius_production" {
   secret_recovery_window_in_days     = 0
   secretsmanager_api_keys_kms_key_id = aws_kms_key.api_key.key_id
   identifiers_arns = [
-    "arn:aws:iam::649098267436:role/api-ecs-production-20190802114727697300000001",
     "arn:aws:iam::649098267436:role/api-ecs-production"
   ]
 }
