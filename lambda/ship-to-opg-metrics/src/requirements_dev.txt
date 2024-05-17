@@ -1,5 +1,5 @@
-moto[sqs]==4.0.12
-moto[secretsmanager]==4.0.12
+moto[sqs]==5.0.7
+moto[secretsmanager]==5.0.7
 coverage==7.0.0
 pylint==2.15.9
 pytest==7.2.0
