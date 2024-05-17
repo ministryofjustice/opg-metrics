@@ -1,7 +1,7 @@
 import unittest
 import os
 import mock
-from moto import mock_sqs, mock_secretsmanager
+from moto import mock_aws
 import boto3
 import requests
 import requests_mock
@@ -36,8 +36,7 @@ PAYLOAD = {
 
 @requests_mock.Mocker()
 @mock.patch.dict(os.environ, {'AWS_DEFAULT_REGION': AWS_REGION, 'OPG_METRICS_URL': OPG_METRICS_URL, 'SECRET_ARN': SECRET_ARN, 'SECRET_VALUE': SECRET_VALUE})
-@mock_secretsmanager
-@mock_sqs
+@mock_aws
 class TestLambdaFunction(unittest.TestCase):
 
     def test_handler(self, m):
