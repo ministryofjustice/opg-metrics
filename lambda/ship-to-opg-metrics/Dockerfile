@@ -1,7 +1,7 @@
 # Define function directory
 ARG FUNCTION_DIR="/function"
 
-FROM python:alpine3.16 AS python-alpine
+FROM python:3.9.19-alpine3.20 AS python-alpine
 RUN apk add --no-cache \
     libstdc++
 
