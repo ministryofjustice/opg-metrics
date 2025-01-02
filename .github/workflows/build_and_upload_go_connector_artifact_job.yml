@@ -23,7 +23,7 @@ jobs:
           echo ::set-output name=artifact_name::bootstrap
       - name: Upload Go executable
         id: upload
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4.5.0
         with:
           name: ${{ steps.go_build.outputs.artifact_name }}
           path: kinesis_timestream_connector/connector/${{ steps.go_build.outputs.artifact_name }}
