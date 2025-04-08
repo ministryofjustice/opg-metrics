@@ -93,3 +93,38 @@ module "trusted_service_access_jenkins_production" {
     "arn:aws:iam::997462338508:role/jenkins-primary-20190430083911121200000007"
   ]
 }
+
+module "trusted_service_access_mrlpa_development" {
+  trusted_service_name               = "mrlpa-development"
+  source                             = "../modules/trusted_service_access"
+  aws_api_gateway_rest_api           = aws_api_gateway_rest_api.kinesis_stream_api_gateway.id
+  aws_api_gateway_stage              = aws_api_gateway_stage.kinesis_stream_api_gateway.stage_name
+  secret_recovery_window_in_days     = 0
+  secretsmanager_api_keys_kms_key_id = aws_kms_key.api_key.key_id
+  identifiers_arns = [
+    "arn:aws:iam::653761790766:role/operator"
+  ]
+}
+
+module "trusted_service_access_mrlpa_preproduction" {
+  trusted_service_name               = "mrlpa-preproduction"
+  source                             = "../modules/trusted_service_access"
+  aws_api_gateway_rest_api           = aws_api_gateway_rest_api.kinesis_stream_api_gateway.id
+  aws_api_gateway_stage              = aws_api_gateway_stage.kinesis_stream_api_gateway.stage_name
+  secret_recovery_window_in_days     = 0
+  secretsmanager_api_keys_kms_key_id = aws_kms_key.api_key.key_id
+  identifiers_arns = [
+    "arn:aws:iam::792093328875:role/operator"
+  ]
+}
+module "trusted_service_access_mrlpa_production" {
+  trusted_service_name               = "mrlpa-production"
+  source                             = "../modules/trusted_service_access"
+  aws_api_gateway_rest_api           = aws_api_gateway_rest_api.kinesis_stream_api_gateway.id
+  aws_api_gateway_stage              = aws_api_gateway_stage.kinesis_stream_api_gateway.stage_name
+  secret_recovery_window_in_days     = 0
+  secretsmanager_api_keys_kms_key_id = aws_kms_key.api_key.key_id
+  identifiers_arns = [
+    "arn:aws:iam::313879017102:role/operator"
+  ]
+}
