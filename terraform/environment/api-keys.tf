@@ -116,7 +116,6 @@ module "trusted_service_access_mrlpa_preproduction" {
   secretsmanager_api_keys_kms_key_id = aws_kms_key.api_key.key_id
   identifiers_arns = [
     "arn:aws:iam::792093328875:role/operator",
-    "arn:aws:iam::653761790766:role/opg-metrics-1886"
   ]
 }
 module "trusted_service_access_mrlpa_production" {
@@ -128,6 +127,5 @@ module "trusted_service_access_mrlpa_production" {
   secretsmanager_api_keys_kms_key_id = aws_kms_key.api_key.key_id
   identifiers_arns = [
     "arn:aws:iam::313879017102:role/operator",
-    "arn:aws:iam::653761790766:role/opg-metrics-1886"
   ]
 }
