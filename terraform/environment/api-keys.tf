@@ -102,7 +102,8 @@ module "trusted_service_access_mrlpa_development" {
   secret_recovery_window_in_days     = 0
   secretsmanager_api_keys_kms_key_id = aws_kms_key.api_key.key_id
   identifiers_arns = [
-    "arn:aws:iam::653761790766:role/operator"
+    "arn:aws:iam::653761790766:role/operator",
+    "arn:aws:iam::653761790766:role/opg-metrics-*"
   ]
 }
 
@@ -114,7 +115,8 @@ module "trusted_service_access_mrlpa_preproduction" {
   secret_recovery_window_in_days     = 0
   secretsmanager_api_keys_kms_key_id = aws_kms_key.api_key.key_id
   identifiers_arns = [
-    "arn:aws:iam::792093328875:role/operator"
+    "arn:aws:iam::792093328875:role/operator",
+    "arn:aws:iam::653761790766:role/opg-metrics-preproduction"
   ]
 }
 module "trusted_service_access_mrlpa_production" {
@@ -125,6 +127,7 @@ module "trusted_service_access_mrlpa_production" {
   secret_recovery_window_in_days     = 0
   secretsmanager_api_keys_kms_key_id = aws_kms_key.api_key.key_id
   identifiers_arns = [
-    "arn:aws:iam::313879017102:role/operator"
+    "arn:aws:iam::313879017102:role/operator",
+    "arn:aws:iam::653761790766:role/opg-metrics-production"
   ]
 }
