@@ -102,8 +102,7 @@ module "trusted_service_access_mrlpa_development" {
   secret_recovery_window_in_days     = 0
   secretsmanager_api_keys_kms_key_id = aws_kms_key.api_key.key_id
   identifiers_arns = [
-    "arn:aws:iam::653761790766:role/operator",
-    "arn:aws:iam::653761790766:role/opg-metrics-1886"
+    "arn:aws:iam::653761790766:root",
   ]
 }
 
@@ -115,7 +114,7 @@ module "trusted_service_access_mrlpa_preproduction" {
   secret_recovery_window_in_days     = 0
   secretsmanager_api_keys_kms_key_id = aws_kms_key.api_key.key_id
   identifiers_arns = [
-    "arn:aws:iam::792093328875:role/operator",
+    "arn:aws:iam::792093328875:root",
   ]
 }
 module "trusted_service_access_mrlpa_production" {
@@ -126,7 +125,7 @@ module "trusted_service_access_mrlpa_production" {
   secret_recovery_window_in_days     = 0
   secretsmanager_api_keys_kms_key_id = aws_kms_key.api_key.key_id
   identifiers_arns = [
-    "arn:aws:iam::313879017102:role/operator",
+    "arn:aws:iam::313879017102:root",
   ]
 }
 
@@ -138,8 +137,7 @@ module "trusted_service_access_lpa_store_development" {
   secret_recovery_window_in_days     = 0
   secretsmanager_api_keys_kms_key_id = aws_kms_key.api_key.key_id
   identifiers_arns = [
-    "arn:aws:iam::653761790766:role/operator",
-    "arn:aws:iam::653761790766:role/opg-metrics-1886"
+    "arn:aws:iam::493907465011:root",
   ]
 }
 
@@ -151,7 +149,7 @@ module "trusted_service_access_lpa_store_preproduction" {
   secret_recovery_window_in_days     = 0
   secretsmanager_api_keys_kms_key_id = aws_kms_key.api_key.key_id
   identifiers_arns = [
-    "arn:aws:iam::792093328875:role/operator",
+    "arn:aws:iam::936779158973:root",
   ]
 }
 module "trusted_service_access_lpa_store_production" {
@@ -162,6 +160,6 @@ module "trusted_service_access_lpa_store_production" {
   secret_recovery_window_in_days     = 0
   secretsmanager_api_keys_kms_key_id = aws_kms_key.api_key.key_id
   identifiers_arns = [
-    "arn:aws:iam::313879017102:role/operator",
+    "arn:aws:iam::764856231715:root",
   ]
 }
