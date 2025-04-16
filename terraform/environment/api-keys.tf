@@ -129,3 +129,39 @@ module "trusted_service_access_mrlpa_production" {
     "arn:aws:iam::313879017102:role/operator",
   ]
 }
+
+module "trusted_service_access_lpa_store_development" {
+  trusted_service_name               = "lpa-store-development"
+  source                             = "../modules/trusted_service_access"
+  aws_api_gateway_rest_api           = aws_api_gateway_rest_api.kinesis_stream_api_gateway.id
+  aws_api_gateway_stage              = aws_api_gateway_stage.kinesis_stream_api_gateway.stage_name
+  secret_recovery_window_in_days     = 0
+  secretsmanager_api_keys_kms_key_id = aws_kms_key.api_key.key_id
+  identifiers_arns = [
+    "arn:aws:iam::653761790766:role/operator",
+    "arn:aws:iam::653761790766:role/opg-metrics-1886"
+  ]
+}
+
+module "trusted_service_access_lpa_store_preproduction" {
+  trusted_service_name               = "lpa-store-preproduction"
+  source                             = "../modules/trusted_service_access"
+  aws_api_gateway_rest_api           = aws_api_gateway_rest_api.kinesis_stream_api_gateway.id
+  aws_api_gateway_stage              = aws_api_gateway_stage.kinesis_stream_api_gateway.stage_name
+  secret_recovery_window_in_days     = 0
+  secretsmanager_api_keys_kms_key_id = aws_kms_key.api_key.key_id
+  identifiers_arns = [
+    "arn:aws:iam::792093328875:role/operator",
+  ]
+}
+module "trusted_service_access_lpa_store_production" {
+  trusted_service_name               = "lpa-store-production"
+  source                             = "../modules/trusted_service_access"
+  aws_api_gateway_rest_api           = aws_api_gateway_rest_api.kinesis_stream_api_gateway.id
+  aws_api_gateway_stage              = aws_api_gateway_stage.kinesis_stream_api_gateway.stage_name
+  secret_recovery_window_in_days     = 0
+  secretsmanager_api_keys_kms_key_id = aws_kms_key.api_key.key_id
+  identifiers_arns = [
+    "arn:aws:iam::313879017102:role/operator",
+  ]
+}
