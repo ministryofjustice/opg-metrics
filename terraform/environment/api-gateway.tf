@@ -8,8 +8,6 @@ resource "aws_api_gateway_deployment" "kinesis_stream_api_gateway" {
   lifecycle {
     create_before_destroy = true
   }
-
-  stage_name = terraform.workspace
 }
 
 resource "aws_api_gateway_stage" "kinesis_stream_api_gateway" {
@@ -34,21 +32,22 @@ resource "aws_api_gateway_rest_api" "kinesis_stream_api_gateway" {
     types = ["REGIONAL"]
   }
 
-  body = data.template_file._.rendered
+  body = local.template_file
 }
 
 locals {
-  openapispec = file("./api/openapi_spec.yaml")
+  # openapispec = file("./api/openapi_spec.yaml")
   openapi_template_vars = {
     region        = data.aws_region.current.name
     name          = var.name
     allowed_roles = aws_iam_role.kinesis_apigateway.arn
   }
+  template_file = templatefile("./api/openapi_spec.yaml", local.openapi_template_vars)
 }
-data "template_file" "_" {
-  template = local.openapispec
-  vars     = local.openapi_template_vars
-}
+# data "template_file" "_" {
+#   template = local.openapispec
+#   vars     = local.openapi_template_vars
+# }
 
 resource "aws_cloudwatch_log_group" "kinesis_stream_api_gateway" {
   name              = "API-Gateway-Execution-Logs_${aws_api_gateway_rest_api.kinesis_stream_api_gateway.id}/${terraform.workspace}"
