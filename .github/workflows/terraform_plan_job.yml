@@ -27,6 +27,8 @@ on:
         required: true
       aws_secret_access_key_actions:
         required: true
+env:
+  TFLINT_VERSION: 0.50.1
 
 jobs:
   terraform_workflow:
@@ -67,11 +69,21 @@ jobs:
           role-duration-seconds: 3600
           role-session-name: OPGMetricsECRGithubAction
 
-      - name: Lint Terraform
-        id: tf_lint
+      - name: Format Check Terraform
+        id: tf_fmt
         run: terraform fmt -check -recursive
         working-directory: ./${{ inputs.terraform_path }}
         continue-on-error: true
+
+      - uses: terraform-linters/setup-tflint@90f302c255ef959cbfb4bd10581afecdb7ece3e6 # v4
+        name: Setup TFLint
+        with:
+          tflint_version: v${{ env.TFLINT_VERSION }}
+
+      - name: Lint Terraform
+        id: tf_lint
+        run: tflint --recursive
+        working-directory: ./terraform/environment
 
       - name: Terraform Init
         run: terraform init -input=false
