@@ -37,9 +37,8 @@ resource "aws_lambda_function_event_invoke_config" "lambda_go_connector" {
 }
 
 # Create Lambda Event Source Mapping
-
 resource "aws_lambda_event_source_mapping" "lambda_go_connector" {
-  batch_size        = 50
+  batch_size        = 100
   event_source_arn  = aws_kinesis_stream.metrics_input.arn
   function_name     = aws_lambda_function.lambda_go_connector.arn
   starting_position = "LATEST"
