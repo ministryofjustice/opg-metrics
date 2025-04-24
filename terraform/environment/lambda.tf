@@ -11,9 +11,7 @@ data "archive_file" "lambda_go_connector_zip" {
 }
 
 # Create AWS Lambda
-
 resource "aws_lambda_function" "lambda_go_connector" {
-  # filename      = "../../kinesis-go-application/${var.timestream_connector_artifact_name}.zip"
   filename      = data.archive_file.lambda_go_connector_zip.output_path
   function_name = "opg-metrics-kinesis-connector"
   role          = aws_iam_role.lambda_go_connector.arn
@@ -41,7 +39,7 @@ resource "aws_lambda_function_event_invoke_config" "lambda_go_connector" {
 # Create Lambda Event Source Mapping
 
 resource "aws_lambda_event_source_mapping" "lambda_go_connector" {
-  #batch_size        = 5
+  batch_size        = 50
   event_source_arn  = aws_kinesis_stream.metrics_input.arn
   function_name     = aws_lambda_function.lambda_go_connector.arn
   starting_position = "LATEST"
