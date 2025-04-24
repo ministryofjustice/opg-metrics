@@ -15,7 +15,7 @@ resource "aws_api_gateway_stage" "kinesis_stream_api_gateway" {
   deployment_id        = aws_api_gateway_deployment.kinesis_stream_api_gateway.id
   rest_api_id          = aws_api_gateway_rest_api.kinesis_stream_api_gateway.id
   cache_cluster_size   = "0.5"
-  stage_name           = terraform.workspace
+  stage_name           = local.environment_name
   xray_tracing_enabled = true
 }
 
@@ -44,7 +44,7 @@ locals {
 }
 
 resource "aws_cloudwatch_log_group" "kinesis_stream_api_gateway" {
-  name              = "API-Gateway-Execution-Logs_${aws_api_gateway_rest_api.kinesis_stream_api_gateway.id}/${terraform.workspace}"
+  name              = "API-Gateway-Execution-Logs_${aws_api_gateway_rest_api.kinesis_stream_api_gateway.id}/${local.environment_name}"
   retention_in_days = 7
 }
 
