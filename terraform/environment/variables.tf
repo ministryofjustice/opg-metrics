@@ -13,11 +13,8 @@ variable "environments" {
 }
 
 locals {
-  environment_name = lower(replace(terraform.workspace, "_", "-"))
-  environment      = contains(keys(var.environments), local.environment_name) ? var.environments[local.environment_name] : var.environments["default"]
-  # account_name = lookup(var.environments, terraform.workspace, "default")
-  # environment  = lower(terraform.workspace)
-
+  environment_name  = lower(replace(terraform.workspace, "_", "-"))
+  environment       = contains(keys(var.environments), local.environment_name) ? var.environments[local.environment_name] : var.environments["default"]
   dns_namespace_env = local.environment_name == "production" ? "" : "${local.environment_name}."
 
   mandatory_moj_tags = {
