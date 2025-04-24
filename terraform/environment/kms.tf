@@ -1,5 +1,5 @@
 resource "aws_kms_key" "api_key" {
-  description             = "opg metrics api key encryption ${local.environment}"
+  description             = "opg metrics api key encryption ${local.environment_name}"
   deletion_window_in_days = 7
   enable_key_rotation     = true
   policy                  = data.aws_iam_policy_document.api_key_kms.json
