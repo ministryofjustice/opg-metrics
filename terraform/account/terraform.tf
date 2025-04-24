@@ -13,6 +13,7 @@ terraform {
 
 variable "default_role" {
   default = "opg-metrics-ci"
+  type    = string
 }
 
 provider "aws" {
