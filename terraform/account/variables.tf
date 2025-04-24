@@ -7,9 +7,8 @@ variable "accounts" {
 }
 
 locals {
-  account_name      = lower(replace(terraform.workspace, "_", "-"))
-  account           = contains(keys(var.accounts), local.account_name) ? var.accounts[local.account_name] : var.accounts["default"]
-  dns_namespace_env = local.account_name == "production" ? "" : "${local.account_name}."
+  account_name = lower(replace(terraform.workspace, "_", "-"))
+  account      = contains(keys(var.accounts), local.account_name) ? var.accounts[local.account_name] : var.accounts["default"]
 
   mandatory_moj_tags = {
     business-unit    = "OPG"
