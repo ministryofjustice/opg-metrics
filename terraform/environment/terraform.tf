@@ -24,7 +24,7 @@ variable "management_role" {
 provider "aws" {
   region = "eu-west-1"
   assume_role {
-    role_arn     = "arn:aws:iam::679638075911:role/${var.default_role}"
+    role_arn     = "arn:aws:iam::${local.environment.account_id}:role/${var.default_role}"
     session_name = "opg-metrics-terraform-session"
   }
 }
@@ -40,5 +40,4 @@ provider "aws" {
 
 data "aws_region" "current" {}
 
-data "aws_caller_identity" "current" {
-}
+data "aws_caller_identity" "current" {}

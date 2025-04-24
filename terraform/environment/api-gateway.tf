@@ -48,7 +48,6 @@ resource "aws_cloudwatch_log_group" "kinesis_stream_api_gateway" {
   retention_in_days = 7
 }
 
-
 resource "aws_api_gateway_account" "kinesis_stream_api_gateway" {
   cloudwatch_role_arn = aws_iam_role.cloudwatch_kinesis_stream_api_gateway.arn
 }
