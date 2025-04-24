@@ -43,7 +43,7 @@ jobs:
 
       - name: Upload Trivy scan results to GitHub Security tab
         id: trivy_upload_sarif
-        uses: github/codeql-action/upload-sarif@b8d3b6e8af63cde30bdc382c0bc28114f4346c88 # v2
+        uses: github/codeql-action/upload-sarif@45775bd8235c68ba998cffa5171334d58593da47 # v3.28.15
         if: always()
         with:
           sarif_file: 'trivy-results.sarif'
@@ -52,7 +52,7 @@ jobs:
         uses: unfor19/install-aws-cli-action@e8b481e524a99f37fbd39fdc1dcb3341ab091367 # v1
         if: ${{ github.actor != 'dependabot[bot]' }}
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838 # v1.7.0
+        uses: aws-actions/configure-aws-credentials@ececac1a45f3b08a01d2dd070d28d111c5fe6722 # v4.1.0
         if: ${{ github.actor != 'dependabot[bot]' }}
         with:
           aws-access-key-id: ${{ secrets.aws_access_key_id_actions }}
@@ -63,7 +63,7 @@ jobs:
           role-session-name: OPGMetricsECRGithubAction
       - name: ECR Login
         id: login_ecr
-        uses: aws-actions/amazon-ecr-login@5a88a04c91d5c6f97aae0d9be790e64d9b1d47b7 # v1.7.1
+        uses: aws-actions/amazon-ecr-login@062b18b96a7aff071d4dc91bc00c4c1a7945b076 # v2.0.1
         if: ${{ github.actor != 'dependabot[bot]' }}
         with:
           registries: 311462405659

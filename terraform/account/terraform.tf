@@ -9,23 +9,17 @@ terraform {
     }
     dynamodb_table = "remote_lock"
   }
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws",
-      version = ">= 4"
-    }
-  }
-  required_version = "<2.0.0"
 }
 
 variable "default_role" {
   default = "opg-metrics-ci"
+  type    = string
 }
 
 provider "aws" {
   region = "eu-west-1"
   assume_role {
-    role_arn     = "arn:aws:iam::679638075911:role/${var.default_role}"
+    role_arn     = "arn:aws:iam::${local.account.account_id}:role/${var.default_role}"
     session_name = "opg-metrics-terraform-session"
   }
 }

@@ -28,8 +28,8 @@ resource "aws_internet_gateway" "gw" {
 }
 
 resource "aws_eip" "nat" {
-  count = 3
-  vpc   = true
+  count  = 3
+  domain = "vpc"
 
   tags = merge(
     var.tags,
