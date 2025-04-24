@@ -51,9 +51,9 @@ jobs:
           echo "REF: ${{ github.head_ref }}"
           echo "RAW BRANCH: ${raw_branch}"
           echo "PARSED BRANCH: ${parsed_branch}"
+          echo "raw_branch=${raw_branch}" >> $GITHUB_OUTPUT
+          echo "parsed_branch=${parsed_branch}" >> $GITHUB_OUTPUT
 
-          echo "::set-output name=raw_branch::${raw_branch}"
-          echo "::set-output name=parsed_branch::${parsed_branch}"
 
       - name: Push to GITHUB_ENV
         if: inputs.push_to_github_env
