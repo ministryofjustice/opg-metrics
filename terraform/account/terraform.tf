@@ -5,9 +5,9 @@ terraform {
     encrypt = true
     region  = "eu-west-1"
     assume_role = {
-      role_arn = "arn:aws:iam::311462405659:role/opg-metrics-ci"
+      role_arn = "arn:aws:iam::311462405659:role/opg-metrics-state-access"
     }
-    dynamodb_table = "remote_lock"
+    use_lockfile = true
   }
 }
 
