@@ -29,9 +29,25 @@ data "aws_iam_policy_document" "kms_key" {
       "kms:DescribeKey",
     ]
 
-    principals {
-      type        = "AWS"
-      identifiers = var.encryption_roles
+    # principals {
+    #   type        = "AWS"
+    #   identifiers = var.encryption_roles
+    # }
+
+    dynamic "principals" {
+      for_each = length(var.encryption_roles) > 0 ? [1] : []
+      content {
+        type        = "AWS"
+        identifiers = var.encryption_roles
+      }
+    }
+
+    dynamic "principals" {
+      for_each = length(var.usage_services) > 0 ? [1] : []
+      content {
+        type        = "Service"
+        identifiers = var.usage_services
+      }
     }
 
     dynamic "condition" {
@@ -56,9 +72,20 @@ data "aws_iam_policy_document" "kms_key" {
       "kms:DescribeKey",
     ]
 
-    principals {
-      type        = "AWS"
-      identifiers = var.decryption_roles
+    dynamic "principals" {
+      for_each = length(var.decryption_roles) > 0 ? [1] : []
+      content {
+        type        = "AWS"
+        identifiers = var.decryption_roles
+      }
+    }
+
+    dynamic "principals" {
+      for_each = length(var.usage_services) > 0 ? [1] : []
+      content {
+        type        = "Service"
+        identifiers = var.usage_services
+      }
     }
 
     dynamic "condition" {
