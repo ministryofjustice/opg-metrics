@@ -3,7 +3,7 @@ module "cloudwatch_log_group_kms_key" {
   administrator_roles = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass"]
   alias               = "${data.aws_default_tags.current.tags.application}-cloudwatch-log-groups-${local.account_name}"
   decryption_roles    = [local.account_name == "production" ? "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass" : "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/operator"]
-  description         = "KMS Key for Cloudwatch log group encryption ${local.account_name}"
+  description         = "KMS key for opg-metrics cloudwatch log group encryption ${local.account_name}"
   encryption_roles    = []
   usage_services = [
     "logs.eu-west-1.amazonaws.com",
