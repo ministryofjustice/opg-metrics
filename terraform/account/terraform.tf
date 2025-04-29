@@ -23,3 +23,12 @@ provider "aws" {
     session_name = "opg-metrics-terraform-session"
   }
 }
+
+provider "aws" {
+  region = "eu-west-2"
+  alias  = "eu-west-2"
+  assume_role {
+    role_arn     = "arn:aws:iam::${local.account.account_id}:role/${var.default_role}"
+    session_name = "opg-metrics-terraform-session"
+  }
+}
