@@ -12,7 +12,7 @@ locals {
 
   mandatory_moj_tags = {
     business-unit    = "OPG"
-    application      = "opg-metrics-shared"
+    application      = "opg-metrics"
     environment-name = local.account_name
     owner            = "OPGOPS opgteam+opgmetrics@digital.justice.gov.uk"
     is-production    = "false"
