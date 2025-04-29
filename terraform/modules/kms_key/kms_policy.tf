@@ -29,11 +29,6 @@ data "aws_iam_policy_document" "kms_key" {
       "kms:DescribeKey",
     ]
 
-    # principals {
-    #   type        = "AWS"
-    #   identifiers = var.encryption_roles
-    # }
-
     dynamic "principals" {
       for_each = length(var.encryption_roles) > 0 ? [1] : []
       content {
