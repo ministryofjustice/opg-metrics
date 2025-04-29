@@ -20,5 +20,5 @@ locals {
     source-code      = "https://github.com/ministryofjustice/opg-metrics"
   }
 
-  tags = local.mandatory_moj_tags
+  default_tags = local.mandatory_moj_tags
 }
