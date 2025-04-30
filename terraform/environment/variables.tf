@@ -7,7 +7,8 @@ variable "name" {
 variable "environments" {
   type = map(
     object({
-      account_id = string
+      account_id   = string
+      account_name = string
     })
   )
 }
