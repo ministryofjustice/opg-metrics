@@ -28,6 +28,11 @@ resource "aws_lambda_function" "lambda_go_connector" {
       TABLE_NAME       = var.name
     }
   }
+
+  tracing_config {
+    mode = "Active"
+  }
+
 }
 
 resource "aws_lambda_function_event_invoke_config" "lambda_go_connector" {
