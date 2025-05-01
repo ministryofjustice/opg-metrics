@@ -17,6 +17,11 @@ resource "aws_api_gateway_stage" "kinesis_stream_api_gateway" {
   cache_cluster_size   = "0.5"
   stage_name           = local.environment_name
   xray_tracing_enabled = true
+
+  access_log_settings {
+    destination_arn = aws_cloudwatch_log_group.kinesis_stream_api_gateway.arn
+    format          = "JSON"
+  }
 }
 
 resource "aws_api_gateway_base_path_mapping" "kinesis_stream_api_gateway" {
