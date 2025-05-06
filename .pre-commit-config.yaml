@@ -2,16 +2,36 @@
 # See https://pre-commit.com/hooks.html for more hooks
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v2.0.0
+    rev: v5.0.0
     hooks:
-      - id: trailing-whitespace
-      - id: end-of-file-fixer
+      - id: trailing-whitespace # trims trailing whitespace.
+      - id: end-of-file-fixer # ensures that a file is either empty, or ends with one newline.
+      - id: check-added-large-files # prevents giant files from being committed.
+        args: [ "--maxkb=20480" ]
+      - id: check-case-conflict # checks for files that would conflict in case-insensitive filesystems.
+      - id: check-json # Attempts to load all json files to verify syntax.
+      - id: check-merge-conflict # checks for files that contain merge conflict strings.
+      - id: check-yaml # checks yaml files for parseable syntax.
+      - id: detect-private-key # detects the presence of private keys.
+      - id: mixed-line-ending # replaces or checks mixed line ending.
+        args: [ "--fix=auto" ]
+      - id: no-commit-to-branch
+        args:
+        - --branch=main
+      - id: pretty-format-json
+        args:
+          - "--autofix"
+          - "--indent=4"
+          - "--no-sort-keys"
+          - "--no-ensure-ascii"
   - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.19.0
+    rev: v1.99.0
     hooks:
       - id: terraform_fmt
-      - id: terraform_validate
-  - repo: https://github.com/awslabs/git-secrets
-    rev: master
+      - id: terraform_tflint
+        args:
+          - --args=--recursive
+  - repo: https://github.com/renovatebot/pre-commit-hooks
+    rev: 39.261.4
     hooks:
-      - id: git-secrets
+      - id: renovate-config-validator
