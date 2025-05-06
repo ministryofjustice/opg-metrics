@@ -20,6 +20,7 @@ jobs:
     name: Build, Scan and Push Lambdas
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         lambda_name: ${{ fromJSON(inputs.lambda_names) }}
     steps:
