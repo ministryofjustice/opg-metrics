@@ -22,6 +22,11 @@ on:
         description: 'Local go artifact path location'
         required: false
         type: string
+      apply_plan:
+        description: 'Apply terraform plan when true'
+        required: false
+        default: false
+        type: boolean
     secrets:
       aws_access_key_id_actions:
         required: true
@@ -102,7 +107,7 @@ jobs:
         env:
           TF_WORKSPACE: ${{ inputs.workspace }}
           TF_VAR_timestream_connector_artifact_name: ${{ inputs.download_go_artifact_name }}
-        if: github.ref == 'refs/heads/main'
+        if: ${{ inputs.apply_plan == true }}
         run: |
-          terraform apply -lock-timeout=300s -input=false -auto-approve -parallelism=30 terraform.plan
+          echo "apply plan"
         working-directory: ./${{ inputs.terraform_path }}
