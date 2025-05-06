@@ -1,8 +1,13 @@
 on:
+  workflow_dispatch:
   schedule:
     - cron: '0 2 * * *' # Every 2 a.m.
 
 jobs:
+  build_go:
+    name: Build Go
+    uses: ./.github/workflows/build_and_upload_go_connector_artifact_job.yml
+
   taint_api_keys:
     name: Taint API Keys
     runs-on: ubuntu-latest
@@ -53,47 +58,17 @@ jobs:
         working-directory: ./terraform/environment
 
   replace_api_keys:
-    name: Replace API Keys
-    runs-on: ubuntu-latest
-    needs: ['taint_api_keys']
-    steps:
-      - name: checkout
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-        with:
-          fetch-depth: 2
-
-      - uses: unfor19/install-aws-cli-action@e8b481e524a99f37fbd39fdc1dcb3341ab091367 # v1
-      - name: "Parse terraform version [directory: ./terraform/environment]"
-        id: tf_version
-        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-version@9a39e099657fda2d7389e1fab3c333ad3c704212 # v3.1.3
-        with:
-          terraform_directory: ./terraform/environment
-      - name: "Terraform version [${{ steps.tf_version.outputs.version }}]"
-        run: echo "terraform version [${{ steps.tf_version.outputs.version }}]" >> $GITHUB_STEP_SUMMARY
-        working-directory: ./terraform/environment
-      - uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
-        with:
-          terraform_version: ${{ steps.tf_version.outputs.version }}
-          terraform_wrapper: false
-
-
-      - name: Configure AWS Credentials For Terraform
-        uses: aws-actions/configure-aws-credentials@ececac1a45f3b08a01d2dd070d28d111c5fe6722 # v4.1.0
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
-          aws-region: eu-west-1
-          role-duration-seconds: 3600
-          role-session-name: OPGMetricsECRGithubAction
-
-      - name: Terraform Init
-        run: terraform init -input=false
-        working-directory: ./terraform/environment
-
-      - name: Terraform replace api keys
-        env:
-          TF_WORKSPACE: development
-          TF_VAR_timestream_connector_artifact_name: bootstrap
-        run: |
-          terraform apply | ~/work/opg-metrics/opg-metrics/scripts/pipeline/redact_output.sh
-        working-directory: ./terraform/environment
+    name: Terraform Environment
+    if: ${{ github.actor != 'dependabot[bot]' }}
+    needs: ['taint_api_keys', 'build_go']
+    uses: ./.github/workflows/terraform_plan_job.yml
+    with:
+      terraform_path: 'terraform/environment'
+      workspace: development
+      download_artifact: true
+      download_go_artifact_name: ${{ needs.build_go.outputs.artifact_name }}
+      download_go_artifact_path_name: 'kinesis-go-application'
+      apply_plan: true
+    secrets:
+      aws_access_key_id_actions: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+      aws_secret_access_key_actions: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
