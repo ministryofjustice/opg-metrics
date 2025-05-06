@@ -66,6 +66,7 @@ jobs:
     with:
       terraform_path: 'terraform/account'
       workspace: development
+      apply_plan: true
     secrets:
       aws_access_key_id_actions: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
       aws_secret_access_key_actions: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
@@ -80,6 +81,7 @@ jobs:
       download_artifact: true
       download_go_artifact_name: ${{ needs.build_go.outputs.artifact_name }}
       download_go_artifact_path_name: 'kinesis-go-application'
+      apply_plan: true
     secrets:
       aws_access_key_id_actions: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
       aws_secret_access_key_actions: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
