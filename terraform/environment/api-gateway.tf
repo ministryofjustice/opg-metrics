@@ -70,8 +70,7 @@ resource "aws_api_gateway_account" "kinesis_stream_api_gateway" {
 }
 
 resource "aws_iam_role" "cloudwatch_kinesis_stream_api_gateway" {
-  name = "api_gateway_cloudwatch_kinesis_stream_api_gateway"
-
+  name               = "api_gateway_cloudwatch_kinesis_stream_api_gateway"
   assume_role_policy = data.aws_iam_policy_document.cloudwatch_kinesis_stream_api_gateway_assume_role.json
 }
 
@@ -89,9 +88,8 @@ data "aws_iam_policy_document" "cloudwatch_kinesis_stream_api_gateway_assume_rol
 }
 
 resource "aws_iam_role_policy" "cloudwatchcloudwatch_kinesis_stream_api_gateway_permissions" {
-  name = "default"
-  role = aws_iam_role.cloudwatch_kinesis_stream_api_gateway.id
-
+  name   = "default"
+  role   = aws_iam_role.cloudwatch_kinesis_stream_api_gateway.id
   policy = data.aws_iam_policy_document.cloudwatch_kinesis_stream_api_gateway_permissions.json
 }
 

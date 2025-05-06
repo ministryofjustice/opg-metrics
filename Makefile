@@ -25,7 +25,7 @@ blddir := kinesis_timestream_connector/connector
 help: ##@other Show this help.
 	@perl -e '$(HELP_FUN)' $(MAKEFILE_LIST)
 
-build_connector: ##@build Builds lambda go connector needed for terraform apply
+build-connector: ##@build Builds lambda go connector needed for terraform apply
 	cd kinesis_timestream_connector/connector && \
 	GOARCH=amd64 GOOS=linux CGO_ENABLED=0  go build -tags lambda.norpc -o ../../kinesis-go-application/bootstrap main.go
 
