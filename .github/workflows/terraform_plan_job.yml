@@ -100,7 +100,7 @@ jobs:
           TF_VAR_timestream_connector_artifact_name: ${{ inputs.download_go_artifact_name }}
         run: |
           terraform workspace show
-          terraform plan -input=false -parallelism=30 -out=terraform.plan
+          terraform plan -input=false -parallelism=30 -out=terraform.plan | ../../scripts/pipeline/redact_output.sh
         working-directory: ./${{ inputs.terraform_path }}
 
       - name: Terraform Apply Environment
