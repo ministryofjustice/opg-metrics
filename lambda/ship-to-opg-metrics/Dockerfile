@@ -1,23 +1,8 @@
 # Define function directory
 ARG FUNCTION_DIR="/function"
 
+# FROM python:3.12-alpine3.21 AS build-image
 FROM python:3.12 AS build-image
-# FROM python:3.13.3-alpine3.21 AS build-image
-# RUN apk add --no-cache \
-#     libstdc++
-
-# FROM python-alpine AS build-image
-
-# Install aws-lambda-cpp build dependencies
-# RUN apk add --no-cache \
-#     cmake
-    # libcurl \
-    # build-base \
-    # libtool \
-    # autoconf \
-    # automake \
-    # libexecinfo-dev \
-    # make
 
 # Include global arg in this stage of the build
 ARG FUNCTION_DIR
@@ -32,11 +17,11 @@ COPY lambda/clsf-to-sqs/src/requirements.txt ${FUNCTION_DIR}/requirements.txt
 # Install the runtime interface client
 RUN pip install --no-cache-dir --upgrade pip==25.1.1 && \
   pip install --no-cache-dir \
-    --target ${FUNCTION_DIR} \
-    --requirement ${FUNCTION_DIR}/requirements.txt
+  --target ${FUNCTION_DIR} \
+  --requirement ${FUNCTION_DIR}/requirements.txt
 
 # Use a slim version of the base Python image to reduce the final image size
-FROM scratch
+FROM python:3.12-slim
 
 # Include global arg in this stage of the build
 ARG FUNCTION_DIR
