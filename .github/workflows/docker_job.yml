@@ -31,7 +31,7 @@ jobs:
       - name: Build Container
         id: build_container
         run: |
-          docker build --file lambda/${{ matrix.lambda_name }}/Dockerfile --tag ${{ matrix.lambda_name }}:latest .
+          docker build --file lambda/${{ matrix.lambda_name }}/Dockerfile --target production --tag ${{ matrix.lambda_name }}:latest .
 
       - name: Trivy Image Vulnerability Scanner
         id: trivy_scan
