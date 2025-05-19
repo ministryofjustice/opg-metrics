@@ -1,11 +1,10 @@
-version: "3.8"
-
 services:
   shiptometrics:
     image: ship-to-opg-metrics
     build:
       context: ./ship-to-opg-metrics
-      dockerfile: test.Dockerfile
+      dockerfile: Dockerfile
+      target: test
     ports:
       - 9000:8080
     volumes:
