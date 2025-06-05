@@ -163,3 +163,38 @@ module "trusted_service_access_lpa_store_production" {
     "arn:aws:iam::764856231715:root",
   ]
 }
+
+module "trusted_service_access_lpa_uid_development" {
+  trusted_service_name               = "lpa-uid-development"
+  source                             = "../modules/trusted_service_access"
+  aws_api_gateway_rest_api           = aws_api_gateway_rest_api.kinesis_stream_api_gateway.id
+  aws_api_gateway_stage              = aws_api_gateway_stage.kinesis_stream_api_gateway.stage_name
+  secret_recovery_window_in_days     = 0
+  secretsmanager_api_keys_kms_key_id = aws_kms_key.api_key.key_id
+  identifiers_arns = [
+    "arn:aws:iam::288342028542:root",
+  ]
+}
+
+module "trusted_service_access_lpa_uid_preproduction" {
+  trusted_service_name               = "lpa-uid-preproduction"
+  source                             = "../modules/trusted_service_access"
+  aws_api_gateway_rest_api           = aws_api_gateway_rest_api.kinesis_stream_api_gateway.id
+  aws_api_gateway_stage              = aws_api_gateway_stage.kinesis_stream_api_gateway.stage_name
+  secret_recovery_window_in_days     = 0
+  secretsmanager_api_keys_kms_key_id = aws_kms_key.api_key.key_id
+  identifiers_arns = [
+    "arn:aws:iam::492687888235:root",
+  ]
+}
+module "trusted_service_access_lpa_uid_production" {
+  trusted_service_name               = "lpa-uid-production"
+  source                             = "../modules/trusted_service_access"
+  aws_api_gateway_rest_api           = aws_api_gateway_rest_api.kinesis_stream_api_gateway.id
+  aws_api_gateway_stage              = aws_api_gateway_stage.kinesis_stream_api_gateway.stage_name
+  secret_recovery_window_in_days     = 0
+  secretsmanager_api_keys_kms_key_id = aws_kms_key.api_key.key_id
+  identifiers_arns = [
+    "arn:aws:iam::649098267436:root",
+  ]
+}
