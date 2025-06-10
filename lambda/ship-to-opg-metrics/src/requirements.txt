@@ -1,4 +1,4 @@
-requests==2.32.3
+requests==2.32.4
 boto3==1.38.2
 aws-xray-sdk==2.14.0
 awslambdaric==3.0.2
