@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"errors"
+	"fmt"
 	"log"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -28,18 +30,16 @@ func main() {
 	lambda.Start(lambdaHandler.Handle)
 }
 
-func (h handler) Handle(ctx context.Context, kinesisEvent events.KinesisEvent) {
+func (h handler) Handle(_ context.Context, kinesisEvent events.KinesisEvent) {
 	kinesisRecords := make([]map[string]string, len(kinesisEvent.Records))
 
-	log.Println("Event recieved on lambda with", len(kinesisEvent.Records), "records")
-
+	log.Printf("Event received on lambda with %d records", len(kinesisEvent.Records))
 	log.Println(kinesisEvent.Records)
 
 	for i, record := range kinesisEvent.Records {
 		x := map[string]string{}
-		log.Println(record.Kinesis.Data)
 
-		err := json.Unmarshal([]byte(record.Kinesis.Data), &x)
+		err := json.Unmarshal(record.Kinesis.Data, &x)
 		if err != nil {
 			log.Println(err)
 			continue
@@ -57,7 +57,23 @@ func (h handler) Handle(ctx context.Context, kinesisEvent events.KinesisEvent) {
 	})
 
 	if err != nil {
-		log.Println(err)
+		var rejectedErr *types.RejectedRecordsException
+		if errors.As(err, &rejectedErr) {
+			fmt.Println("One or more records were rejected:")
+			successfulCount := len(kinesisRecords) - len(rejectedErr.RejectedRecords)
+			log.Printf("Successfully wrote %d out of %d records to timestream", successfulCount, len(kinesisRecords))
+
+			for _, rejectedRecord := range rejectedErr.RejectedRecords {
+				log.Printf("Record Index: %d, Reason: %s", rejectedRecord.RecordIndex, *rejectedRecord.Reason)
+				if rejectedRecord.ExistingVersion != nil {
+					log.Printf("  Existing Version: %d", *rejectedRecord.ExistingVersion)
+				}
+			}
+		} else {
+			log.Println("WriteRecords failed:", err)
+		}
+	} else {
+		log.Printf("Successfully wrote all %d records to timestream", len(kinesisRecords))
 	}
 }
 
