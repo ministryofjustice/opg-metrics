@@ -36,8 +36,8 @@ module "kinesis_kms_key" {
   description      = "KMS key for opg-metrics kinesis encryption ${local.account_name}"
   encryption_roles = []
   usage_services = [
-    "logs.eu-west-1.amazonaws.com",
-    "logs.eu-west-2.amazonaws.com",
+    "kinesis.eu-west-1.amazonaws.com",
+    "kinesis.eu-west-2.amazonaws.com",
   ]
 
   providers = {
