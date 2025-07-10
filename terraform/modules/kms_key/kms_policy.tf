@@ -146,7 +146,7 @@ data "aws_iam_policy_document" "kms_key" {
     }
   }
   dynamic "statement" {
-    for_each = length(concat(var.encryption_roles, decryption_roles)) > 0 && var.enable_grant_for_resources ? [1] : []
+    for_each = length(concat(var.encryption_roles, var.decryption_roles)) > 0 && var.enable_grant_for_resources ? [1] : []
     content {
       sid    = "Allow attachment of persistent resources"
       effect = "Allow"
