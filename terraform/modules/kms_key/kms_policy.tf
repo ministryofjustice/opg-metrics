@@ -145,4 +145,28 @@ data "aws_iam_policy_document" "kms_key" {
       identifiers = var.administrator_roles
     }
   }
+  dynamic "statement" {
+    for_each = length(concat(var.encryption_roles, var.decryption_roles)) > 0 && var.enable_grant_for_resources ? [1] : []
+    content {
+      sid    = "Allow attachment of persistent resources"
+      effect = "Allow"
+      resources = [
+        "arn:aws:kms:*:${data.aws_caller_identity.current.account_id}:key/*"
+      ]
+      actions = [
+        "kms:CreateGrant",
+        "kms:ListGrants",
+        "kms:RevokeGrant"
+      ]
+      principals {
+        type        = "AWS"
+        identifiers = concat(var.encryption_roles, var.decryption_roles)
+      }
+      condition {
+        test     = "Bool"
+        variable = "kms:GrantIsForAWSResource"
+        values   = "true"
+      }
+    }
+  }
 }
