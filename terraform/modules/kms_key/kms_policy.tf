@@ -160,7 +160,7 @@ data "aws_iam_policy_document" "kms_key" {
       ]
       principals {
         type        = "AWS"
-        identifiers = concat(var.encryption_roles, decryption_roles)
+        identifiers = concat(var.encryption_roles, var.decryption_roles)
       }
       condition {
         test     = "Bool"
