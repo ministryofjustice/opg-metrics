@@ -165,7 +165,7 @@ data "aws_iam_policy_document" "kms_key" {
       condition {
         test     = "Bool"
         variable = "kms:GrantIsForAWSResource"
-        values   = "true"
+        values   = ["true"]
       }
     }
   }
