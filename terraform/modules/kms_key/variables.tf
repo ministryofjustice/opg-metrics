@@ -29,6 +29,6 @@ variable "usage_services" {
 }
 
 variable "enable_grant_for_resources" {
-  description = "add policy condition to allow roles to create grants for "
+  description = "add policy condition to allow roles to create grants for resources"
   type        = bool
 }
