@@ -60,8 +60,8 @@ locals {
 }
 
 resource "aws_cloudwatch_log_group" "kinesis_stream_api_gateway" {
-  name = "API-Gateway-Execution-Logs_${aws_api_gateway_rest_api.kinesis_stream_api_gateway.id}/${local.environment_name}"
-  # kms_key_id        = data.aws_kms_alias.cloudwatch_application_logs_encryption.target_key_arn
+  name              = "API-Gateway-Execution-Logs_${aws_api_gateway_rest_api.kinesis_stream_api_gateway.id}/${local.environment_name}"
+  kms_key_id        = data.aws_kms_alias.cloudwatch_application_logs_encryption.target_key_arn
   retention_in_days = 7
 }
 
