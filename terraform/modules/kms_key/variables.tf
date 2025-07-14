@@ -27,3 +27,8 @@ variable "usage_services" {
   description = "List of AWS Service that the usage roles can use the KMS "
   type        = list(string)
 }
+
+variable "enable_grant_for_resources" {
+  description = "add policy condition to allow roles to create grants for resources"
+  type        = bool
+}
