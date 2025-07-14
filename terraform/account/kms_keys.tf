@@ -10,7 +10,8 @@ module "cloudwatch_log_group_kms_key" {
   ]
   description = "KMS key for opg-metrics cloudwatch log group encryption ${local.account_name}"
   encryption_roles = [
-    "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/api_gateway_cloudwatch_kinesis_stream_api_gateway"
+    "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/api_gateway_cloudwatch_kinesis_stream_api_gateway",
+    "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/LambdaKinesisRole"
   ]
   usage_services = [
     "logs.eu-west-1.amazonaws.com",
