@@ -17,6 +17,7 @@
   "lockFileMaintenance": {
     "enabled": false
   },
+  "minimumReleaseAge": "7 days",
   "vulnerabilityAlerts": {
     "groupName": "Security Alerts",
     "labels": [
@@ -118,8 +119,7 @@
         "patch"
       ],
       "prCreation": "immediate",
-      "prPriority": 4,
-      "minimumReleaseAge": "3 days"
+      "prPriority": 4
     }
   ]
 }
