@@ -33,21 +33,14 @@ jobs:
         run: |
           docker build --file lambda/${{ matrix.lambda_name }}/Dockerfile --target production --tag ${{ matrix.lambda_name }}:latest .
 
-      - name: Trivy Image Vulnerability Scanner
-        id: trivy_scan
-        uses: aquasecurity/trivy-action@6c175e9c4083a92bbca2f9724c8a5e33bc2d97a5 # 0.30.0
-        with:
-          image-ref: ${{ matrix.lambda_name }}:latest
-          severity: 'HIGH,CRITICAL'
-          format: 'sarif'
-          output: 'trivy-results.sarif'
+      - name: Snyk scan
+        run: exit 1
 
-      - name: Upload Trivy scan results to GitHub Security tab
-        id: trivy_upload_sarif
+      - name: Upload Snyk scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@28deaeda66b76a05916b6923827895f2b14ab387 # v3.28.16
         if: always()
         with:
-          sarif_file: 'trivy-results.sarif'
+          sarif_file: 'test-results/snyk.sarif'
 
       - name: Install AWS CLI
         uses: unfor19/install-aws-cli-action@e8b481e524a99f37fbd39fdc1dcb3341ab091367 # v1
