@@ -62,7 +62,7 @@ jobs:
   terraform_account_workflow:
     name: Terraform Account
     if: ${{ github.actor != 'dependabot[bot]' }}
-    needs: ['tfsec', 'docker_build_scan_push']
+    needs: ['tfsec']
     uses: ./.github/workflows/terraform_plan_job.yml
     with:
       terraform_path: 'terraform/account'
