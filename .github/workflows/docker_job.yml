@@ -14,6 +14,8 @@ on:
         required: true
       aws_secret_access_key_actions:
         required: true
+      snyk_opg_org_token:
+        required: true
 
 jobs:
   docker_build_scan_push:
@@ -34,7 +36,10 @@ jobs:
           docker build --file lambda/${{ matrix.lambda_name }}/Dockerfile --target production --tag ${{ matrix.lambda_name }}:latest .
 
       - name: Snyk scan
-        run: exit 1
+        uses: ministryofjustice/opg-github-actions/actions/snyk-scan@8dea82fc8b8e7ffca431f0fb83848d523147ccd8 # v4.5.0
+        with:
+          SNYK_TEST_IMAGE: ${{ matrix.lambda_name }}:latest
+          SNYK_TOKEN: ${{ secrets.snyk_opg_org_token }}
 
       - name: Upload Snyk scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@28deaeda66b76a05916b6923827895f2b14ab387 # v3.28.16
