@@ -2,28 +2,28 @@ on:
   workflow_call:
     inputs:
       terraform_path:
-        description: 'The name of the terraform paths'
+        description: "The name of the terraform paths"
         required: true
         type: string
       workspace:
-        description: 'Terraform workspace'
+        description: "Terraform workspace"
         required: true
         type: string
       download_artifact:
-        description: 'Download Artifact'
+        description: "Download Artifact"
         required: false
         default: false
         type: boolean
       download_go_artifact_name:
-        description: 'Go Artifact name'
+        description: "Go Artifact name"
         required: false
         type: string
       download_go_artifact_path_name:
-        description: 'Local go artifact path location'
+        description: "Local go artifact path location"
         required: false
         type: string
       apply_plan:
-        description: 'Apply terraform plan when true'
+        description: "Apply terraform plan when true"
         required: false
         default: false
         type: boolean
@@ -41,7 +41,7 @@ jobs:
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
-          fetch-depth: '0'
+          fetch-depth: "0"
 
       - name: Download go Artifact
         if: ${{ inputs.download_artifact == true }}
@@ -54,7 +54,7 @@ jobs:
       - uses: unfor19/install-aws-cli-action@e8b481e524a99f37fbd39fdc1dcb3341ab091367 # v1
       - name: "Parse terraform version [directory: ./${{ inputs.terraform_path }}]"
         id: tf_version
-        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-version@9a39e099657fda2d7389e1fab3c333ad3c704212 # v3.1.3
+        uses: ministryofjustice/opg-github-actions/actions/terraform-version@b605e1e2c94b399e8139c4c2be2c8730700e0004 # v4.5.2
         with:
           terraform_directory: ./${{ inputs.terraform_path }}
       - name: "Terraform version [${{ steps.tf_version.outputs.version }}]"

@@ -2,11 +2,11 @@ on:
   workflow_call:
     inputs:
       lambda_names:
-        description: 'The name of the lambda Docker container'
+        description: "The name of the lambda Docker container"
         required: true
         type: string
       tag:
-        description: 'Tag for docker image'
+        description: "Tag for docker image"
         required: true
         type: string
     secrets:
@@ -25,6 +25,11 @@ jobs:
       fail-fast: false
       matrix:
         lambda_name: ${{ fromJSON(inputs.lambda_names) }}
+        include:
+          - lambda_name: clsf-to-sqs
+            scan_id: clsf_to_sqs
+          - lambda_name: ship-to-opg-metrics
+            scan_id: ship_to_opg_metrics
     steps:
       - name: Check out code
         id: checkout_code
@@ -40,12 +45,14 @@ jobs:
         with:
           SNYK_TEST_IMAGE: ${{ matrix.lambda_name }}:latest
           SNYK_TOKEN: ${{ secrets.snyk_opg_org_token }}
+          scan_id: ${{ matrix.scan_id }}
 
       - name: Upload Snyk scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@28deaeda66b76a05916b6923827895f2b14ab387 # v3.28.16
-        if: always()
+        if: ${{ always() && hashFiles(format('test-results/{0}_snyk.sarif', matrix.scan_id)) != '' }}
         with:
-          sarif_file: 'test-results/snyk.sarif'
+          sarif_file: "test-results/${{ matrix.scan_id }}_snyk.sarif"
+          category: ${{ matrix.scan_id }}
 
       - name: Install AWS CLI
         uses: unfor19/install-aws-cli-action@e8b481e524a99f37fbd39fdc1dcb3341ab091367 # v1
