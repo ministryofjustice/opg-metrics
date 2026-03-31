@@ -59,7 +59,7 @@ jobs:
 
   terraform_account_workflow:
     name: Terraform Account
-    needs: ["snyk_iac"]
+    needs: ["docker_build_scan_push"]
     uses: ./.github/workflows/terraform_plan_job.yml
     with:
       terraform_path: "terraform/account"
