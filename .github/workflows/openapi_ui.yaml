@@ -17,8 +17,9 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
 
+      # not part of allowed enterprise actions
       - name: Generate Swagger UI
         uses: Legion2/swagger-ui-action@eff65dc3f193f0a749872be82f74baa35be0797d # v1
         with:
