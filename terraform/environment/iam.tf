@@ -30,14 +30,12 @@ data "aws_iam_policy_document" "lambda_go_connector_kinesis_processing_policy" {
 
     effect = "Allow"
 
-    #tfsec:ignore:aws-iam-no-policy-wildcards
     actions = [
       "kinesis:ListShards",
       "kinesis:ListStreams",
       "kinesis:*"
     ]
 
-    #tfsec:ignore:aws-iam-no-policy-wildcards
     resources = [
       "arn:aws:kinesis:*:*:*"
     ]
@@ -46,7 +44,6 @@ data "aws_iam_policy_document" "lambda_go_connector_kinesis_processing_policy" {
 
     effect = "Allow"
 
-    #tfsec:ignore:aws-iam-no-policy-wildcards
     actions = [
       "stream:GetRecord",
       "stream:GetShardIterator",
@@ -54,7 +51,6 @@ data "aws_iam_policy_document" "lambda_go_connector_kinesis_processing_policy" {
       "stream:*"
     ]
 
-    #tfsec:ignore:aws-iam-no-policy-wildcards
     resources = [
       "arn:aws:stream:*:*:*"
     ]
@@ -64,12 +60,11 @@ data "aws_iam_policy_document" "lambda_go_connector_kinesis_processing_policy" {
     sid    = "TimestreamAccess"
     effect = "Allow"
 
-    #tfsec:ignore:aws-iam-no-policy-wildcards
     actions = [
       "timestream:*",
     ]
 
-    #tfsec:ignore:aws-iam-no-policy-wildcards
+
     resources = [
       "*",
     ]
@@ -97,7 +92,6 @@ data "aws_iam_policy_document" "lambda_go_connector_logging_policy" {
       "logs:PutLogEvents"
     ]
 
-    #tfsec:ignore:aws-iam-no-policy-wildcards
     resources = [
       "arn:aws:logs:*:*:*"
     ]
@@ -137,13 +131,11 @@ data "aws_iam_policy_document" "kinesis_apigateway" {
 
     effect = "Allow"
 
-    #tfsec:ignore:aws-iam-no-policy-wildcards
     actions = [
       "apigateway:*",
       "kinesis:*",
     ]
 
-    #tfsec:ignore:aws-iam-no-policy-wildcards
     resources = [
       "*"
     ]
