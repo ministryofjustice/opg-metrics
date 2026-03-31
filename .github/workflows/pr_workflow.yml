@@ -52,6 +52,11 @@ jobs:
       aws_secret_access_key_actions: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
       snyk_opg_org_token: ${{ secrets.SNYK_OPG_ORG_TOKEN }}
 
+  snyk_iac:
+    name: Snyk IAC
+    run: echo "::warning title=MISSING-IAC-SCAN::Please add the snyk iac scan composite action when it is available."
+  # TODO: Add Snyk IAC scan and upload results to GitHub Security tab when the composite action is available.
+
   terraform_account_workflow:
     name: Terraform Account
     if: ${{ github.actor != 'dependabot[bot]' }}
