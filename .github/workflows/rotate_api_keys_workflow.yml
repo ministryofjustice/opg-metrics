@@ -1,7 +1,7 @@
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 2 * * *' # Every 2 a.m.
+    - cron: "0 2 * * *" # Every 2 a.m.
 
 jobs:
   build_go:
@@ -20,7 +20,7 @@ jobs:
       - uses: unfor19/install-aws-cli-action@e8b481e524a99f37fbd39fdc1dcb3341ab091367 # v1
       - name: "Parse terraform version [directory: ./terraform/environment]"
         id: tf_version
-        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-version@9a39e099657fda2d7389e1fab3c333ad3c704212 # v3.1.3
+        uses: ministryofjustice/opg-github-actions/actions/terraform-version@b605e1e2c94b399e8139c4c2be2c8730700e0004 # v4.5.2
         with:
           terraform_directory: ./terraform/environment
       - name: "Terraform version [${{ steps.tf_version.outputs.version }}]"
@@ -30,7 +30,6 @@ jobs:
         with:
           terraform_version: ${{ steps.tf_version.outputs.version }}
           terraform_wrapper: false
-
 
       - name: Configure AWS Credentials For Terraform
         uses: aws-actions/configure-aws-credentials@ececac1a45f3b08a01d2dd070d28d111c5fe6722 # v4.1.0
@@ -60,14 +59,14 @@ jobs:
   replace_api_keys:
     name: Terraform Environment
     if: ${{ github.actor != 'dependabot[bot]' }}
-    needs: ['taint_api_keys', 'build_go']
+    needs: ["taint_api_keys", "build_go"]
     uses: ./.github/workflows/terraform_plan_job.yml
     with:
-      terraform_path: 'terraform/environment'
+      terraform_path: "terraform/environment"
       workspace: development
       download_artifact: true
       download_go_artifact_name: ${{ needs.build_go.outputs.artifact_name }}
-      download_go_artifact_path_name: 'kinesis-go-application'
+      download_go_artifact_path_name: "kinesis-go-application"
       apply_plan: true
     secrets:
       aws_access_key_id_actions: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
