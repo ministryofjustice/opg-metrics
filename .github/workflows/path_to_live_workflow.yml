@@ -54,7 +54,10 @@ jobs:
 
   snyk_iac:
     name: Snyk IAC
-    run: echo "::warning title=MISSING-IAC-SCAN::Please add the snyk iac scan composite action when it is available."
+    runs-on: ubuntu-latest
+    steps:
+      - name: Warn missing IAC scan
+        run: echo "::warning title=MISSING-IAC-SCAN::Please add the snyk iac scan composite action when it is available."
   # TODO: Add Snyk IAC scan and upload results to GitHub Security tab when the composite action is available.
 
   terraform_account_workflow:
