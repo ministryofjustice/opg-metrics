@@ -36,19 +36,21 @@ jobs:
     outputs:
       raw_branch: ${{ steps.parse.outputs.raw_branch }}
       parsed_branch: ${{ steps.parse.outputs.parsed_branch }}
+    env:
+      HEAD_REF: ${{ github.head_ref}}
     steps:
       - id: parse
         name: Parse branch name
         run: |
-          if [ "${{ github.head_ref}}" == "" ]; then
+          if [ "${HEAD_REF}" == "" ]; then
             raw_branch="main"
             parsed_branch="main"
           else
-            raw_branch=${{ github.head_ref }}
+            raw_branch=${HEAD_REF}
             parsed_branch=$( echo "${raw_branch}" | tr -cd '[:alnum:]')
           fi
           echo "EVENT: ${GITHUB_EVENT_NAME}"
-          echo "REF: ${{ github.head_ref }}"
+          echo "REF: ${HEAD_REF}"
           echo "RAW BRANCH: ${raw_branch}"
           echo "PARSED BRANCH: ${parsed_branch}"
           echo "raw_branch=${raw_branch}" >> $GITHUB_OUTPUT

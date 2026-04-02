@@ -37,6 +37,7 @@ jobs:
     uses: ./.github/workflows/tags_job.yml
     with:
       branch_name: ${{ needs.branch_name.outputs.raw_branch_name }}
+      pre_release: true
     secrets:
       source_github_token: ${{ secrets.GITHUB_TOKEN }}
 
