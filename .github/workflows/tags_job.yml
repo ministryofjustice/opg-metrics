@@ -9,6 +9,10 @@ on:
         type: string
         description: "Current Github branch name"
         required: true
+      pre_release:
+        description: "Whether tag is prerelease or not"
+        default: true
+        type: boolean
     secrets:
       source_github_token:
           required: true
@@ -17,16 +21,14 @@ jobs:
   create_tags:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-      - name: Bump version
-        id: bump_version
-        uses: anothrNick/github-tag-action@f278d49d30cdd8775cc3e7dd00b5ee11686ee297 # 1.71.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.source_github_token }}
-          INITIAL_VERSION: 0.0.0
-          DEFAULT_BUMP: minor
-          PRERELEASE_SUFFIX: ${{ inputs.branch_name }}
-          RELEASE_BRANCHES: main
-          WITH_V: true
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+      - name: generate semver tag and release
+        id: semver_tag
+        uses: ministryofjustice/opg-github-actions/actions/semver@b8868247a908f74fafe1905701391580575a6d35 # v4.3.10
+        with:
+          prerelease: ${{ inputs.pre_release }}
+          default_bump: minor
     outputs:
-      version_tag: ${{ steps.bump_version.outputs.tag }}
+      version_tag: ${{ steps.semver_tag.outputs.tag }}

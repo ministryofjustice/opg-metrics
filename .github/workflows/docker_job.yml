@@ -53,10 +53,6 @@ jobs:
         with:
           sarif_file: "test-results/${{ matrix.scan_id }}_snyk.sarif"
           category: ${{ matrix.scan_id }}
-
-      - name: Install AWS CLI
-        uses: unfor19/install-aws-cli-action@e8b481e524a99f37fbd39fdc1dcb3341ab091367 # v1
-        if: ${{ github.actor != 'dependabot[bot]' }}
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@ececac1a45f3b08a01d2dd070d28d111c5fe6722 # v4.1.0
         if: ${{ github.actor != 'dependabot[bot]' }}
