@@ -1,5 +1,5 @@
 moto[sqs]==5.0.7
 coverage==7.0.0
 pylint==2.15.9
-pytest==7.2.0
+pytest==9.0.3
 awslambdaric==3.0.2
